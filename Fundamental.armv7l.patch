@@ -1,0 +1,10 @@
+diff --git a/Makefile b/Makefile
+index a8ec6fa..61c5ec7 100644
+--- a/Makefile
++++ b/Makefile
+@@ -8,3 +8,5 @@ DISTRIBUTABLES += $(wildcard LICENSE*)
+ DISTRIBUTABLES += $(wildcard presets)
+ 
+ include $(RACK_DIR)/plugin.mk
++
++FLAGS += -Idep/include -mfpu=vfpv3-d16 -mno-unaligned-access

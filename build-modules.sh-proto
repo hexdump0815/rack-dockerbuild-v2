@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# exit on errors
+#set -e
+
+WORKDIR=`dirname $0`
+cd $WORKDIR
+WORKDIR=`pwd`
+
+cd library/repos
+for i in * ; do
+  # SurgeRack is handled separately below
+  if [ "$i" != "SurgeRack" ]; then
+    if [ -f ${i}/plugin.json ]; then
+      echo ""
+      echo "=== $i ==="
+      echo ""
+      cd $i
+    #  RACK_DIR=${WORKDIR}/Rack make -j4 clean
+      RACK_DIR=${WORKDIR}/Rack make -j4 dep
+      RACK_DIR=${WORKDIR}/Rack make -j4
+      RACK_DIR=${WORKDIR}/Rack make -j4 dist
+      cd ..
+    fi
+  fi
+done
+cd ../..
+
+# go back to a defined starting point to be on the safe side
+cd ${WORKDIR}
+
+cd plugins
+for i in * ; do
+  echo ""
+  echo "=== $i ==="
+  echo ""
+  cd $i
+#  RACK_DIR=${WORKDIR}/Rack make -j4 clean
+  RACK_DIR=${WORKDIR}/Rack make -j4 dep
+  RACK_DIR=${WORKDIR}/Rack make -j4
+  RACK_DIR=${WORKDIR}/Rack make -j4 dist
+  cd ..
+done
+cd ..

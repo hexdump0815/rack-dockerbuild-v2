@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# exit on errors
+set -e
+
+WORKDIR=`dirname $0`
+cd $WORKDIR
+WORKDIR=`pwd`
+
+echo Rack
+cd Rack
+make -j4 clean
+make -j4 dep
+make -j4
+cd ..
