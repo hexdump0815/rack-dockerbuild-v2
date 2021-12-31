@@ -244,6 +244,9 @@ if [ -f ../../../VCV-Recorder.$MYARCH.patch ]; then
 fi
 cd ..
 
+# go back to a defined starting point to be on the safe side
+cd ${WORKDIR}/compile/plugins
+
 # ValleyRackFree
 echo ""
 echo "===> ValleyRackFree extra plugin"
@@ -269,6 +272,9 @@ if [ -f ../../../ValleyRackFree.$MYARCH.patch ]; then
 fi
 find * -type f -exec ../../../simde-ify.sh {} \;
 cd ..
+
+# go back to a defined starting point to be on the safe side
+cd ${WORKDIR}/compile/plugins
 
 # vcvrack-packone
 echo ""
