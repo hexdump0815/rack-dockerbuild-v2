@@ -46,6 +46,12 @@ else
   git rm -f TheXOR
   cd ..
 
+  # and the rjmodules repo seems to make trouble as well, so get rid of it too
+  cd repos
+  git submodule deinit -f -- RJModules
+  git rm -f RJModules
+  cd ..
+
   git submodule update --init --recursive
   ( cd ../.. ; mkdir -p source ; tar czf source/library-source.tar.gz compile/library )
 fi
