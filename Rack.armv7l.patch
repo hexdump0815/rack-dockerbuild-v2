@@ -1,19 +1,19 @@
 diff --git a/arch.mk b/arch.mk
-index b2676f27..4b455a35 100644
+index b2676f27..0ed4fda6 100644
 --- a/arch.mk
 +++ b/arch.mk
 @@ -6,6 +6,9 @@ ifneq (,$(findstring x86_64-,$(MACHINE)))
  else ifneq (,$(findstring i686-,$(MACHINE)))
  	ARCH_x86 := 1
  	ARCH_NAME := x86
-+else ifneq (,$(findstring armv7l-,$(MACHINE)))
++else ifneq (,$(findstring arm-,$(MACHINE)))
 +	ARCH_armv7l := 1
 +	ARCH_NAME := armv7l
  else
  $(error Could not determine CPU architecture of $(MACHINE). Try hacking around in arch.mk)
  endif
 diff --git a/compile.mk b/compile.mk
-index 9580533c..09f63a7c 100644
+index 9580533c..c17a3293 100644
 --- a/compile.mk
 +++ b/compile.mk
 @@ -14,7 +14,7 @@ FLAGS += -MMD -MP
@@ -35,7 +35,7 @@ index 9580533c..09f63a7c 100644
  ifdef ARCH_WIN
  	$(OBJCOPY) -I binary -O pe-x86-64 -B i386:x86-64 --rename-section .data=.rodata,alloc,load,readonly,data,contents $< $@
 diff --git a/dep.mk b/dep.mk
-index 1d541269..4f4a748f 100644
+index 1d541269..8f9c7129 100644
 --- a/dep.mk
 +++ b/dep.mk
 @@ -5,7 +5,7 @@ DEP_LOCAL ?= dep
@@ -48,16 +48,39 @@ index 1d541269..4f4a748f 100644
  # Static libs don't usually compiled with -fPIC, but since we're including them in a shared library, it's needed.
  DEP_FLAGS += -fPIC
 diff --git a/dep/Makefile b/dep/Makefile
-index 7b42373b..f28c04a7 100755
+index 7b42373b..bfee4e6b 100755
 --- a/dep/Makefile
 +++ b/dep/Makefile
-@@ -172,6 +172,7 @@ speexdsp-SpeexDSP-1.2rc3:
+@@ -120,7 +120,8 @@ openssl-1.1.1k:
+ $(openssl): | openssl-1.1.1k
+ 	# The CFLAGS environment variable is ignored, so pass CFLAGS to their custom ./config script, which passes them to the compiler.
+ 	# Set no-pinshared so OpenSSL doesn't call GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_PIN, ...) on initialization on Windows. This prevents libRack from being unloaded on Windows with FreeLibrary().
+-	cd openssl-1.1.1k && ./config --prefix="$(DEP_PATH)" no-shared no-hw threads no-zlib no-capieng no-pinshared $(CFLAGS)
++	# we do not pass CFLAGS for armv7l, as otherwise it will try to compile armv8 asm
++	cd openssl-1.1.1k && CFLAGS="" ./config --prefix="$(DEP_PATH)" no-shared no-hw threads no-zlib no-capieng no-pinshared
+ 	$(MAKE) -C openssl-1.1.1k
+ 	$(MAKE) -C openssl-1.1.1k install_sw
+ 
+@@ -172,6 +173,7 @@ speexdsp-SpeexDSP-1.2rc3:
  
  $(libspeexdsp): | speexdsp-SpeexDSP-1.2rc3
  	cd speexdsp-SpeexDSP-1.2rc3 && $(CONFIGURE)
 +	cp ../../resample_neon.h speexdsp-SpeexDSP-1.2rc3/libspeexdsp
  	$(MAKE) -C speexdsp-SpeexDSP-1.2rc3
  	$(MAKE) -C speexdsp-SpeexDSP-1.2rc3 install
+ 
+diff --git a/plugin.mk b/plugin.mk
+index 3258094f..a7459869 100644
+--- a/plugin.mk
++++ b/plugin.mk
+@@ -55,6 +55,8 @@ all: $(TARGET)
+ 
+ include $(RACK_DIR)/compile.mk
+ 
++FLAGS += -mfpu=neon -mno-unaligned-access
++
+ clean:
+ 	rm -rfv build $(TARGET) dist
  
 diff --git a/src/engine/Engine.cpp b/src/engine/Engine.cpp
 index ce473eab..4a3cfca1 100644
@@ -123,3 +146,16 @@ index ce473eab..4a3cfca1 100644
  }
  
  
+diff --git a/Makefile b/Makefile
+index c7074ce3..64dea1cc 100644
+--- a/Makefile
++++ b/Makefile
+@@ -41,7 +41,7 @@ ifdef ARCH_LIN
+ 
+ 	STANDALONE_TARGET := Rack
+ 	STANDALONE_LDFLAGS += -static-libstdc++ -static-libgcc
+-	STANDALONE_LDFLAGS += -Wl,-rpath=.
++	STANDALONE_LDFLAGS += -Wl,-rpath=. -latomic
+ endif
+ 
+ ifdef ARCH_MAC
