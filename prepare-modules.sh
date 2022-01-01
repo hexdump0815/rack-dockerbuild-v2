@@ -5,7 +5,7 @@
 
 WORKDIR=`dirname $0`
 cd $WORKDIR
-# make in an absolute path
+# make it an absolute path
 WORKDIR=`pwd`
 
 MYARCH=`uname -m`
