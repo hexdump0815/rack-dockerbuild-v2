@@ -55,12 +55,12 @@ else
   ( cd ../.. ; mkdir -p source ; tar czf source/Rack-source.tar.gz compile/Rack )
 fi
 # arch independent patches
-if [ -f ../../Rack.patch ]; then
-  patch -p1 < ../../Rack.patch
+if [ -f ../../patches/Rack.patch ]; then
+  patch -p1 < ../../patches/Rack.patch
 fi
 # arch specific patches
-if [ -f ../../Rack.$MYARCH.patch ]; then
-  patch -p1 < ../../Rack.$MYARCH.patch
+if [ -f ../../patches/Rack.$MYARCH.patch ]; then
+  patch -p1 < ../../patches/Rack.$MYARCH.patch
 fi
 if [ "$MYARCH" == "armv7l" ] || [ "$MYARCH" == "aarch64" ]; then
   mkdir -p dep/include

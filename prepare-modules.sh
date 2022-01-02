@@ -68,12 +68,12 @@ for i in * ; do
     echo ""
     cd $i
     # arch independent patches
-    if [ -f ../../../../${i}.patch ]; then
-      patch -p1 < ../../../../${i}.patch
+    if [ -f ../../../../patches/${i}.patch ]; then
+      patch -p1 < ../../../../patches/${i}.patch
     fi
     # arch specific patches
-    if [ -f ../../../../${i}.$MYARCH.patch ]; then
-      patch -p1 < ../../../../${i}.$MYARCH.patch
+    if [ -f ../../../../patches/${i}.$MYARCH.patch ]; then
+      patch -p1 < ../../../../patches/${i}.$MYARCH.patch
     fi
     cd ..
   fi
@@ -214,11 +214,11 @@ else
   git submodule update --init --recursive
   ( cd ../../.. ; mkdir -p source ; tar czf source/Fundamental-source.tar.gz compile/plugins/Fundamental )
 fi
-if [ -f ../../../Fundamental.patch ]; then
-  patch -p1 < ../../../Fundamental.patch
+if [ -f ../../../patches/Fundamental.patch ]; then
+  patch -p1 < ../../../patches/Fundamental.patch
 fi
-if [ -f ../../../Fundamental.$MYARCH.patch ]; then
-  patch -p1 < ../../../Fundamental.$MYARCH.patch
+if [ -f ../../../patches/Fundamental.$MYARCH.patch ]; then
+  patch -p1 < ../../../patches/Fundamental.$MYARCH.patch
 fi
 cd ..
 
@@ -242,11 +242,11 @@ else
   git submodule update --init --recursive
   ( cd ../../.. ; mkdir -p source ; tar czf source/VCV-Recorder-source.tar.gz compile/plugins/VCV-Recorder )
 fi
-if [ -f ../../../VCV-Recorder.patch ]; then
-  patch -p1 < ../../../VCV-Recorder.patch
+if [ -f ../../../patches/VCV-Recorder.patch ]; then
+  patch -p1 < ../../../patches/VCV-Recorder.patch
 fi
-if [ -f ../../../VCV-Recorder.$MYARCH.patch ]; then
-  patch -p1 < ../../../VCV-Recorder.$MYARCH.patch
+if [ -f ../../../patches/VCV-Recorder.$MYARCH.patch ]; then
+  patch -p1 < ../../../patches/VCV-Recorder.$MYARCH.patch
 fi
 cd ..
 
@@ -270,11 +270,11 @@ else
   git submodule update --init --recursive
   ( cd ../../.. ; mkdir -p source ; tar czf source/ValleyRackFree-source.tar.gz compile/plugins/ValleyRackFree )
 fi
-if [ -f ../../../ValleyRackFree.patch ]; then
-  patch -p1 < ../../../ValleyRackFree.patch
+if [ -f ../../../patches/ValleyRackFree.patch ]; then
+  patch -p1 < ../../../patches/ValleyRackFree.patch
 fi
-if [ -f ../../../ValleyRackFree.$MYARCH.patch ]; then
-  patch -p1 < ../../../ValleyRackFree.$MYARCH.patch
+if [ -f ../../../patches/ValleyRackFree.$MYARCH.patch ]; then
+  patch -p1 < ../../../patches/ValleyRackFree.$MYARCH.patch
 fi
 find * -type f -exec ../../../simde-ify.sh {} \;
 cd ..
@@ -299,11 +299,11 @@ else
   git submodule update --init --recursive
   ( cd ../../.. ; mkdir -p source ; tar czf source/vcvrack-packone-source.tar.gz compile/plugins/vcvrack-packone )
 fi
-if [ -f ../../../vcvrack-packone.patch ]; then
-  patch -p1 < ../../../vcvrack-packone.patch
+if [ -f ../../../patches/vcvrack-packone.patch ]; then
+  patch -p1 < ../../../patches/vcvrack-packone.patch
 fi
-if [ -f ../../../vcvrack-packone.$MYARCH.patch ]; then
-  patch -p1 < ../../../vcvrack-packone.$MYARCH.patch
+if [ -f ../../../patches/vcvrack-packone.$MYARCH.patch ]; then
+  patch -p1 < ../../../patches/vcvrack-packone.$MYARCH.patch
 fi
 cd ..
 
@@ -327,11 +327,11 @@ cd ${WORKDIR}/compile/plugins
 #   git submodule update --init --recursive
 #   ( cd ../../.. ; mkdir -p source ; tar czf source/VCV-Prototype-source.tar.gz compile/plugins/VCV-Prototype )
 # fi
-# if [ -f ../../../VCV-Prototype.patch ]; then
-#   patch -p1 < ../../../VCV-Prototype.patch
+# if [ -f ../../../patches/VCV-Prototype.patch ]; then
+#   patch -p1 < ../../../patches/VCV-Prototype.patch
 # fi
-# if [ -f ../../../VCV-Prototype.$MYARCH.patch ]; then
-#   patch -p1 < ../../../VCV-Prototype.$MYARCH.patch
+# if [ -f ../../../patches/VCV-Prototype.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/VCV-Prototype.$MYARCH.patch
 # fi
 # cd ..
 
@@ -355,11 +355,11 @@ cd ${WORKDIR}/compile/plugins
 #   git submodule update --init --recursive
 #   ( cd ../../.. ; mkdir -p source ; tar czf source/vcv-link-source.tar.gz compile/plugins/vcv-link )
 # fi
-# if [ -f ../../../vcv-link.patch ]; then
-#   patch -p1 < ../../../vcv-link.patch
+# if [ -f ../../../patches/vcv-link.patch ]; then
+#   patch -p1 < ../../../patches/vcv-link.patch
 # fi
-# if [ -f ../../../vcv-link.$MYARCH.patch ]; then
-#   patch -p1 < ../../../vcv-link.$MYARCH.patch
+# if [ -f ../../../patches/vcv-link.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/vcv-link.$MYARCH.patch
 # fi
 # cd ..
 
@@ -383,15 +383,15 @@ cd ${WORKDIR}/compile/plugins
 #   git submodule update --init --recursive
 #   ( cd ../../.. ; mkdir -p source ; tar czf source/vcvrack-packgamma-source.tar.gz compile/plugins/vcvrack-packgamma )
 # fi
-# if [ -f ../../../vcvrack-packgamma.patch ]; then
-#   patch -p1 < ../../../vcvrack-packgamma.patch
+# if [ -f ../../../patches/vcvrack-packgamma.patch ]; then
+#   patch -p1 < ../../../patches/vcvrack-packgamma.patch
 # fi
-# if [ -f ../../../vcvrack-packgamma.$MYARCH.patch ]; then
-#   patch -p1 < ../../../vcvrack-packgamma.$MYARCH.patch
+# if [ -f ../../../patches/vcvrack-packgamma.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/vcvrack-packgamma.$MYARCH.patch
 # fi
 # cd dep/Gamma
-# if [ -f ../../../../../vcvrack-packgamma-dep-Gamma.$MYARCH.patch ]; then
-#   patch -p1 < ../../../../../vcvrack-packgamma-dep-Gamma.$MYARCH.patch
+# if [ -f ../../../../../patches/vcvrack-packgamma-dep-Gamma.$MYARCH.patch ]; then
+#   patch -p1 < ../../../../../patches/vcvrack-packgamma-dep-Gamma.$MYARCH.patch
 # fi
 # cd ../..
 # cd ..
@@ -416,11 +416,11 @@ cd ${WORKDIR}/compile/plugins
 #   git submodule update --init --recursive
 #   ( cd ../../.. ; mkdir -p source ; tar czf source/vcvrack-packtau-source.tar.gz compile/plugins/vcvrack-packtau )
 # fi
-# if [ -f ../../../vcvrack-packtau.patch ]; then
-#   patch -p1 < ../../../vcvrack-packtau.patch
+# if [ -f ../../../patches/vcvrack-packtau.patch ]; then
+#   patch -p1 < ../../../patches/vcvrack-packtau.patch
 # fi
-# if [ -f ../../../vcvrack-packtau.$MYARCH.patch ]; then
-#   patch -p1 < ../../../vcvrack-packtau.$MYARCH.patch
+# if [ -f ../../../patches/vcvrack-packtau.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/vcvrack-packtau.$MYARCH.patch
 # fi
 # cd ..
 
@@ -444,13 +444,13 @@ cd ${WORKDIR}/compile/plugins
 #   git submodule update --init --recursive
 #   ( cd ../../.. ; mkdir -p source ; tar czf source/surge-rack-source.tar.gz compile/plugins/surge-rack )
 # fi
-# if [ -f ../../../surge-rack.$MYARCH.patch ]; then
-#   patch -p1 < ../../../surge-rack.$MYARCH.patch
+# if [ -f ../../../patches/surge-rack.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/surge-rack.$MYARCH.patch
 # fi
 # # special patching for surge-rack in the surge subdir
 # cd surge
-# if [ -f ../../../../surge-rack-surge.$MYARCH.patch ]; then
-#   patch -p1 < ../../../../surge-rack-surge.$MYARCH.patch
+# if [ -f ../../../../patches/surge-rack-surge.$MYARCH.patch ]; then
+#   patch -p1 < ../../../../patches/surge-rack-surge.$MYARCH.patch
 # fi
 # cd ..
 # # this seems to no longer be required with 1.7.1
@@ -477,11 +477,11 @@ cd ${WORKDIR}/compile/plugins
 #   git submodule update --init --recursive
 #   ( cd ../../.. ; mkdir -p source ; tar czf source/4rack-source.tar.gz compile/plugins/4rack )
 # fi
-# if [ -f ../../../4rack.patch ]; then
-#   patch -p1 < ../../../4rack.patch
+# if [ -f ../../../patches/4rack.patch ]; then
+#   patch -p1 < ../../../patches/4rack.patch
 # fi
-# if [ -f ../../../4rack.$MYARCH.patch ]; then
-#   patch -p1 < ../../../4rack.$MYARCH.patch
+# if [ -f ../../../patches/4rack.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/4rack.$MYARCH.patch
 # fi
 # cd ..
 
@@ -505,11 +505,11 @@ cd ${WORKDIR}/compile/plugins
 #   git submodule update --init --recursive
 #   ( cd ../../.. ; mkdir -p source ; tar czf source/CAOplugs-source.tar.gz compile/plugins/CAOplugs )
 # fi
-# if [ -f ../../../CAOplugs.patch ]; then
-#   patch -p1 < ../../../CAOplugs.patch
+# if [ -f ../../../patches/CAOplugs.patch ]; then
+#   patch -p1 < ../../../patches/CAOplugs.patch
 # fi
-# if [ -f ../../../CAOplugs.$MYARCH.patch ]; then
-#   patch -p1 < ../../../CAOplugs.$MYARCH.patch
+# if [ -f ../../../patches/CAOplugs.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/CAOplugs.$MYARCH.patch
 # fi
 # cd ..
 
@@ -533,11 +533,11 @@ cd ${WORKDIR}/compile/plugins
 #   git submodule update --init --recursive
 #   ( cd ../../.. ; mkdir -p source ; tar czf source/Demo-source.tar.gz compile/plugins/Demo )
 # fi
-# if [ -f ../../../Demo.patch ]; then
-#   patch -p1 < ../../../Demo.patch
+# if [ -f ../../../patches/Demo.patch ]; then
+#   patch -p1 < ../../../patches/Demo.patch
 # fi
-# if [ -f ../../../Demo.$MYARCH.patch ]; then
-#   patch -p1 < ../../../Demo.$MYARCH.patch
+# if [ -f ../../../patches/Demo.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/Demo.$MYARCH.patch
 # fi
 # cd ..
 
@@ -561,11 +561,11 @@ cd ${WORKDIR}/compile/plugins
 #   git submodule update --init --recursive
 #   ( cd ../../.. ; mkdir -p source ; tar czf source/FM-Delexander-source.tar.gz compile/plugins/FM-Delexander )
 # fi
-# if [ -f ../../../FM-Delexander.patch ]; then
-#   patch -p1 < ../../../FM-Delexander.patch
+# if [ -f ../../../patches/FM-Delexander.patch ]; then
+#   patch -p1 < ../../../patches/FM-Delexander.patch
 # fi
-# if [ -f ../../../FM-Delexander.$MYARCH.patch ]; then
-#   patch -p1 < ../../../FM-Delexander.$MYARCH.patch
+# if [ -f ../../../patches/FM-Delexander.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/FM-Delexander.$MYARCH.patch
 # fi
 # cd ..
 
@@ -589,11 +589,11 @@ cd ${WORKDIR}/compile/plugins
 #   git submodule update --init --recursive
 #   ( cd ../../.. ; mkdir -p source ; tar czf source/LocoVCVModules-source.tar.gz compile/plugins/LocoVCVModules )
 # fi
-# if [ -f ../../../LocoVCVModules.patch ]; then
-#   patch -p1 < ../../../LocoVCVModules.patch
+# if [ -f ../../../patches/LocoVCVModules.patch ]; then
+#   patch -p1 < ../../../patches/LocoVCVModules.patch
 # fi
-# if [ -f ../../../LocoVCVModules.$MYARCH.patch ]; then
-#   patch -p1 < ../../../LocoVCVModules.$MYARCH.patch
+# if [ -f ../../../patches/LocoVCVModules.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/LocoVCVModules.$MYARCH.patch
 # fi
 # cd ..
 
@@ -617,11 +617,11 @@ cd ${WORKDIR}/compile/plugins
 #   git submodule update --init --recursive
 #   ( cd ../../.. ; mkdir -p source ; tar czf source/MIDI-Delexander-source.tar.gz compile/plugins/MIDI-Delexander )
 # fi
-# if [ -f ../../../MIDI-Delexander.patch ]; then
-#   patch -p1 < ../../../MIDI-Delexander.patch
+# if [ -f ../../../patches/MIDI-Delexander.patch ]; then
+#   patch -p1 < ../../../patches/MIDI-Delexander.patch
 # fi
-# if [ -f ../../../MIDI-Delexander.$MYARCH.patch ]; then
-#   patch -p1 < ../../../MIDI-Delexander.$MYARCH.patch
+# if [ -f ../../../patches/MIDI-Delexander.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/MIDI-Delexander.$MYARCH.patch
 # fi
 # cd ..
 
@@ -646,11 +646,11 @@ cd ${WORKDIR}/compile/plugins
 #   git submodule update --init --recursive
 #   ( cd ../../.. ; mkdir -p source ; tar czf source/RackdeLirios-source.tar.gz compile/plugins/RackdeLirios )
 # fi
-# if [ -f ../../../RackdeLirios.patch ]; then
-#   patch -p1 < ../../../RackdeLirios.patch
+# if [ -f ../../../patches/RackdeLirios.patch ]; then
+#   patch -p1 < ../../../patches/RackdeLirios.patch
 # fi
-# if [ -f ../../../RackdeLirios.$MYARCH.patch ]; then
-#   patch -p1 < ../../../RackdeLirios.$MYARCH.patch
+# if [ -f ../../../patches/RackdeLirios.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/RackdeLirios.$MYARCH.patch
 # fi
 # cd ..
 
@@ -674,11 +674,11 @@ cd ${WORKDIR}/compile/plugins
 #   git submodule update --init --recursive
 #   ( cd ../../.. ; mkdir -p source ; tar czf source/VCVRack_modules-source.tar.gz compile/plugins/VCVRack_modules )
 # fi
-# if [ -f ../../../VCVRack_modules.patch ]; then
-#   patch -p1 < ../../../VCVRack_modules.patch
+# if [ -f ../../../patches/VCVRack_modules.patch ]; then
+#   patch -p1 < ../../../patches/VCVRack_modules.patch
 # fi
-# if [ -f ../../../VCVRack_modules.$MYARCH.patch ]; then
-#   patch -p1 < ../../../VCVRack_modules.$MYARCH.patch
+# if [ -f ../../../patches/VCVRack_modules.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/VCVRack_modules.$MYARCH.patch
 # fi
 # cd ..
 
@@ -702,11 +702,11 @@ cd ${WORKDIR}/compile/plugins
 #   git submodule update --init --recursive
 #   ( cd ../../.. ; mkdir -p source ; tar czf source/VCV-Plugins-source.tar.gz compile/plugins/VCV-Plugins )
 # fi
-# if [ -f ../../../VCV-Plugins.patch ]; then
-#   patch -p1 < ../../../VCV-Plugins.patch
+# if [ -f ../../../patches/VCV-Plugins.patch ]; then
+#   patch -p1 < ../../../patches/VCV-Plugins.patch
 # fi
-# if [ -f ../../../VCV-Plugins.$MYARCH.patch ]; then
-#   patch -p1 < ../../../VCV-Plugins.$MYARCH.patch
+# if [ -f ../../../patches/VCV-Plugins.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/VCV-Plugins.$MYARCH.patch
 # fi
 # cd ..
 
@@ -731,11 +731,11 @@ cd ${WORKDIR}/compile/plugins
 #   ( cd ../../.. ; mkdir -p source ; tar czf source/Paralis-Modular-source.tar.gz compile/plugins/Paralis-Modular )
 # fi
 # RACK_DIR=${WORKDIR}/compile/Rack make clean
-# if [ -f ../../../Paralis-Modular.patch ]; then
-#   patch -p1 < ../../../Paralis-Modular.patch
+# if [ -f ../../../patches/Paralis-Modular.patch ]; then
+#   patch -p1 < ../../../patches/Paralis-Modular.patch
 # fi
-# if [ -f ../../../Paralis-Modular.$MYARCH.patch ]; then
-#   patch -p1 < ../../../Paralis-Modular.$MYARCH.patch
+# if [ -f ../../../patches/Paralis-Modular.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/Paralis-Modular.$MYARCH.patch
 # fi
 # cd ..
 
@@ -759,11 +759,11 @@ cd ${WORKDIR}/compile/plugins
 #   git submodule update --init --recursive
 #   ( cd ../../.. ; mkdir -p source ; tar czf source/southpole-vcvrack-source.tar.gz compile/plugins/southpole-vcvrack )
 # fi
-# if [ -f ../../../southpole-vcvrack.patch ]; then
-#   patch -p1 < ../../../southpole-vcvrack.patch
+# if [ -f ../../../patches/southpole-vcvrack.patch ]; then
+#   patch -p1 < ../../../patches/southpole-vcvrack.patch
 # fi
-# if [ -f ../../../southpole-vcvrack.$MYARCH.patch ]; then
-#   patch -p1 < ../../../southpole-vcvrack.$MYARCH.patch
+# if [ -f ../../../patches/southpole-vcvrack.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/southpole-vcvrack.$MYARCH.patch
 # fi
 # cd ..
 
@@ -787,11 +787,11 @@ cd ${WORKDIR}/compile/plugins
 #   git submodule update --init --recursive
 #   ( cd ../../.. ; mkdir -p source ; tar czf source/AtomicHorse-Modules-source.tar.gz compile/plugins/AtomicHorse-Modules )
 # fi
-# if [ -f ../../../AtomicHorse-Modules.patch ]; then
-#   patch -p1 < ../../../AtomicHorse-Modules.patch
+# if [ -f ../../../patches/AtomicHorse-Modules.patch ]; then
+#   patch -p1 < ../../../patches/AtomicHorse-Modules.patch
 # fi
-# if [ -f ../../../AtomicHorse-Modules.$MYARCH.patch ]; then
-#   patch -p1 < ../../../AtomicHorse-Modules.$MYARCH.patch
+# if [ -f ../../../patches/AtomicHorse-Modules.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/AtomicHorse-Modules.$MYARCH.patch
 # fi
 # cd ..
 
@@ -815,11 +815,11 @@ cd ${WORKDIR}/compile/plugins
 #   git submodule update --init --recursive
 #   ( cd ../../.. ; mkdir -p source ; tar czf source/Modal-source.tar.gz compile/plugins/Modal )
 # fi
-# if [ -f ../../../Modal.patch ]; then
-#   patch -p1 < ../../../Modal.patch
+# if [ -f ../../../patches/Modal.patch ]; then
+#   patch -p1 < ../../../patches/Modal.patch
 # fi
-# if [ -f ../../../Modal.$MYARCH.patch ]; then
-#   patch -p1 < ../../../Modal.$MYARCH.patch
+# if [ -f ../../../patches/Modal.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/Modal.$MYARCH.patch
 # fi
 # cd ..
 
@@ -843,11 +843,11 @@ cd ${WORKDIR}/compile/plugins
 #   git submodule update --init --recursive
 #   ( cd ../../.. ; mkdir -p source ; tar czf source/Diapason-modules-source.tar.gz compile/plugins/Diapason-modules )
 # fi
-# if [ -f ../../../Diapason-modules.patch ]; then
-#   patch -p1 < ../../../Diapason-modules.patch
+# if [ -f ../../../patches/Diapason-modules.patch ]; then
+#   patch -p1 < ../../../patches/Diapason-modules.patch
 # fi
-# if [ -f ../../../Diapason-modules.$MYARCH.patch ]; then
-#   patch -p1 < ../../../Diapason-modules.$MYARCH.patch
+# if [ -f ../../../patches/Diapason-modules.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/Diapason-modules.$MYARCH.patch
 # fi
 # cd ..
 
@@ -871,11 +871,11 @@ cd ${WORKDIR}/compile/plugins
 #   git submodule update --init --recursive
 #   ( cd ../../.. ; mkdir -p source ; tar czf source/Poly_AudibleInstruments-source.tar.gz compile/plugins/Poly_AudibleInstruments )
 # fi
-# if [ -f ../../../Poly_AudibleInstruments.patch ]; then
-#   patch -p1 < ../../../Poly_AudibleInstruments.patch
+# if [ -f ../../../patches/Poly_AudibleInstruments.patch ]; then
+#   patch -p1 < ../../../patches/Poly_AudibleInstruments.patch
 # fi
-# if [ -f ../../../Poly_AudibleInstruments.$MYARCH.patch ]; then
-#   patch -p1 < ../../../Poly_AudibleInstruments.$MYARCH.patch
+# if [ -f ../../../patches/Poly_AudibleInstruments.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/Poly_AudibleInstruments.$MYARCH.patch
 # fi
 # cd ..
 
@@ -901,11 +901,11 @@ cd ${WORKDIR}/compile/plugins
 #   git submodule update --init --recursive
 #   ( cd ../../.. ; mkdir -p source ; tar czf source/23volts-vcv-source.tar.gz compile/plugins/23volts-vcv )
 # fi
-# if [ -f ../../../23volts-vcv.patch ]; then
-#   patch -p1 < ../../../23volts-vcv.patch
+# if [ -f ../../../patches/23volts-vcv.patch ]; then
+#   patch -p1 < ../../../patches/23volts-vcv.patch
 # fi
-# if [ -f ../../../23volts-vcv.$MYARCH.patch ]; then
-#   patch -p1 < ../../../23volts-vcv.$MYARCH.patch
+# if [ -f ../../../patches/23volts-vcv.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/23volts-vcv.$MYARCH.patch
 # fi
 # cd ..
 
