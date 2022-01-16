@@ -63,19 +63,25 @@ cd repos
 for i in * ; do
   # SurgeRack is handled separately below
   if [ "$i" != "SurgeRack" ]; then
-    echo ""
-    echo "===> $i"
-    echo ""
-    cd $i
-    # arch independent patches
-    if [ -f ../../../../patches/${i}.patch ]; then
-      patch -p1 < ../../../../patches/${i}.patch
+    if [ -f ${i}/plugin.json ]; then
+      # we only want v2 plugins
+      grep -q '"version": "2' ${i}/plugin.json
+      if [ "$?" = "0" ]; then
+        echo ""
+        echo "===> $i"
+        echo ""
+        cd $i
+        # arch independent patches
+        if [ -f ../../../../patches/${i}.patch ]; then
+          patch -p1 < ../../../../patches/${i}.patch
+        fi
+        # arch specific patches
+        if [ -f ../../../../patches/${i}.$MYARCH.patch ]; then
+          patch -p1 < ../../../../patches/${i}.$MYARCH.patch
+        fi
+        cd ..
+      fi
     fi
-    # arch specific patches
-    if [ -f ../../../../patches/${i}.$MYARCH.patch ]; then
-      patch -p1 < ../../../../patches/${i}.$MYARCH.patch
-    fi
-    cd ..
   fi
 done
 

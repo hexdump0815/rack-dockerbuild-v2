@@ -12,15 +12,19 @@ for i in * ; do
   # SurgeRack is handled separately below
   if [ "$i" != "SurgeRack" ]; then
     if [ -f ${i}/plugin.json ]; then
-      echo ""
-      echo "=== $i ==="
-      echo ""
-      cd $i
-    #  RACK_DIR=${WORKDIR}/Rack make -j4 clean
-      RACK_DIR=${WORKDIR}/Rack make -j4 dep
-      RACK_DIR=${WORKDIR}/Rack make -j4
-      RACK_DIR=${WORKDIR}/Rack make -j4 dist
-      cd ..
+      # we only want v2 plugins
+      grep -q '"version": "2' ${i}/plugin.json
+      if [ "$?" = "0" ]; then
+        echo ""
+        echo "=== $i ==="
+        echo ""
+        cd $i
+      #  RACK_DIR=${WORKDIR}/Rack make -j4 clean
+        RACK_DIR=${WORKDIR}/Rack make -j4 dep
+        RACK_DIR=${WORKDIR}/Rack make -j4
+        RACK_DIR=${WORKDIR}/Rack make -j4 dist
+        cd ..
+      fi
     fi
   fi
 done
