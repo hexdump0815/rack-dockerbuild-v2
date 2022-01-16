@@ -72,16 +72,17 @@ diff --git a/src/engine/Engine.cpp b/src/engine/Engine.cpp
 index ce473eab..4a3cfca1 100644
 --- a/src/engine/Engine.cpp
 +++ b/src/engine/Engine.cpp
-@@ -5,7 +5,8 @@
+@@ -5,7 +5,9 @@
  #include <mutex>
  #include <atomic>
  #include <tuple>
 -#include <pmmintrin.h>
++// #include <pmmintrin.h>
 +#include <x86/sse2.h>
 +#include <unistd.h>
- #include <pthread.h>
  
  #include <engine/Engine.hpp>
+ #include <settings.hpp>
 @@ -24,10 +25,10 @@ namespace engine {
  static void initMXCSR() {
  	// Set CPU to flush-to-zero (FTZ) and denormals-are-zero (DAZ) mode
