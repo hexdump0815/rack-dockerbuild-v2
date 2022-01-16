@@ -1,0 +1,10 @@
+diff --git a/Makefile b/Makefile
+index 51794c7..095c796 100644
+--- a/Makefile
++++ b/Makefile
+@@ -95,3 +95,5 @@ DISTRIBUTABLES += $(wildcard LICENSE*) res
+ 
+ RACK_DIR ?= ../..
+ include $(RACK_DIR)/plugin.mk
++
++FLAGS += -mfpu=vfpv3-d16 -mno-unaligned-access
