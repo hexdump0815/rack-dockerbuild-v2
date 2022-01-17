@@ -366,6 +366,7 @@ else
   git submodule update --init --recursive
   ( cd ../../.. ; mkdir -p source ; tar czf source/surge-rack-source.tar.gz compile/plugins/surge-rack )
 fi
+find * -type f -exec ../../../simde-ify.sh {} \;
 if [ -f ../../../patches/surge-rack.$MYARCH.patch ]; then
   patch -p1 < ../../../patches/surge-rack.$MYARCH.patch
 fi
