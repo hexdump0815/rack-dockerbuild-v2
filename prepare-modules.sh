@@ -305,6 +305,10 @@ else
   git submodule update --init --recursive
   ( cd ../../.. ; mkdir -p source ; tar czf source/vcv-link-source.tar.gz compile/plugins/vcv-link )
 fi
+# for some strange reason the link modules does not get checked out properly - so redo it by hand
+cd modules/link
+git checkout 4f00babaa9fa6812ada1aacbb71aaac8ac34f547
+cd ../..
 if [ -f ../../../patches/vcv-link.patch ]; then
   patch -p1 < ../../../patches/vcv-link.patch
 fi
@@ -313,33 +317,34 @@ if [ -f ../../../patches/vcv-link.$MYARCH.patch ]; then
 fi
 cd ..
 
-# go back to a defined starting point to be on the safe side
-cd ${WORKDIR}/compile/plugins
-
-# vcvrack-packtau
-echo ""
-echo "===> vcvrack-packtau extra plugin"
-echo ""
-# if we have a source archive in the source dir use that ...
-if [ -f ../../source/vcvrack-packtau-source.tar.gz ]; then
-  echo "INFO: using sources from the source archive"
-  ( cd ../.. ; tar xzf source/vcvrack-packtau-source.tar.gz )
-  cd vcvrack-packtau
-# ... otherwise get it from git and create a source archive afterwards
-else
-  git clone https://github.com/stoermelder/vcvrack-packtau.git
-  cd vcvrack-packtau
-  git checkout v2
-  git submodule update --init --recursive
-  ( cd ../../.. ; mkdir -p source ; tar czf source/vcvrack-packtau-source.tar.gz compile/plugins/vcvrack-packtau )
-fi
-if [ -f ../../../patches/vcvrack-packtau.patch ]; then
-  patch -p1 < ../../../patches/vcvrack-packtau.patch
-fi
-if [ -f ../../../patches/vcvrack-packtau.$MYARCH.patch ]; then
-  patch -p1 < ../../../patches/vcvrack-packtau.$MYARCH.patch
-fi
-cd ..
+# looks like this modules is not fully ready yet for v2
+# # go back to a defined starting point to be on the safe side
+# cd ${WORKDIR}/compile/plugins
+#
+# # vcvrack-packtau
+# echo ""
+# echo "===> vcvrack-packtau extra plugin"
+# echo ""
+# # if we have a source archive in the source dir use that ...
+# if [ -f ../../source/vcvrack-packtau-source.tar.gz ]; then
+#   echo "INFO: using sources from the source archive"
+#   ( cd ../.. ; tar xzf source/vcvrack-packtau-source.tar.gz )
+#   cd vcvrack-packtau
+# # ... otherwise get it from git and create a source archive afterwards
+# else
+#   git clone https://github.com/stoermelder/vcvrack-packtau.git
+#   cd vcvrack-packtau
+#   git checkout v2
+#   git submodule update --init --recursive
+#   ( cd ../../.. ; mkdir -p source ; tar czf source/vcvrack-packtau-source.tar.gz compile/plugins/vcvrack-packtau )
+# fi
+# if [ -f ../../../patches/vcvrack-packtau.patch ]; then
+#   patch -p1 < ../../../patches/vcvrack-packtau.patch
+# fi
+# if [ -f ../../../patches/vcvrack-packtau.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/vcvrack-packtau.$MYARCH.patch
+# fi
+# cd ..
 
 # go back to a defined starting point to be on the safe side
 cd ${WORKDIR}/compile/plugins
@@ -371,33 +376,34 @@ if [ -f ../../../../patches/surge-rack-surge.$MYARCH.patch ]; then
 fi
 cd ..
 
-# go back to a defined starting point to be on the safe side
-cd ${WORKDIR}/compile/plugins
-
-# Demo
-echo ""
-echo "===> Demo extra plugin"
-echo ""
-# if we have a source archive in the source dir use that ...
-if [ -f ../../source/Demo-source.tar.gz ]; then
-  echo "INFO: using sources from the source archive"
-  ( cd ../.. ; tar xzf source/Demo-source.tar.gz )
-  cd Demo
-# ... otherwise get it from git and create a source archive afterwards
-else
-  git clone https://github.com/squinkylabs/Demo.git
-  cd Demo
-  git checkout v2
-  git submodule update --init --recursive
-  ( cd ../../.. ; mkdir -p source ; tar czf source/Demo-source.tar.gz compile/plugins/Demo )
-fi
-if [ -f ../../../patches/Demo.patch ]; then
-  patch -p1 < ../../../patches/Demo.patch
-fi
-if [ -f ../../../patches/Demo.$MYARCH.patch ]; then
-  patch -p1 < ../../../patches/Demo.$MYARCH.patch
-fi
-cd ..
+# looks like this modules is not fully ready yet for v2
+# # go back to a defined starting point to be on the safe side
+# cd ${WORKDIR}/compile/plugins
+#
+# # Demo
+# echo ""
+# echo "===> Demo extra plugin"
+# echo ""
+# # if we have a source archive in the source dir use that ...
+# if [ -f ../../source/Demo-source.tar.gz ]; then
+#   echo "INFO: using sources from the source archive"
+#   ( cd ../.. ; tar xzf source/Demo-source.tar.gz )
+#   cd Demo
+# # ... otherwise get it from git and create a source archive afterwards
+# else
+#   git clone https://github.com/squinkylabs/Demo.git
+#   cd Demo
+#   git checkout v2
+#   git submodule update --init --recursive
+#   ( cd ../../.. ; mkdir -p source ; tar czf source/Demo-source.tar.gz compile/plugins/Demo )
+# fi
+# if [ -f ../../../patches/Demo.patch ]; then
+#   patch -p1 < ../../../patches/Demo.patch
+# fi
+# if [ -f ../../../patches/Demo.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/Demo.$MYARCH.patch
+# fi
+# cd ..
 
 # go back to a defined starting point to be on the safe side
 cd ${WORKDIR}/compile/plugins
@@ -411,7 +417,7 @@ if [ -f ../../source/23volts-vcv-source.tar.gz ]; then
   echo "INFO: using sources from the source archive"
   ( cd ../.. ; tar xzf source/23volts-vcv-source.tar.gz )
   cd 23volts-vcv
-... otherwise get it from git and create a source archive afterwards
+# ... otherwise get it from git and create a source archive afterwards
 else
   git clone https://github.com/23volts/23volts-vcv.git
   cd 23volts-vcv
@@ -427,6 +433,7 @@ if [ -f ../../../patches/23volts-vcv.$MYARCH.patch ]; then
 fi
 cd ..
 
+# this modules compiles forever on my armv7l system, so leave it off for now
 # # go back to a defined starting point to be on the safe side
 # cd ${WORKDIR}/compile/plugins
 #

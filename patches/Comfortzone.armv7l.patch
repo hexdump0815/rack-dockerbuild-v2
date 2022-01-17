@@ -1,0 +1,10 @@
+diff --git a/Makefile b/Makefile
+index a4c7d65..3346055 100644
+--- a/Makefile
++++ b/Makefile
+@@ -20,3 +20,5 @@ DISTRIBUTABLES += $(wildcard LICENSE*)
+ 
+ # Include the Rack plugin Makefile framework
+ include $(RACK_DIR)/plugin.mk
++
++FLAGS += -mfpu=vfpv3-d16 -mno-unaligned-access

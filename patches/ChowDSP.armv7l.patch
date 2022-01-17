@@ -1,0 +1,10 @@
+diff --git a/Makefile b/Makefile
+index 2f2de8d..0aecbd8 100644
+--- a/Makefile
++++ b/Makefile
+@@ -42,3 +42,5 @@ azure-win-dist: all
+ endif
+ 
+ include bench.mk
++
++FLAGS += -mfpu=vfpv3-d16 -mno-unaligned-access
