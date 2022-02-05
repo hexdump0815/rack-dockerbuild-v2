@@ -38,7 +38,7 @@ else
   cd library
   git checkout v2
   # this is the version i used this script last with
-  #git checkout 37dd327c7a390fa76c2aa582f5d9c4aaaa18d4a4
+  #git checkout e9dcbc97d390247cb7d11b1ef06bae33a57b2872
 
   # looks like the the-xor plugin is no longer available via github
   cd repos
@@ -50,6 +50,12 @@ else
   cd repos
   git submodule deinit -f -- RJModules
   git rm -f RJModules
+  cd ..
+
+  # and the SunsetSignals repo seems to make trouble as well, so get rid of it too
+  cd repos
+  git submodule deinit -f -- SunsetSignals
+  git rm -f SunsetSignals
   cd ..
 
   git submodule update --init --recursive
@@ -192,6 +198,17 @@ echo ""
 echo "===> Comfortzone extra steps"
 echo ""
 cd Comfortzone
+find * -type f -exec ../../../../simde-ify.sh {} \;
+cd ..
+
+# go back to a defined starting point to be on the safe side
+cd ${WORKDIR}/compile/library/repos
+
+# RPJ
+echo ""
+echo "===> RPJ extra steps"
+echo ""
+cd RPJ
 find * -type f -exec ../../../../simde-ify.sh {} \;
 cd ..
 
