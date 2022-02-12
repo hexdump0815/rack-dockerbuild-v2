@@ -334,35 +334,6 @@ if [ -f ../../../patches/vcv-link.$MYARCH.patch ]; then
 fi
 cd ..
 
-# looks like this modules is not fully ready yet for v2
-# # go back to a defined starting point to be on the safe side
-# cd ${WORKDIR}/compile/plugins
-#
-# # vcvrack-packtau
-# echo ""
-# echo "===> vcvrack-packtau extra plugin"
-# echo ""
-# # if we have a source archive in the source dir use that ...
-# if [ -f ../../source/vcvrack-packtau-source.tar.gz ]; then
-#   echo "INFO: using sources from the source archive"
-#   ( cd ../.. ; tar xzf source/vcvrack-packtau-source.tar.gz )
-#   cd vcvrack-packtau
-# # ... otherwise get it from git and create a source archive afterwards
-# else
-#   git clone https://github.com/stoermelder/vcvrack-packtau.git
-#   cd vcvrack-packtau
-#   git checkout v2
-#   git submodule update --init --recursive
-#   ( cd ../../.. ; mkdir -p source ; tar czf source/vcvrack-packtau-source.tar.gz compile/plugins/vcvrack-packtau )
-# fi
-# if [ -f ../../../patches/vcvrack-packtau.patch ]; then
-#   patch -p1 < ../../../patches/vcvrack-packtau.patch
-# fi
-# if [ -f ../../../patches/vcvrack-packtau.$MYARCH.patch ]; then
-#   patch -p1 < ../../../patches/vcvrack-packtau.$MYARCH.patch
-# fi
-# cd ..
-
 # go back to a defined starting point to be on the safe side
 cd ${WORKDIR}/compile/plugins
  
@@ -451,7 +422,7 @@ if [ -f ../../../patches/23volts-vcv.$MYARCH.patch ]; then
 fi
 cd ..
 
-# this modules compiles forever on my armv7l system, so leave it off for now
+# this plugin compiles forever on my armv7l system, so leave it off for now
 # # go back to a defined starting point to be on the safe side
 # cd ${WORKDIR}/compile/plugins
 #
@@ -480,32 +451,62 @@ cd ..
 # fi
 # cd ..
 
-# go back to a defined starting point to be on the safe side
-cd ${WORKDIR}/compile/plugins
+# this plugin compiles well but gives an error when starting - more investigation required
+# # go back to a defined starting point to be on the safe side
+# cd ${WORKDIR}/compile/plugins
+#
+# # substation-opensource
+# echo ""
+# echo "===> substation-opensource extra plugin"
+# echo ""
+# # if we have a source archive in the source dir use that ...
+# if [ -f ../../source/substation-opensource-source.tar.gz ]; then
+#   echo "INFO: using sources from the source archive"
+#   ( cd ../.. ; tar xzf source/substation-opensource-source.tar.gz )
+#   cd substation-opensource
+# # ... otherwise get it from git and create a source archive afterwards
+# else
+#   git clone https://gitlab.com/slimechild/substation-opensource.git
+#   cd substation-opensource
+#   git checkout 5cf59e9364dcb03ee697b5135a39cc92f82af407
+#   git submodule update --init --recursive
+#   ( cd ../../.. ; mkdir -p source ; tar czf source/substation-opensource-source.tar.gz compile/plugins/substation-opensource )
+# fi
+# if [ -f ../../../patches/substation-opensource.patch ]; then
+#   patch -p1 < ../../../patches/substation-opensource.patch
+# fi
+# if [ -f ../../../patches/substation-opensource.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/substation-opensource.$MYARCH.patch
+# fi
 
-# substation-opensource
-echo ""
-echo "===> substation-opensource extra plugin"
-echo ""
-# if we have a source archive in the source dir use that ...
-if [ -f ../../source/substation-opensource-source.tar.gz ]; then
-  echo "INFO: using sources from the source archive"
-  ( cd ../.. ; tar xzf source/substation-opensource-source.tar.gz )
-  cd substation-opensource
-# ... otherwise get it from git and create a source archive afterwards
-else
-  git clone https://gitlab.com/slimechild/substation-opensource.git
-  cd substation-opensource
-  git checkout 5cf59e9364dcb03ee697b5135a39cc92f82af407
-  git submodule update --init --recursive
-  ( cd ../../.. ; mkdir -p source ; tar czf source/substation-opensource-source.tar.gz compile/plugins/substation-opensource )
-fi
-if [ -f ../../../patches/substation-opensource.patch ]; then
-  patch -p1 < ../../../patches/substation-opensource.patch
-fi
-if [ -f ../../../patches/substation-opensource.$MYARCH.patch ]; then
-  patch -p1 < ../../../patches/substation-opensource.$MYARCH.patch
-fi
+# looks like this plugin is not fully ready yet for v2
+# # go back to a defined starting point to be on the safe side
+# cd ${WORKDIR}/compile/plugins
+#
+# # vcvrack-packtau
+# echo ""
+# echo "===> vcvrack-packtau extra plugin"
+# echo ""
+# # if we have a source archive in the source dir use that ...
+# if [ -f ../../source/vcvrack-packtau-source.tar.gz ]; then
+#   echo "INFO: using sources from the source archive"
+#   ( cd ../.. ; tar xzf source/vcvrack-packtau-source.tar.gz )
+#   cd vcvrack-packtau
+# # ... otherwise get it from git and create a source archive afterwards
+# else
+#   git clone https://github.com/stoermelder/vcvrack-packtau.git
+#   cd vcvrack-packtau
+#   git checkout v2
+#   git submodule update --init --recursive
+#   ( cd ../../.. ; mkdir -p source ; tar czf source/vcvrack-packtau-source.tar.gz compile/plugins/vcvrack-packtau )
+# fi
+# if [ -f ../../../patches/vcvrack-packtau.patch ]; then
+#   patch -p1 < ../../../patches/vcvrack-packtau.patch
+# fi
+# if [ -f ../../../patches/vcvrack-packtau.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/vcvrack-packtau.$MYARCH.patch
+# fi
+# cd ..
 
 # go back to a defined point
 cd ${WORKDIR}
