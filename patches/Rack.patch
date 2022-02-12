@@ -1,0 +1,174 @@
+- add option to disable the port lights showing the current voltage to save cpu cycles
+- add 16 and 32 khz sample rates for low end systems
+- change some default settings for low end systems
+  - default sample rate = 22.05 khz
+  - 2 threads
+  - frame swap interval = 15
+
+diff --git a/include/settings.hpp b/include/settings.hpp
+index 2b7c1a9b..44226812 100644
+--- a/include/settings.hpp
++++ b/include/settings.hpp
+@@ -47,6 +47,7 @@ extern float cableOpacity;
+ extern float cableTension;
+ extern float rackBrightness;
+ extern float haloBrightness;
++extern bool disablePortLights;
+ /** Allows rack to hide and lock the cursor position when dragging knobs etc. */
+ extern bool allowCursorLock;
+ enum KnobMode {
+diff --git a/src/app/CableWidget.cpp b/src/app/CableWidget.cpp
+index 170ca13f..83200f98 100644
+--- a/src/app/CableWidget.cpp
++++ b/src/app/CableWidget.cpp
+@@ -76,16 +76,18 @@ struct PlugWidget : widget::Widget {
+ 	}
+ 
+ 	void step() override {
+-		std::vector<float> values(3);
+-		if (portWidget && plugLight->isVisible()) {
+-			engine::Port* port = portWidget->getPort();
+-			if (port) {
+-				for (int i = 0; i < 3; i++) {
+-					values[i] = port->plugLights[i].getBrightness();
++		if(!settings::disablePortLights) {
++			std::vector<float> values(3);
++			if (portWidget && plugLight->isVisible()) {
++				engine::Port* port = portWidget->getPort();
++				if (port) {
++					for (int i = 0; i < 3; i++) {
++						values[i] = port->plugLights[i].getBrightness();
++					}
+ 				}
+ 			}
++			plugLight->setBrightnesses(values);
+ 		}
+-		plugLight->setBrightnesses(values);
+ 
+ 		Widget::step();
+ 	}
+diff --git a/src/app/MenuBar.cpp b/src/app/MenuBar.cpp
+index 8f9ade8c..f1b3e4cf 100644
+--- a/src/app/MenuBar.cpp
++++ b/src/app/MenuBar.cpp
+@@ -393,6 +393,13 @@ struct KnobScrollSensitivitySlider : ui::Slider {
+ };
+ 
+ 
++struct ViewDisablePortLightsItem : ui::MenuItem {
++	void onAction(const event::Action& e) override {
++		settings::disablePortLights ^= true;
++	}
++};
++
++
+ struct ViewButton : MenuButton {
+ 	void onAction(const ActionEvent& e) override {
+ 		ui::Menu* menu = createMenu();
+@@ -444,6 +451,11 @@ struct ViewButton : MenuButton {
+ 
+ 		menu->addChild(createBoolPtrMenuItem("Lock cursor while dragging params", "", &settings::allowCursorLock));
+ 
++		ViewDisablePortLightsItem* disablePortLightsItem = new ViewDisablePortLightsItem;
++		disablePortLightsItem->text = "Disable port lights";
++		disablePortLightsItem->rightText = CHECKMARK(settings::disablePortLights);
++		menu->addChild(disablePortLightsItem);
++
+ 		static const std::vector<std::string> knobModeLabels = {
+ 			"Linear",
+ 			"Scaled linear",
+@@ -491,6 +503,18 @@ struct SampleRateItem : ui::MenuItem {
+ 			[=]() {settings::sampleRate = 0;}
+ 		));
+ 
++		// Two special lower sample rates
++		float sampleRate = 16000.f;
++		menu->addChild(createCheckMenuItem("16 kHz", "",
++			[=]() {return settings::sampleRate == sampleRate;},
++			[=]() {settings::sampleRate = sampleRate;}
++		));
++		sampleRate = 32000.f;
++		menu->addChild(createCheckMenuItem("32 kHz", "",
++			[=]() {return settings::sampleRate == sampleRate;},
++			[=]() {settings::sampleRate = sampleRate;}
++		));
++
+ 		// Power-of-2 oversample times 44.1kHz or 48kHz
+ 		for (int i = -2; i <= 4; i++) {
+ 			for (int j = 0; j < 2; j++) {
+diff --git a/src/engine/Module.cpp b/src/engine/Module.cpp
+index 1014c225..334923a7 100644
+--- a/src/engine/Module.cpp
++++ b/src/engine/Module.cpp
+@@ -373,13 +373,15 @@ void Module::doProcess(const ProcessArgs& args) {
+ 	}
+ 
+ 	// Iterate ports to step plug lights
+-	if (args.frame % PORT_DIVIDER == 0) {
+-		float portTime = args.sampleTime * PORT_DIVIDER;
+-		for (Input& input : inputs) {
+-			Port_step(&input, portTime);
+-		}
+-		for (Output& output : outputs) {
+-			Port_step(&output, portTime);
++	if(!settings::disablePortLights) {
++		if (args.frame % PORT_DIVIDER == 0) {
++			float portTime = args.sampleTime * PORT_DIVIDER;
++			for (Input& input : inputs) {
++				Port_step(&input, portTime);
++			}
++			for (Output& output : outputs) {
++				Port_step(&output, portTime);
++			}
+ 		}
+ 	}
+ }
+diff --git a/src/settings.cpp b/src/settings.cpp
+index 1fb91691..58e2613f 100644
+--- a/src/settings.cpp
++++ b/src/settings.cpp
+@@ -30,12 +30,13 @@ float cableTension = 1.0;
+ float rackBrightness = 1.0;
+ float haloBrightness = 0.25;
+ bool allowCursorLock = true;
++bool disablePortLights = false;
+ KnobMode knobMode = KNOB_MODE_LINEAR;
+ bool knobScroll = false;
+ float knobLinearSensitivity = 0.001f;
+ float knobScrollSensitivity = 0.001f;
+-float sampleRate = 0;
+-int threadCount = 1;
++float sampleRate = 22050;
++int threadCount = 2;
+ bool tooltips = true;
+ bool cpuMeter = false;
+ bool lockModules = false;
+@@ -43,7 +44,7 @@ bool lockModules = false;
+ 	// Most Mac GPUs can't handle rendering the screen every frame, so use ~30 Hz by default.
+ 	int frameSwapInterval = 2;
+ #else
+-	int frameSwapInterval = 1;
++	int frameSwapInterval = 15;
+ #endif
+ float autosaveInterval = 15.0;
+ bool skipLoadOnLaunch = false;
+@@ -125,6 +126,8 @@ json_t* toJson() {
+ 
+ 	json_object_set_new(rootJ, "allowCursorLock", json_boolean(allowCursorLock));
+ 
++	json_object_set_new(rootJ, "disablePortLights", json_boolean(disablePortLights));
++
+ 	json_object_set_new(rootJ, "knobMode", json_integer((int) knobMode));
+ 
+ 	json_object_set_new(rootJ, "knobScroll", json_boolean(knobScroll));
+@@ -281,6 +284,10 @@ void fromJson(json_t* rootJ) {
+ 	if (allowCursorLockJ)
+ 		allowCursorLock = json_boolean_value(allowCursorLockJ);
+ 
++	json_t *disablePortLightsJ = json_object_get(rootJ, "disablePortLights");
++	if (disablePortLightsJ)
++		disablePortLights = json_boolean_value(disablePortLightsJ);
++
+ 	json_t* knobModeJ = json_object_get(rootJ, "knobMode");
+ 	if (knobModeJ)
+ 		knobMode = (KnobMode) json_integer_value(knobModeJ);
