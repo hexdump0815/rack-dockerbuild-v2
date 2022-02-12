@@ -6,7 +6,7 @@
   - frame swap interval = 15
 
 diff --git a/include/settings.hpp b/include/settings.hpp
-index 2b7c1a9b..44226812 100644
+index 2b7c1a9b..7e6a1b21 100644
 --- a/include/settings.hpp
 +++ b/include/settings.hpp
 @@ -47,6 +47,7 @@ extern float cableOpacity;
@@ -18,7 +18,7 @@ index 2b7c1a9b..44226812 100644
  extern bool allowCursorLock;
  enum KnobMode {
 diff --git a/src/app/CableWidget.cpp b/src/app/CableWidget.cpp
-index 170ca13f..83200f98 100644
+index 170ca13f..7b535a33 100644
 --- a/src/app/CableWidget.cpp
 +++ b/src/app/CableWidget.cpp
 @@ -76,16 +76,18 @@ struct PlugWidget : widget::Widget {
@@ -48,56 +48,37 @@ index 170ca13f..83200f98 100644
  		Widget::step();
  	}
 diff --git a/src/app/MenuBar.cpp b/src/app/MenuBar.cpp
-index 8f9ade8c..f1b3e4cf 100644
+index 8f9ade8c..93a993fb 100644
 --- a/src/app/MenuBar.cpp
 +++ b/src/app/MenuBar.cpp
-@@ -393,6 +393,13 @@ struct KnobScrollSensitivitySlider : ui::Slider {
- };
- 
- 
-+struct ViewDisablePortLightsItem : ui::MenuItem {
-+	void onAction(const event::Action& e) override {
-+		settings::disablePortLights ^= true;
-+	}
-+};
-+
-+
- struct ViewButton : MenuButton {
- 	void onAction(const ActionEvent& e) override {
- 		ui::Menu* menu = createMenu();
-@@ -444,6 +451,11 @@ struct ViewButton : MenuButton {
+@@ -444,6 +444,8 @@ struct ViewButton : MenuButton {
  
  		menu->addChild(createBoolPtrMenuItem("Lock cursor while dragging params", "", &settings::allowCursorLock));
  
-+		ViewDisablePortLightsItem* disablePortLightsItem = new ViewDisablePortLightsItem;
-+		disablePortLightsItem->text = "Disable port lights";
-+		disablePortLightsItem->rightText = CHECKMARK(settings::disablePortLights);
-+		menu->addChild(disablePortLightsItem);
++		menu->addChild(createBoolPtrMenuItem("Disable port lights", "", &settings::disablePortLights));
 +
  		static const std::vector<std::string> knobModeLabels = {
  			"Linear",
  			"Scaled linear",
-@@ -491,6 +503,18 @@ struct SampleRateItem : ui::MenuItem {
+@@ -491,6 +493,16 @@ struct SampleRateItem : ui::MenuItem {
  			[=]() {settings::sampleRate = 0;}
  		));
  
 +		// Two special lower sample rates
-+		float sampleRate = 16000.f;
 +		menu->addChild(createCheckMenuItem("16 kHz", "",
-+			[=]() {return settings::sampleRate == sampleRate;},
-+			[=]() {settings::sampleRate = sampleRate;}
++			[=]() {return settings::sampleRate == 16000.f;},
++			[=]() {settings::sampleRate = 16000.f;}
 +		));
-+		sampleRate = 32000.f;
 +		menu->addChild(createCheckMenuItem("32 kHz", "",
-+			[=]() {return settings::sampleRate == sampleRate;},
-+			[=]() {settings::sampleRate = sampleRate;}
++			[=]() {return settings::sampleRate == 32000.f;},
++			[=]() {settings::sampleRate = 32000.f;}
 +		));
 +
  		// Power-of-2 oversample times 44.1kHz or 48kHz
  		for (int i = -2; i <= 4; i++) {
  			for (int j = 0; j < 2; j++) {
 diff --git a/src/engine/Module.cpp b/src/engine/Module.cpp
-index 1014c225..334923a7 100644
+index 1014c225..1c7bbf73 100644
 --- a/src/engine/Module.cpp
 +++ b/src/engine/Module.cpp
 @@ -373,13 +373,15 @@ void Module::doProcess(const ProcessArgs& args) {
@@ -124,7 +105,7 @@ index 1014c225..334923a7 100644
  	}
  }
 diff --git a/src/settings.cpp b/src/settings.cpp
-index 1fb91691..58e2613f 100644
+index 1fb91691..1045d72a 100644
 --- a/src/settings.cpp
 +++ b/src/settings.cpp
 @@ -30,12 +30,13 @@ float cableTension = 1.0;
