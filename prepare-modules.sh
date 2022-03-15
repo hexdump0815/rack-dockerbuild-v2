@@ -24,7 +24,7 @@ else
   fi
 fi
 
-cd compile
+cd ${WORKDIR}/compile
 cp ../build-modules.sh-proto build-modules.sh
 
 # if we have a source archive in the source dir use that ...
@@ -38,7 +38,7 @@ else
   cd library
   git checkout v2
   # this is the version i used this script last with
-  #git checkout e9dcbc97d390247cb7d11b1ef06bae33a57b2872
+  #git checkout 527d9d550278e976d03e4396291887f534d58cc5
 
   # looks like the the-xor plugin is no longer available via github
   cd repos
@@ -58,11 +58,36 @@ else
   git rm -f SunsetSignals
   cd ..
 
+  # and the DrumKit repo seems to make trouble as well, so get rid of it too
+  cd repos
+  git submodule deinit -f -- DrumKit
+  git rm -f DrumKit
+  cd ..
+
+  # and the CharredDesert repo seems to make trouble as well, so get rid of it too
+  cd repos
+  git submodule deinit -f -- CharredDesert
+  git rm -f CharredDesert
+  cd ..
+
+  # and the ReTunesFree repo seems to make trouble as well, so get rid of it too
+  cd repos
+  git submodule deinit -f -- ReTunesFree
+  git rm -f ReTunesFree
+  cd ..
+
+  # and the EH_modules repo seems to make trouble as well, so get rid of it too
+  cd repos
+  git submodule deinit -f -- EH_modules
+  git rm -f EH_modules
+  cd ..
+
   git submodule update --init --recursive
   ( cd ../.. ; mkdir -p source ; tar czf source/library-source.tar.gz compile/library )
 fi
 
-cd repos
+# go back to a defined starting point to be on the safe side
+cd ${WORKDIR}/compile/library/repos
 
 # arch specific patching if needed
 
@@ -419,6 +444,90 @@ if [ -f ../../../patches/23volts-vcv.patch ]; then
 fi
 if [ -f ../../../patches/23volts-vcv.$MYARCH.patch ]; then
   patch -p1 < ../../../patches/23volts-vcv.$MYARCH.patch
+fi
+cd ..
+
+# go back to a defined starting point to be on the safe side
+cd ${WORKDIR}/compile/plugins
+
+# DrumKit
+echo ""
+echo "===> DrumKit extra plugin"
+echo ""
+# if we have a source archive in the source dir use that ...
+if [ -f ../../source/DrumKit-source.tar.gz ]; then
+  echo "INFO: using sources from the source archive"
+  ( cd ../.. ; tar xzf source/DrumKit-source.tar.gz )
+  cd DrumKit
+# ... otherwise get it from git and create a source archive afterwards
+else
+  git clone https://github.com/SVModular/DrumKit.git
+  cd DrumKit
+  git checkout v2.0
+  git submodule update --init --recursive
+  ( cd ../../.. ; mkdir -p source ; tar czf source/DrumKit-source.tar.gz compile/plugins/DrumKit )
+fi
+if [ -f ../../../patches/DrumKit.patch ]; then
+  patch -p1 < ../../../patches/DrumKit.patch
+fi
+if [ -f ../../../patches/DrumKit.$MYARCH.patch ]; then
+  patch -p1 < ../../../patches/DrumKit.$MYARCH.patch
+fi
+cd ..
+
+# go back to a defined starting point to be on the safe side
+cd ${WORKDIR}/compile/plugins
+
+# CharredDesert
+echo ""
+echo "===> CharredDesert extra plugin"
+echo ""
+# if we have a source archive in the source dir use that ...
+if [ -f ../../source/CharredDesert-source.tar.gz ]; then
+  echo "INFO: using sources from the source archive"
+  ( cd ../.. ; tar xzf source/CharredDesert-source.tar.gz )
+  cd CharredDesert
+# ... otherwise get it from git and create a source archive afterwards
+else
+  git clone https://github.com/SVModular/CharredDesert.git
+  cd CharredDesert
+  git checkout v2.0
+  git submodule update --init --recursive
+  ( cd ../../.. ; mkdir -p source ; tar czf source/CharredDesert-source.tar.gz compile/plugins/CharredDesert )
+fi
+if [ -f ../../../patches/CharredDesert.patch ]; then
+  patch -p1 < ../../../patches/CharredDesert.patch
+fi
+if [ -f ../../../patches/CharredDesert.$MYARCH.patch ]; then
+  patch -p1 < ../../../patches/CharredDesert.$MYARCH.patch
+fi
+cd ..
+
+# go back to a defined starting point to be on the safe side
+cd ${WORKDIR}/compile/plugins
+
+# vcvrack-fv1-emu
+echo ""
+echo "===> vcvrack-fv1-emu extra plugin"
+echo ""
+# if we have a source archive in the source dir use that ...
+if [ -f ../../source/vcvrack-fv1-emu-source.tar.gz ]; then
+  echo "INFO: using sources from the source archive"
+  ( cd ../.. ; tar xzf source/vcvrack-fv1-emu-source.tar.gz )
+  cd vcvrack-fv1-emu
+# ... otherwise get it from git and create a source archive afterwards
+else
+  git clone https://github.com/eh2k/vcvrack-fv1-emu.git
+  cd vcvrack-fv1-emu
+  git checkout 2.0.5
+  git submodule update --init --recursive
+  ( cd ../../.. ; mkdir -p source ; tar czf source/vcvrack-fv1-emu-source.tar.gz compile/plugins/vcvrack-fv1-emu )
+fi
+if [ -f ../../../patches/vcvrack-fv1-emu.patch ]; then
+  patch -p1 < ../../../patches/vcvrack-fv1-emu.patch
+fi
+if [ -f ../../../patches/vcvrack-fv1-emu.$MYARCH.patch ]; then
+  patch -p1 < ../../../patches/vcvrack-fv1-emu.$MYARCH.patch
 fi
 cd ..
 
