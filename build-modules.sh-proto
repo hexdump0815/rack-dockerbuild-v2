@@ -21,7 +21,7 @@ for i in * ; do
         cd $i
         # dbRackFormulaOne currently uses too many ressources during
 	# build on small systems, so only use one compile thread for it
-        if [ "$i" != "dbRackFormulaOne" ]; then
+        if [ "$i" = "dbRackFormulaOne" ]; then
 	  PARALLEL="1"
 	else
 	  PARALLEL="4"
