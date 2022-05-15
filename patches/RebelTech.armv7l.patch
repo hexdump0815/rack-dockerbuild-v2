@@ -1,0 +1,21 @@
+diff --git a/src/Tonic.cpp b/src/Tonic.cpp
+index bc9dd48..4eb1b1e 100644
+--- a/src/Tonic.cpp
++++ b/src/Tonic.cpp
+@@ -1,4 +1,5 @@
+ #include "plugin.hpp"
++#include <x86/sse3.h>
+ 
+ using namespace simd;
+ 
+@@ -76,8 +77,8 @@ struct Tonic : Module {
+ 				globalState[c / 4] = ifelse(globalState[c / 4], globalState[c / 4], state);
+ 
+ 				// SSE3 simd: put sum in all elements, https://stackoverflow.com/a/6996992/251715
+-				state.v = _mm_hadd_ps(state.v, state.v);
+-				state.v = _mm_hadd_ps(state.v, state.v);
++				state.v = simde_mm_hadd_ps(state.v, state.v);
++				state.v = simde_mm_hadd_ps(state.v, state.v);
+ 				stateForLight += state[0];
+ 			}
+ 			stateForLight /= numPolyphonyEngines;
