@@ -10,7 +10,7 @@ WORKDIR=`pwd`
 cd library/repos
 for i in * ; do
   # SurgeRack is handled separately below
-  if [ "$i" != "SurgeRack" ] && [ "$i" != "dbRackFormulaOne" ]; then
+  if [ "$i" != "SurgeRack" ]; then
     if [ -f ${i}/plugin.json ]; then
       # we only want v2 plugins
       grep -q '"version": "2' ${i}/plugin.json
