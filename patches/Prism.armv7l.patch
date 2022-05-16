@@ -1,0 +1,20 @@
+diff --git a/Makefile b/Makefile
+index 6c6f4cc..9392720 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,11 +1,13 @@
+ # FLAGS will be passed to both the C and C++ compiler
+-FLAGS += -flto
++#FLAGS += -flto
++FLAGS +=
+ CFLAGS +=
+ CXXFLAGS +=
+ 
+ # Careful about linking to shared libraries, since you can't assume much about the user's environment and library search path.
+ # Static libraries are fine.
+-LDFLAGS += -flto
++#LDFLAGS += -flto
++LDFLAGS +=
+ 
+ # Add .cpp and .c files to the build
+ SOURCES += $(wildcard src/*.cpp src/scales/*.cpp)
