@@ -38,7 +38,7 @@ else
   cd library
   git checkout v2
   # this is the version i used this script last with
-  #git checkout 940db0d13f4c81f1303e63fd1d7e743d4ca479ac
+  #git checkout 3ae98ec206410aaab7c5edda57d782829bbcd6c5
 
   # looks like the the-xor plugin is no longer available via github
   cd repos

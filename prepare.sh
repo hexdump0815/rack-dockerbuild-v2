@@ -24,20 +24,18 @@ fi
 
 mkdir -p compile
 cd compile
-if [ "$MYARCH" == "armv7l" ] || [ "$MYARCH" == "aarch64" ]; then
-  # if we have a source archive in the source dir use that ...
-  if [ -f ../source/simde.tar.gz ]; then
-    echo "INFO: using sources from the source archive"
-    ( cd .. ; tar xzf source/simde.tar.gz )
-  # ... otherwise get it from git and create a source archive afterwards
-  else
-    git clone https://github.com/simd-everywhere/simde.git
-    cd simde
-    # this is the version i used this script last with
-    #git checkout dd0b662fd8cf4b1617dbbb4d08aa053e512b08e4
-    ( cd ../.. ; mkdir -p source ; tar czf source/simde.tar.gz compile/simde )
-    cd ..
-  fi
+# if we have a source archive in the source dir use that ...
+if [ -f ../source/simde.tar.gz ]; then
+  echo "INFO: using sources from the source archive"
+  ( cd .. ; tar xzf source/simde.tar.gz )
+# ... otherwise get it from git and create a source archive afterwards
+else
+  git clone https://github.com/simd-everywhere/simde.git
+  cd simde
+  # this is the version i used this script last with
+  #git checkout dd0b662fd8cf4b1617dbbb4d08aa053e512b08e4
+  ( cd ../.. ; mkdir -p source ; tar czf source/simde.tar.gz compile/simde )
+  cd ..
 fi
 
 # if we have a source archive in the source dir use that ...
@@ -49,7 +47,7 @@ if [ -f ../source/Rack-source.tar.gz ]; then
 else
   git clone https://github.com/VCVRack/Rack.git
   cd Rack
-  git checkout v2.1.1
+  git checkout v2.1.2
   git submodule update --init --recursive
   # create a backup copy of the unpatched sources if needed to build elsewhere later from them
   ( cd ../.. ; mkdir -p source ; tar czf source/Rack-source.tar.gz compile/Rack )
