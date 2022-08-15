@@ -21,7 +21,7 @@ index 9580533c..09f63a7c 100644
  FLAGS += -g
  # Optimization
 -FLAGS += -O3 -march=nehalem -funsafe-math-optimizations -fno-omit-frame-pointer
-+FLAGS += -O3 -march=armv8-a -mtune=cortex-a53 -funsafe-math-optimizations -fno-omit-frame-pointer
++FLAGS += -O3 -march=armv8-a -mtune=cortex-a53 -funsafe-math-optimizations -fno-omit-frame-pointer -DSIMDE_ENABLE_NATIVE_ALIASES
  # Warnings
  FLAGS += -Wall -Wextra -Wno-unused-parameter
  # C++ standard
@@ -43,7 +43,7 @@ index 1d541269..4f4a748f 100644
  DEP_PATH := $(abspath $(DEP_LOCAL))
  
 -DEP_FLAGS += -g -O3 -march=nehalem
-+DEP_FLAGS += -g -O3 -march=armv8-a -mtune=cortex-a53
++DEP_FLAGS += -g -O3 -march=armv8-a -mtune=cortex-a53 -DSIMDE_ENABLE_NATIVE_ALIASES
  # This is needed for Rack for DAWs.
  # Static libs don't usually compiled with -fPIC, but since we're including them in a shared library, it's needed.
  DEP_FLAGS += -fPIC
