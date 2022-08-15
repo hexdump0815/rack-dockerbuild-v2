@@ -240,6 +240,17 @@ cd ..
 # go back to a defined starting point to be on the safe side
 cd ${WORKDIR}/compile/library/repos
 
+# dbRackModules
+echo ""
+echo "===> dbRackModules extra steps"
+echo ""
+cd dbRackModules
+find * -type f -exec ../../../../simde-ify.sh {} \;
+cd ..
+
+# go back to a defined starting point to be on the safe side
+cd ${WORKDIR}/compile/library/repos
+
 # some extra plugins
 
 cd ${WORKDIR}
