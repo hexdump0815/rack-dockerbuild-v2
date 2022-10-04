@@ -38,7 +38,7 @@ else
   cd library
   git checkout v2
   # this is the version i used this script last with
-  #git checkout 3ae98ec206410aaab7c5edda57d782829bbcd6c5
+  #git checkout bfea1f8b8391183b622d137f4ab644a0fbac3a20
 
   # looks like the the-xor plugin is no longer available via github
   cd repos
@@ -539,6 +539,34 @@ if [ -f ../../../patches/vcvrack-fv1-emu.patch ]; then
 fi
 if [ -f ../../../patches/vcvrack-fv1-emu.$MYARCH.patch ]; then
   patch -p1 < ../../../patches/vcvrack-fv1-emu.$MYARCH.patch
+fi
+cd ..
+
+# go back to a defined starting point to be on the safe side
+cd ${WORKDIR}/compile/plugins
+
+# NullPath
+echo ""
+echo "===> NullPath extra plugin"
+echo ""
+# if we have a source archive in the source dir use that ...
+if [ -f ../../source/NullPath-source.tar.gz ]; then
+  echo "INFO: using sources from the source archive"
+  ( cd ../.. ; tar xzf source/NullPath-source.tar.gz )
+  cd NullPath
+# ... otherwise get it from git and create a source archive afterwards
+else
+  git clone https://github.com/alefnull/NullPath.git
+  cd NullPath
+  git checkout main
+  git submodule update --init --recursive
+  ( cd ../../.. ; mkdir -p source ; tar czf source/NullPath-source.tar.gz compile/plugins/NullPath )
+fi
+if [ -f ../../../patches/NullPath.patch ]; then
+  patch -p1 < ../../../patches/NullPath.patch
+fi
+if [ -f ../../../patches/NullPath.$MYARCH.patch ]; then
+  patch -p1 < ../../../patches/NullPath.$MYARCH.patch
 fi
 cd ..
 
