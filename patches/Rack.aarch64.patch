@@ -1,31 +1,31 @@
 diff --git a/arch.mk b/arch.mk
-index b2676f27..4b455a35 100644
+index 88b50819..a93cb92e 100644
 --- a/arch.mk
 +++ b/arch.mk
 @@ -6,6 +6,9 @@ ifneq (,$(findstring x86_64-,$(MACHINE)))
- else ifneq (,$(findstring i686-,$(MACHINE)))
- 	ARCH_x86 := 1
- 	ARCH_NAME := x86
+ else ifneq (,$(findstring arm64-,$(MACHINE)))
+ 	ARCH_ARM64 := 1
+ 	ARCH_CPU := arm64
 +else ifneq (,$(findstring aarch64-,$(MACHINE)))
-+	ARCH_aarch64 := 1
-+	ARCH_NAME := aarch64
++	ARCH_ARM64 := 1
++	ARCH_CPU := arm64
  else
- $(error Could not determine CPU architecture of $(MACHINE). Try hacking around in arch.mk)
+ $(error Could not determine CPU architecture of $(MACHINE))
  endif
 diff --git a/compile.mk b/compile.mk
-index 9580533c..09f63a7c 100644
+index b72fd683..e167bc39 100644
 --- a/compile.mk
 +++ b/compile.mk
-@@ -14,7 +14,7 @@ FLAGS += -MMD -MP
- # Debugger symbols. These are removed with `strip`.
- FLAGS += -g
- # Optimization
--FLAGS += -O3 -march=nehalem -funsafe-math-optimizations -fno-omit-frame-pointer
-+FLAGS += -O3 -march=armv8-a -mtune=cortex-a53 -funsafe-math-optimizations -fno-omit-frame-pointer -DSIMDE_ENABLE_NATIVE_ALIASES
- # Warnings
- FLAGS += -Wall -Wextra -Wno-unused-parameter
- # C++ standard
-@@ -82,7 +82,7 @@ build/%.m.o: %.m
+@@ -27,7 +27,7 @@ ifdef ARCH_X64
+ endif
+ ifdef ARCH_ARM64
+ 	FLAGS += -DARCH_ARM64
+-	FLAGS += -march=armv8-a+fp+simd
++	FLAGS += -march=armv8-a -mtune=cortex-a53 -DSIMDE_ENABLE_NATIVE_ALIASES
+ endif
+ 
+ ifdef ARCH_LIN
+@@ -91,7 +91,7 @@ build/%.m.o: %.m
  build/%.bin.o: %
  	@mkdir -p $(@D)
  ifdef ARCH_LIN
@@ -35,31 +35,23 @@ index 9580533c..09f63a7c 100644
  ifdef ARCH_WIN
  	$(OBJCOPY) -I binary -O pe-x86-64 -B i386:x86-64 --rename-section .data=.rodata,alloc,load,readonly,data,contents $< $@
 diff --git a/dep.mk b/dep.mk
-index 1d541269..4f4a748f 100644
+index 7db35fb5..cd618b1c 100644
 --- a/dep.mk
 +++ b/dep.mk
-@@ -5,7 +5,7 @@ DEP_LOCAL ?= dep
- $(shell mkdir -p $(DEP_LOCAL))
- DEP_PATH := $(abspath $(DEP_LOCAL))
+@@ -14,7 +14,7 @@ ifdef ARCH_X64
+ 	DEP_FLAGS += -march=nehalem
+ endif
+ ifdef ARCH_ARM64
+-	DEP_FLAGS += -march=armv8-a+fp+simd
++	DEP_FLAGS += -march=armv8-a -mtune=cortex-a53 -DSIMDE_ENABLE_NATIVE_ALIASES
+ endif
  
--DEP_FLAGS += -g -O3 -march=nehalem
-+DEP_FLAGS += -g -O3 -march=armv8-a -mtune=cortex-a53 -DSIMDE_ENABLE_NATIVE_ALIASES
- # This is needed for Rack for DAWs.
- # Static libs don't usually compiled with -fPIC, but since we're including them in a shared library, it's needed.
- DEP_FLAGS += -fPIC
+ ifdef ARCH_MAC
 diff --git a/dep/Makefile b/dep/Makefile
-index 7b42373b..f28c04a7 100755
+index 87c1278b..c234428a 100755
 --- a/dep/Makefile
 +++ b/dep/Makefile
-@@ -172,6 +172,7 @@ speexdsp-SpeexDSP-1.2rc3:
- 
- $(libspeexdsp): | speexdsp-SpeexDSP-1.2rc3
- 	cd speexdsp-SpeexDSP-1.2rc3 && $(CONFIGURE)
-+	cp ../../resample_neon.h speexdsp-SpeexDSP-1.2rc3/libspeexdsp
- 	$(MAKE) -C speexdsp-SpeexDSP-1.2rc3
- 	$(MAKE) -C speexdsp-SpeexDSP-1.2rc3 install
- 
-@@ -182,6 +183,8 @@ libsamplerate-0.1.9:
+@@ -181,6 +181,8 @@ libsamplerate-0.1.9:
  	rm libsamplerate-0.1.9.tar.gz
  
  $(libsamplerate): | libsamplerate-0.1.9
@@ -69,67 +61,26 @@ index 7b42373b..f28c04a7 100755
  	$(MAKE) -C libsamplerate-0.1.9
  	$(MAKE) -C libsamplerate-0.1.9 install
 diff --git a/src/engine/Engine.cpp b/src/engine/Engine.cpp
-index ce473eab..4a3cfca1 100644
+index 453a4a09..78b0a957 100644
 --- a/src/engine/Engine.cpp
 +++ b/src/engine/Engine.cpp
-@@ -5,7 +5,9 @@
- #include <mutex>
- #include <atomic>
- #include <tuple>
--#include <pmmintrin.h>
-+// #include <pmmintrin.h>
-+#include <x86/sse2.h>
-+#include <unistd.h>
- 
- #include <engine/Engine.hpp>
- #include <settings.hpp>
-@@ -24,10 +25,10 @@ namespace engine {
- static void initMXCSR() {
- 	// Set CPU to flush-to-zero (FTZ) and denormals-are-zero (DAZ) mode
- 	// https://software.intel.com/en-us/node/682949
--	_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON);
--	_MM_SET_DENORMALS_ZERO_MODE(_MM_DENORMALS_ZERO_ON);
-+//	_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON);
-+//	_MM_SET_DENORMALS_ZERO_MODE(_MM_DENORMALS_ZERO_ON);
- 	// Reset other flags
--	_MM_SET_ROUNDING_MODE(_MM_ROUND_NEAREST);
-+//	_MM_SET_ROUNDING_MODE(_MM_ROUND_NEAREST);
- }
- 
- 
-@@ -145,7 +146,7 @@ struct SpinBarrier {
- 		while (true) {
- 			if (step.load(std::memory_order_relaxed) != s)
+@@ -98,6 +98,9 @@ struct SpinBarrier {
  				return;
--			__builtin_ia32_pause();
+ #if defined ARCH_X64
+ 			__builtin_ia32_pause();
++#else
++// TODO: test if this is really required
 +			asm volatile("yield" ::: "memory");
+ #endif
  		}
  	}
- };
-@@ -192,7 +193,7 @@ struct HybridBarrier {
- 		while (!yielded.load(std::memory_order_relaxed)) {
- 			if (step.load(std::memory_order_relaxed) != s)
+@@ -147,6 +150,9 @@ struct HybridBarrier {
  				return;
--			__builtin_ia32_pause();
+ #if defined ARCH_X64
+ 			__builtin_ia32_pause();
++#else
++// TODO: test if this is really required
 +			asm volatile("yield" ::: "memory");
+ #endif
  		}
- 
- 		// Wait on mutex CV
-@@ -582,7 +583,7 @@ void Engine::stepBlock(int frames) {
- 	std::lock_guard<std::mutex> stepLock(internal->blockMutex);
- 	ReadLock lock(internal->mutex);
- 	// Configure thread
--	uint32_t csr = _mm_getcsr();
-+	uint32_t csr = simde_mm_getcsr();
- 	initMXCSR();
- 	random::init();
- 
-@@ -627,7 +628,7 @@ void Engine::stepBlock(int frames) {
- 	}
- 
- 	// Reset MXCSR back to original value
--	_mm_setcsr(csr);
-+	simde_mm_setcsr(csr);
- }
- 
  

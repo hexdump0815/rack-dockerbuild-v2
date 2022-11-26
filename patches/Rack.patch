@@ -105,10 +105,10 @@ index 1014c225..1c7bbf73 100644
  	}
  }
 diff --git a/src/settings.cpp b/src/settings.cpp
-index 1fb91691..1045d72a 100644
+index 621a395a..46979382 100644
 --- a/src/settings.cpp
 +++ b/src/settings.cpp
-@@ -30,12 +30,13 @@ float cableTension = 1.0;
+@@ -31,12 +31,13 @@ float cableTension = 1.0;
  float rackBrightness = 1.0;
  float haloBrightness = 0.25;
  bool allowCursorLock = true;
@@ -124,16 +124,16 @@ index 1fb91691..1045d72a 100644
  bool tooltips = true;
  bool cpuMeter = false;
  bool lockModules = false;
-@@ -43,7 +44,7 @@ bool lockModules = false;
- 	// Most Mac GPUs can't handle rendering the screen every frame, so use ~30 Hz by default.
- 	int frameSwapInterval = 2;
+@@ -45,7 +46,7 @@ bool squeezeModules = true;
+ 	// Most Mac GPUs can't handle rendering the screen every frame, so use 30 Hz by default.
+ 	float frameRateLimit = 30.f;
  #else
--	int frameSwapInterval = 1;
-+	int frameSwapInterval = 15;
+-	float frameRateLimit = 60.f;
++	float frameRateLimit = 5.f;
  #endif
  float autosaveInterval = 15.0;
  bool skipLoadOnLaunch = false;
-@@ -125,6 +126,8 @@ json_t* toJson() {
+@@ -138,6 +139,8 @@ json_t* toJson() {
  
  	json_object_set_new(rootJ, "allowCursorLock", json_boolean(allowCursorLock));
  
@@ -142,7 +142,7 @@ index 1fb91691..1045d72a 100644
  	json_object_set_new(rootJ, "knobMode", json_integer((int) knobMode));
  
  	json_object_set_new(rootJ, "knobScroll", json_boolean(knobScroll));
-@@ -281,6 +284,10 @@ void fromJson(json_t* rootJ) {
+@@ -307,6 +310,10 @@ void fromJson(json_t* rootJ) {
  	if (allowCursorLockJ)
  		allowCursorLock = json_boolean_value(allowCursorLockJ);
  
