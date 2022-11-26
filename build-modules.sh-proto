@@ -10,7 +10,7 @@ WORKDIR=`pwd`
 cd library/repos
 for i in * ; do
   # SurgeRack is handled separately below
-  if [ "$i" != "SurgeRack" ]; then
+  if [ "$i" != "SurgeRack" ] || [ "$i" != "SurgeXTRack" ]; then
     if [ -f ${i}/plugin.json ]; then
       # we only want v2 plugins
       grep -q '"version": "2' ${i}/plugin.json
@@ -46,7 +46,13 @@ for i in * ; do
   echo "=== $i ==="
   echo ""
   cd $i
-  PARALLEL="4"
+  # Volume1 currently uses too many ressources during
+  # build on small systems, so only use one compile thread for it
+  if [ "$i" = "Volume1" ]; then
+    PARALLEL="1"
+  else
+    PARALLEL="4"
+  fi
 #  RACK_DIR=${WORKDIR}/Rack make -j${PARALLEL} clean
   RACK_DIR=${WORKDIR}/Rack make -j${PARALLEL} dep
   RACK_DIR=${WORKDIR}/Rack make -j${PARALLEL}
