@@ -24,19 +24,6 @@ fi
 
 mkdir -p compile
 cd compile
-# if we have a source archive in the source dir use that ...
-if [ -f ../source/simde.tar.gz ]; then
-  echo "INFO: using sources from the source archive"
-  ( cd .. ; tar xzf source/simde.tar.gz )
-# ... otherwise get it from git and create a source archive afterwards
-else
-  git clone https://github.com/simd-everywhere/simde.git
-  cd simde
-  # this is the version i used this script last with
-  #git checkout dd0b662fd8cf4b1617dbbb4d08aa053e512b08e4
-  ( cd ../.. ; mkdir -p source ; tar czf source/simde.tar.gz compile/simde )
-  cd ..
-fi
 
 # if we have a source archive in the source dir use that ...
 if [ -f ../source/Rack-source.tar.gz ]; then
@@ -47,7 +34,7 @@ if [ -f ../source/Rack-source.tar.gz ]; then
 else
   git clone https://github.com/VCVRack/Rack.git
   cd Rack
-  git checkout v2.1.2
+  git checkout v2.2.0
   git submodule update --init --recursive
   # create a backup copy of the unpatched sources if needed to build elsewhere later from them
   ( cd ../.. ; mkdir -p source ; tar czf source/Rack-source.tar.gz compile/Rack )
@@ -60,16 +47,5 @@ fi
 if [ -f ../../patches/Rack.$MYARCH.patch ]; then
   patch -p1 < ../../patches/Rack.$MYARCH.patch
 fi
-if [ "$MYARCH" == "armv7l" ] || [ "$MYARCH" == "aarch64" ]; then
-  mkdir -p dep/include
-  cd dep/include
-  ln -s ../../../simde/simde/hedley.h
-  ln -s ../../../simde/simde/simde-arch.h
-  ln -s ../../../simde/simde/simde-common.h
-  ln -s ../../../simde/simde/x86
-  cd ../..
-  find include/simd -type f -exec ../../simde-ify.sh {} \;
-fi
 cd ..
-cp ../resample_neon.h .
 cp ../build.sh-proto build.sh
