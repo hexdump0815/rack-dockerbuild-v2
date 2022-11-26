@@ -47,6 +47,19 @@ index 7db35fb5..cd618b1c 100644
  endif
  
  ifdef ARCH_MAC
+diff --git a/dep/Makefile b/dep/Makefile
+index 87c1278b..c234428a 100755
+--- a/dep/Makefile
++++ b/dep/Makefile
+@@ -181,6 +181,8 @@ libsamplerate-0.1.9:
+ 	rm libsamplerate-0.1.9.tar.gz
+ 
+ $(libsamplerate): | libsamplerate-0.1.9
++	cp /usr/share/automake-1.16/config.guess libsamplerate-0.1.9/Cfg
++	cp /usr/share/automake-1.16/config.sub libsamplerate-0.1.9/Cfg
+ 	cd libsamplerate-0.1.9 && $(CONFIGURE) --disable-fftw --disable-sndfile
+ 	$(MAKE) -C libsamplerate-0.1.9
+ 	$(MAKE) -C libsamplerate-0.1.9 install
 diff --git a/src/engine/Engine.cpp b/src/engine/Engine.cpp
 index 453a4a09..78b0a957 100644
 --- a/src/engine/Engine.cpp
