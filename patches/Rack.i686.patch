@@ -11,3 +11,18 @@ index 9580533c..040b4a54 100644
  endif
  ifdef ARCH_WIN
  	$(OBJCOPY) -I binary -O pe-x86-64 -B i386:x86-64 --rename-section .data=.rodata,alloc,load,readonly,data,contents $< $@
+diff --git a/arch.mk b/arch.mk
+index 88b50819..cd204fe3 100644
+--- a/arch.mk
++++ b/arch.mk
+@@ -1,8 +1,8 @@
+ MACHINE := $(shell $(CC) -dumpmachine)
+ 
+-ifneq (,$(findstring x86_64-,$(MACHINE)))
++ifneq (,$(findstring i686-,$(MACHINE)))
+ 	ARCH_X64 := 1
+-	ARCH_CPU := x64
++	ARCH_CPU := i686
+ else ifneq (,$(findstring arm64-,$(MACHINE)))
+ 	ARCH_ARM64 := 1
+ 	ARCH_CPU := arm64
