@@ -38,7 +38,7 @@ else
   cd library
   git checkout v2
   # this is the version i used this script last with
-  #git checkout bfea1f8b8391183b622d137f4ab644a0fbac3a20
+  #git checkout 3aa9689770c294119b68bd2b2276b043e20a9dd6
 
   # looks like the the-xor plugin is no longer available via github
   cd repos
@@ -58,18 +58,6 @@ else
   git rm -f SunsetSignals
   cd ..
 
-  # and the DrumKit repo seems to make trouble as well, so get rid of it too
-  cd repos
-  git submodule deinit -f -- DrumKit
-  git rm -f DrumKit
-  cd ..
-
-  # and the CharredDesert repo seems to make trouble as well, so get rid of it too
-  cd repos
-  git submodule deinit -f -- CharredDesert
-  git rm -f CharredDesert
-  cd ..
-
   # and the ReTunesFree repo seems to make trouble as well, so get rid of it too
   cd repos
   git submodule deinit -f -- ReTunesFree
@@ -82,6 +70,12 @@ else
   git rm -f EH_modules
   cd ..
 
+  # and the RacketScience repo seems to make trouble as well, so get rid of it too
+  cd repos
+  git submodule deinit -f -- RacketScience
+  git rm -f RacketScience
+  cd ..
+
   git submodule update --init --recursive
   ( cd ../.. ; mkdir -p source ; tar czf source/library-source.tar.gz compile/library )
 fi
@@ -92,8 +86,8 @@ cd ${WORKDIR}/compile/library/repos
 # arch specific patching if needed
 
 for i in * ; do
-  # SurgeRack is handled separately below
-  if [ "$i" != "SurgeRack" ]; then
+  # SurgeRack and SurgeXTRack is handled separately below
+  if [ "$i" != "SurgeRack" ] || [ "$i" != "SurgeXTRack" ] ; then
     if [ -f ${i}/plugin.json ]; then
       # we only want v2 plugins
       grep -q '"version": "2' ${i}/plugin.json
@@ -127,8 +121,6 @@ echo "===> AudibleInstruments extra steps"
 echo ""
 cd AudibleInstruments
 find * -type f -exec ../../../../simde-ify.sh {} \;
-# this file gets accidently simde-ified :)
-git checkout -- design/Warps.ai
 cd ..
 
 # go back to a defined starting point to be on the safe side
@@ -151,19 +143,6 @@ echo "===> ChowDSP extra steps"
 echo ""
 cd ChowDSP
 find * -type f -exec ../../../../simde-ify.sh {} \;
-# this file gets accidently simde-ified :)
-git checkout -- lib/Eigen/src/Core/IO.h
-cd ..
-
-# go back to a defined starting point to be on the safe side
-cd ${WORKDIR}/compile/library/repos
-
-# FreeSurface
-echo ""
-echo "===> FreeSurface extra steps"
-echo ""
-cd FreeSurface
-find * -type f -exec ../../../../simde-ify.sh {} \;
 cd ..
 
 # go back to a defined starting point to be on the safe side
@@ -175,8 +154,6 @@ echo "===> squinkylabs-plug1 extra steps"
 echo ""
 cd squinkylabs-plug1
 find * -type f -exec ../../../../simde-ify.sh {} \;
-# this file gets accidently simde-ified :)
-git checkout -- gfx/Cheby.ai
 cd ..
 
 # go back to a defined starting point to be on the safe side
@@ -187,42 +164,6 @@ echo ""
 echo "===> Valley extra steps"
 echo ""
 cd Valley
-find * -type f -exec ../../../../simde-ify.sh {} \;
-# those files get accidently simde-ified :)
-git checkout -- TopographImg.png
-git checkout -- ValleyImg.png
-cd ..
-
-# go back to a defined starting point to be on the safe side
-cd ${WORKDIR}/compile/library/repos
-
-# ML_modules
-echo ""
-echo "===> ML_modules extra steps"
-echo ""
-cd ML_modules
-find * -type f -exec ../../../../simde-ify.sh {} \;
-cd ..
-
-# go back to a defined starting point to be on the safe side
-cd ${WORKDIR}/compile/library/repos
-
-# SubmarineFree
-echo ""
-echo "===> SubmarineFree extra steps"
-echo ""
-cd SubmarineFree
-find * -type f -exec ../../../../simde-ify.sh {} \;
-cd ..
-
-# go back to a defined starting point to be on the safe side
-cd ${WORKDIR}/compile/library/repos
-
-# Comfortzone
-echo ""
-echo "===> Comfortzone extra steps"
-echo ""
-cd Comfortzone
 find * -type f -exec ../../../../simde-ify.sh {} \;
 cd ..
 
@@ -386,7 +327,7 @@ if [ -f ../../source/surge-rack-source.tar.gz ]; then
 else
   git clone https://github.com/surge-synthesizer/surge-rack
   cd surge-rack
-  git checkout v2
+  git checkout release/2.1.7.0
   git submodule update --init --recursive
   ( cd ../../.. ; mkdir -p source ; tar czf source/surge-rack-source.tar.gz compile/plugins/surge-rack )
 fi
@@ -394,41 +335,33 @@ find * -type f -exec ../../../simde-ify.sh {} \;
 if [ -f ../../../patches/surge-rack.$MYARCH.patch ]; then
   patch -p1 < ../../../patches/surge-rack.$MYARCH.patch
 fi
-# special patching for surge-rack in the surge subdir
-cd surge
-if [ -f ../../../../patches/surge-rack-surge.$MYARCH.patch ]; then
-  patch -p1 < ../../../../patches/surge-rack-surge.$MYARCH.patch
-fi
 cd ..
 
-# looks like this modules is not fully ready yet for v2
-# # go back to a defined starting point to be on the safe side
-# cd ${WORKDIR}/compile/plugins
-#
-# # Demo
-# echo ""
-# echo "===> Demo extra plugin"
-# echo ""
-# # if we have a source archive in the source dir use that ...
-# if [ -f ../../source/Demo-source.tar.gz ]; then
-#   echo "INFO: using sources from the source archive"
-#   ( cd ../.. ; tar xzf source/Demo-source.tar.gz )
-#   cd Demo
-# # ... otherwise get it from git and create a source archive afterwards
-# else
-#   git clone https://github.com/squinkylabs/Demo.git
-#   cd Demo
-#   git checkout v2
-#   git submodule update --init --recursive
-#   ( cd ../../.. ; mkdir -p source ; tar czf source/Demo-source.tar.gz compile/plugins/Demo )
-# fi
-# if [ -f ../../../patches/Demo.patch ]; then
-#   patch -p1 < ../../../patches/Demo.patch
-# fi
-# if [ -f ../../../patches/Demo.$MYARCH.patch ]; then
-#   patch -p1 < ../../../patches/Demo.$MYARCH.patch
-# fi
-# cd ..
+# go back to a defined starting point to be on the safe side
+cd ${WORKDIR}/compile/plugins
+ 
+# surgext-rack
+echo ""
+echo "===> surgext-rack extra plugin"
+echo ""
+# if we have a source archive in the source dir use that ...
+if [ -f ../../source/surgext-rack-source.tar.gz ]; then
+  echo "INFO: using sources from the source archive"
+  ( cd ../.. ; tar xzf source/surgext-rack-source.tar.gz )
+  cd surgext-rack
+# ... otherwise get it from git and create a source archive afterwards
+else
+  git clone https://github.com/surge-synthesizer/surge-rack surgext-rack
+  cd surgext-rack
+  git checkout v2.0.3.0
+  git submodule update --init --recursive
+  ( cd ../../.. ; mkdir -p source ; tar czf source/surgext-rack-source.tar.gz compile/plugins/surgext-rack )
+fi
+find * -type f -exec ../../../simde-ify.sh {} \;
+if [ -f ../../../patches/surgext-rack.$MYARCH.patch ]; then
+  patch -p1 < ../../../patches/surgext-rack.$MYARCH.patch
+fi
+cd ..
 
 # go back to a defined starting point to be on the safe side
 cd ${WORKDIR}/compile/plugins
@@ -455,62 +388,6 @@ if [ -f ../../../patches/23volts-vcv.patch ]; then
 fi
 if [ -f ../../../patches/23volts-vcv.$MYARCH.patch ]; then
   patch -p1 < ../../../patches/23volts-vcv.$MYARCH.patch
-fi
-cd ..
-
-# go back to a defined starting point to be on the safe side
-cd ${WORKDIR}/compile/plugins
-
-# DrumKit
-echo ""
-echo "===> DrumKit extra plugin"
-echo ""
-# if we have a source archive in the source dir use that ...
-if [ -f ../../source/DrumKit-source.tar.gz ]; then
-  echo "INFO: using sources from the source archive"
-  ( cd ../.. ; tar xzf source/DrumKit-source.tar.gz )
-  cd DrumKit
-# ... otherwise get it from git and create a source archive afterwards
-else
-  git clone https://github.com/SVModular/DrumKit.git
-  cd DrumKit
-  git checkout v2.0
-  git submodule update --init --recursive
-  ( cd ../../.. ; mkdir -p source ; tar czf source/DrumKit-source.tar.gz compile/plugins/DrumKit )
-fi
-if [ -f ../../../patches/DrumKit.patch ]; then
-  patch -p1 < ../../../patches/DrumKit.patch
-fi
-if [ -f ../../../patches/DrumKit.$MYARCH.patch ]; then
-  patch -p1 < ../../../patches/DrumKit.$MYARCH.patch
-fi
-cd ..
-
-# go back to a defined starting point to be on the safe side
-cd ${WORKDIR}/compile/plugins
-
-# CharredDesert
-echo ""
-echo "===> CharredDesert extra plugin"
-echo ""
-# if we have a source archive in the source dir use that ...
-if [ -f ../../source/CharredDesert-source.tar.gz ]; then
-  echo "INFO: using sources from the source archive"
-  ( cd ../.. ; tar xzf source/CharredDesert-source.tar.gz )
-  cd CharredDesert
-# ... otherwise get it from git and create a source archive afterwards
-else
-  git clone https://github.com/SVModular/CharredDesert.git
-  cd CharredDesert
-  git checkout v2.0
-  git submodule update --init --recursive
-  ( cd ../../.. ; mkdir -p source ; tar czf source/CharredDesert-source.tar.gz compile/plugins/CharredDesert )
-fi
-if [ -f ../../../patches/CharredDesert.patch ]; then
-  patch -p1 < ../../../patches/CharredDesert.patch
-fi
-if [ -f ../../../patches/CharredDesert.$MYARCH.patch ]; then
-  patch -p1 < ../../../patches/CharredDesert.$MYARCH.patch
 fi
 cd ..
 
@@ -570,91 +447,117 @@ if [ -f ../../../patches/NullPath.$MYARCH.patch ]; then
 fi
 cd ..
 
-# this plugin compiles forever on my armv7l system, so leave it off for now
-# # go back to a defined starting point to be on the safe side
-# cd ${WORKDIR}/compile/plugins
-#
-# # Volume1
-# echo ""
-# echo "===> Volume1 extra plugin"
-# echo ""
-# # if we have a source archive in the source dir use that ...
-# if [ -f ../../source/Volume1-source.tar.gz ]; then
-#   echo "INFO: using sources from the source archive"
-#   ( cd ../.. ; tar xzf source/Volume1-source.tar.gz )
-#   cd Volume1
-# # ... otherwise get it from git and create a source archive afterwards
-# else
-#   git clone https://github.com/Delexander/Volume1
-#   cd Volume1
-#   git checkout v2
-#   git submodule update --init --recursive
-#   ( cd ../../.. ; mkdir -p source ; tar czf source/Volume1-source.tar.gz compile/plugins/Volume1 )
-# fi
-# if [ -f ../../../patches/Volume1.patch ]; then
-#   patch -p1 < ../../../patches/Volume1.patch
-# fi
-# if [ -f ../../../patches/Volume1.$MYARCH.patch ]; then
-#   patch -p1 < ../../../patches/Volume1.$MYARCH.patch
-# fi
-# cd ..
+# go back to a defined starting point to be on the safe side
+cd ${WORKDIR}/compile/plugins
+
+# Volume1
+echo ""
+echo "===> Volume1 extra plugin"
+echo ""
+# if we have a source archive in the source dir use that ...
+if [ -f ../../source/Volume1-source.tar.gz ]; then
+  echo "INFO: using sources from the source archive"
+  ( cd ../.. ; tar xzf source/Volume1-source.tar.gz )
+  cd Volume1
+# ... otherwise get it from git and create a source archive afterwards
+else
+  git clone https://github.com/Delexander/Volume1
+  cd Volume1
+  git checkout v2
+  git submodule update --init --recursive
+  ( cd ../../.. ; mkdir -p source ; tar czf source/Volume1-source.tar.gz compile/plugins/Volume1 )
+fi
+if [ -f ../../../patches/Volume1.patch ]; then
+  patch -p1 < ../../../patches/Volume1.patch
+fi
+if [ -f ../../../patches/Volume1.$MYARCH.patch ]; then
+  patch -p1 < ../../../patches/Volume1.$MYARCH.patch
+fi
+cd ..
 
 # this plugin compiles well but gives an error when starting - more investigation required
-# # go back to a defined starting point to be on the safe side
-# cd ${WORKDIR}/compile/plugins
-#
-# # substation-opensource
-# echo ""
-# echo "===> substation-opensource extra plugin"
-# echo ""
-# # if we have a source archive in the source dir use that ...
-# if [ -f ../../source/substation-opensource-source.tar.gz ]; then
-#   echo "INFO: using sources from the source archive"
-#   ( cd ../.. ; tar xzf source/substation-opensource-source.tar.gz )
-#   cd substation-opensource
-# # ... otherwise get it from git and create a source archive afterwards
-# else
-#   git clone https://gitlab.com/slimechild/substation-opensource.git
-#   cd substation-opensource
-#   git checkout 5cf59e9364dcb03ee697b5135a39cc92f82af407
-#   git submodule update --init --recursive
-#   ( cd ../../.. ; mkdir -p source ; tar czf source/substation-opensource-source.tar.gz compile/plugins/substation-opensource )
-# fi
-# if [ -f ../../../patches/substation-opensource.patch ]; then
-#   patch -p1 < ../../../patches/substation-opensource.patch
-# fi
-# if [ -f ../../../patches/substation-opensource.$MYARCH.patch ]; then
-#   patch -p1 < ../../../patches/substation-opensource.$MYARCH.patch
-# fi
+# go back to a defined starting point to be on the safe side
+cd ${WORKDIR}/compile/plugins
 
-# looks like this plugin is not fully ready yet for v2
-# # go back to a defined starting point to be on the safe side
-# cd ${WORKDIR}/compile/plugins
-#
-# # vcvrack-packtau
-# echo ""
-# echo "===> vcvrack-packtau extra plugin"
-# echo ""
-# # if we have a source archive in the source dir use that ...
-# if [ -f ../../source/vcvrack-packtau-source.tar.gz ]; then
-#   echo "INFO: using sources from the source archive"
-#   ( cd ../.. ; tar xzf source/vcvrack-packtau-source.tar.gz )
-#   cd vcvrack-packtau
-# # ... otherwise get it from git and create a source archive afterwards
-# else
-#   git clone https://github.com/stoermelder/vcvrack-packtau.git
-#   cd vcvrack-packtau
-#   git checkout v2
-#   git submodule update --init --recursive
-#   ( cd ../../.. ; mkdir -p source ; tar czf source/vcvrack-packtau-source.tar.gz compile/plugins/vcvrack-packtau )
-# fi
-# if [ -f ../../../patches/vcvrack-packtau.patch ]; then
-#   patch -p1 < ../../../patches/vcvrack-packtau.patch
-# fi
-# if [ -f ../../../patches/vcvrack-packtau.$MYARCH.patch ]; then
-#   patch -p1 < ../../../patches/vcvrack-packtau.$MYARCH.patch
-# fi
-# cd ..
+# substation-opensource
+echo ""
+echo "===> substation-opensource extra plugin"
+echo ""
+# if we have a source archive in the source dir use that ...
+if [ -f ../../source/substation-opensource-source.tar.gz ]; then
+  echo "INFO: using sources from the source archive"
+  ( cd ../.. ; tar xzf source/substation-opensource-source.tar.gz )
+  cd substation-opensource
+# ... otherwise get it from git and create a source archive afterwards
+else
+  git clone https://gitlab.com/slimechild/substation-opensource.git
+  cd substation-opensource
+  git checkout 9dca160ed29596d5fc64c02c7f43a91dfac5a4d1
+  git submodule update --init --recursive
+  ( cd ../../.. ; mkdir -p source ; tar czf source/substation-opensource-source.tar.gz compile/plugins/substation-opensource )
+fi
+if [ -f ../../../patches/substation-opensource.patch ]; then
+  patch -p1 < ../../../patches/substation-opensource.patch
+fi
+if [ -f ../../../patches/substation-opensource.$MYARCH.patch ]; then
+  patch -p1 < ../../../patches/substation-opensource.$MYARCH.patch
+fi
+
+# go back to a defined starting point to be on the safe side
+cd ${WORKDIR}/compile/plugins
+
+# vcvrack-packtau
+echo ""
+echo "===> vcvrack-packtau extra plugin"
+echo ""
+# if we have a source archive in the source dir use that ...
+if [ -f ../../source/vcvrack-packtau-source.tar.gz ]; then
+  echo "INFO: using sources from the source archive"
+  ( cd ../.. ; tar xzf source/vcvrack-packtau-source.tar.gz )
+  cd vcvrack-packtau
+# ... otherwise get it from git and create a source archive afterwards
+else
+  git clone https://github.com/stoermelder/vcvrack-packtau.git
+  cd vcvrack-packtau
+  git checkout v2
+  git submodule update --init --recursive
+  ( cd ../../.. ; mkdir -p source ; tar czf source/vcvrack-packtau-source.tar.gz compile/plugins/vcvrack-packtau )
+fi
+if [ -f ../../../patches/vcvrack-packtau.patch ]; then
+  patch -p1 < ../../../patches/vcvrack-packtau.patch
+fi
+if [ -f ../../../patches/vcvrack-packtau.$MYARCH.patch ]; then
+  patch -p1 < ../../../patches/vcvrack-packtau.$MYARCH.patch
+fi
+cd ..
+
+# go back to a defined starting point to be on the safe side
+cd ${WORKDIR}/compile/plugins
+
+# MindMeldModular-beta
+echo ""
+echo "===> MindMeldModular-beta extra plugin"
+echo ""
+# if we have a source archive in the source dir use that ...
+if [ -f ../../source/MindMeldModular-beta-source.tar.gz ]; then
+  echo "INFO: using sources from the source archive"
+  ( cd ../.. ; tar xzf source/MindMeldModular-beta-source.tar.gz )
+  cd MindMeldModular-beta
+# ... otherwise get it from git and create a source archive afterwards
+else
+  git clone https://github.com/MarcBoule/MindMeldModular.git MindMeldModular-beta
+  cd MindMeldModular-beta
+  git checkout v2.1.1b
+  git submodule update --init --recursive
+  ( cd ../../.. ; mkdir -p source ; tar czf source/MindMeldModular-beta-source.tar.gz compile/plugins/MindMeldModular-beta )
+fi
+if [ -f ../../../patches/MindMeldModular-beta.patch ]; then
+  patch -p1 < ../../../patches/MindMeldModular-beta.patch
+fi
+if [ -f ../../../patches/MindMeldModular-beta.$MYARCH.patch ]; then
+  patch -p1 < ../../../patches/MindMeldModular-beta.$MYARCH.patch
+fi
+cd ..
 
 # go back to a defined point
 cd ${WORKDIR}
