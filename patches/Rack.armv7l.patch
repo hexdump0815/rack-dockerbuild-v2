@@ -1,52 +1,3 @@
-diff --git a/arch.mk b/arch.mk
-index 88b50819..a93cb92e 100644
---- a/arch.mk
-+++ b/arch.mk
-@@ -6,6 +6,9 @@ ifneq (,$(findstring x86_64-,$(MACHINE)))
- else ifneq (,$(findstring arm64-,$(MACHINE)))
- 	ARCH_ARM64 := 1
- 	ARCH_CPU := arm64
-+else ifneq (,$(findstring arm-,$(MACHINE)))
-+	ARCH_ARM32 := 1
-+	ARCH_CPU := arm32
- else
- $(error Could not determine CPU architecture of $(MACHINE))
- endif
-diff --git a/compile.mk b/compile.mk
-index b72fd683..e167bc39 100644
---- a/compile.mk
-+++ b/compile.mk
-@@ -27,7 +27,7 @@ ifdef ARCH_X64
- endif
- ifdef ARCH_ARM64
- 	FLAGS += -DARCH_ARM64
--	FLAGS += -march=armv8-a+fp+simd
-+	FLAGS += -march=armv7 -mtune=cortex-a9 -mfpu=neon -mno-unaligned-access -DSIMDE_ENABLE_NATIVE_ALIASES
- endif
- 
- ifdef ARCH_LIN
-@@ -91,7 +91,7 @@ build/%.m.o: %.m
- build/%.bin.o: %
- 	@mkdir -p $(@D)
- ifdef ARCH_LIN
--	$(OBJCOPY) -I binary -O elf64-x86-64 -B i386:x86-64 --rename-section .data=.rodata,alloc,load,readonly,data,contents $< $@
-+	$(OBJCOPY) -I binary -O elf32-littlearm -B arm7 --rename-section .data=.rodata,alloc,load,readonly,data,contents $< $@
- endif
- ifdef ARCH_WIN
- 	$(OBJCOPY) -I binary -O pe-x86-64 -B i386:x86-64 --rename-section .data=.rodata,alloc,load,readonly,data,contents $< $@
-diff --git a/dep.mk b/dep.mk
-index 7db35fb5..cd618b1c 100644
---- a/dep.mk
-+++ b/dep.mk
-@@ -14,7 +14,7 @@ ifdef ARCH_X64
- 	DEP_FLAGS += -march=nehalem
- endif
- ifdef ARCH_ARM64
--	DEP_FLAGS += -march=armv8-a+fp+simd
-+	DEP_FLAGS += -march=armv7 -mtune=cortex-a9 -mfpu=neon -mno-unaligned-access -DSIMDE_ENABLE_NATIVE_ALIASES
- endif
- 
- ifdef ARCH_MAC
 diff --git a/src/engine/Engine.cpp b/src/engine/Engine.cpp
 index 453a4a09..78b0a957 100644
 --- a/src/engine/Engine.cpp
@@ -70,4 +21,98 @@ index 453a4a09..78b0a957 100644
 +			asm volatile("yield" ::: "memory");
  #endif
  		}
+ 
+diff --git a/arch.mk b/arch.mk
+index 88b50819..8b402e52 100644
+--- a/arch.mk
++++ b/arch.mk
+@@ -6,6 +6,9 @@ ifneq (,$(findstring x86_64-,$(MACHINE)))
+ else ifneq (,$(findstring arm64-,$(MACHINE)))
+ 	ARCH_ARM64 := 1
+ 	ARCH_CPU := arm64
++else ifneq (,$(findstring arm-,$(MACHINE)))
++	ARCH_ARM32 := 1
++	ARCH_CPU := arm32
+ else
+ $(error Could not determine CPU architecture of $(MACHINE))
+ endif
+diff --git a/compile.mk b/compile.mk
+index b72fd683..3f17ef59 100644
+--- a/compile.mk
++++ b/compile.mk
+@@ -25,9 +25,9 @@ ifdef ARCH_X64
+ 	FLAGS += -DARCH_X64
+ 	FLAGS += -march=nehalem
+ endif
+-ifdef ARCH_ARM64
++ifdef ARCH_ARM32
+ 	FLAGS += -DARCH_ARM64
+-	FLAGS += -march=armv8-a+fp+simd
++	FLAGS += -march=armv7 -mtune=cortex-a9 -mfpu=neon -mno-unaligned-access -DSIMDE_ENABLE_NATIVE_ALIASES
+ endif
+ 
+ ifdef ARCH_LIN
+@@ -91,7 +91,7 @@ build/%.m.o: %.m
+ build/%.bin.o: %
+ 	@mkdir -p $(@D)
+ ifdef ARCH_LIN
+-	$(OBJCOPY) -I binary -O elf64-x86-64 -B i386:x86-64 --rename-section .data=.rodata,alloc,load,readonly,data,contents $< $@
++	$(OBJCOPY) -I binary -O elf32-littlearm -B arm7 --rename-section .data=.rodata,alloc,load,readonly,data,contents $< $@
+ endif
+ ifdef ARCH_WIN
+ 	$(OBJCOPY) -I binary -O pe-x86-64 -B i386:x86-64 --rename-section .data=.rodata,alloc,load,readonly,data,contents $< $@
+diff --git a/dep.mk b/dep.mk
+index 7db35fb5..211f83d5 100644
+--- a/dep.mk
++++ b/dep.mk
+@@ -13,8 +13,8 @@ DEP_FLAGS += -fPIC
+ ifdef ARCH_X64
+ 	DEP_FLAGS += -march=nehalem
+ endif
+-ifdef ARCH_ARM64
+-	DEP_FLAGS += -march=armv8-a+fp+simd
++ifdef ARCH_ARM32
++	DEP_FLAGS += -march=armv7 -mtune=cortex-a9 -mfpu=neon -mno-unaligned-access -DSIMDE_ENABLE_NATIVE_ALIASES
+ endif
+ 
+ ifdef ARCH_MAC
+diff --git a/dep/Makefile b/dep/Makefile
+index 87c1278b..8bed24e0 100755
+--- a/dep/Makefile
++++ b/dep/Makefile
+@@ -124,7 +124,8 @@ openssl-1.1.1k:
+ $(openssl): | openssl-1.1.1k
+ 	# The CFLAGS environment variable is ignored, so pass CFLAGS to their custom ./config script, which passes them to the compiler.
+ 	# Set no-pinshared so OpenSSL doesn't call GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_PIN, ...) on initialization on Windows. This prevents libRack from being unloaded on Windows with FreeLibrary().
+-	cd openssl-1.1.1k && ./config --prefix="$(DEP_PATH)" no-shared no-hw threads no-zlib no-capieng no-pinshared $(CFLAGS)
++	# we do not pass CFLAGS for armv7l, as otherwise it will try to compile armv8 asm
++	cd openssl-1.1.1k && CFLAGS="" ./config --prefix="$(DEP_PATH)" no-shared no-hw threads no-zlib no-capieng no-pinshared
+ 	$(MAKE) -C openssl-1.1.1k
+ 	$(MAKE) -C openssl-1.1.1k install_sw
+ 
+diff --git a/Makefile b/Makefile
+index e1be07d1..80b56aa4 100644
+--- a/Makefile
++++ b/Makefile
+@@ -73,7 +73,7 @@ STANDALONE_SOURCES += adapters/standalone.cpp
+ ifdef ARCH_LIN
+ 	STANDALONE_TARGET := Rack
+ 	STANDALONE_LDFLAGS += -static-libstdc++ -static-libgcc
+-	STANDALONE_LDFLAGS += -Wl,-rpath=.
++	STANDALONE_LDFLAGS += -Wl,-rpath=. -latomic
+ endif
+ ifdef ARCH_MAC
+ 	STANDALONE_TARGET := Rack
+diff --git a/plugin.mk b/plugin.mk
+index 88a51f51..5353fc41 100644
+--- a/plugin.mk
++++ b/plugin.mk
+@@ -55,6 +55,8 @@ all: $(TARGET)
+ 
+ include $(RACK_DIR)/compile.mk
+ 
++FLAGS += -mfpu=neon -mno-unaligned-access
++
+ clean:
+ 	rm -rfv build $(TARGET) dist
  
