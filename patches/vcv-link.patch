@@ -1,13 +1,15 @@
 diff --git a/Makefile b/Makefile
-index dd23638..5c407a5 100755
+index dd23638..a88a494 100755
 --- a/Makefile
 +++ b/Makefile
-@@ -1,20 +1,14 @@
+@@ -1,20 +1,16 @@
 -# If RACK_DIR is not defined when calling the Makefile, defaults to use the Rack-SDK submodule
 -RACK_DIR ?= Rack-SDK/lin
 -
  include $(RACK_DIR)/arch.mk
  
++CXXFLAGS += -DLINK_PLATFORM_LINUX=1
++
  ifeq ($(ARCH_OS_NAME), lin)
 -    RACK_DIR = Rack-SDK/lin
      CXXFLAGS += -DLINK_PLATFORM_LINUX=1
