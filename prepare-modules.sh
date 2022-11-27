@@ -86,26 +86,23 @@ cd ${WORKDIR}/compile/library/repos
 # arch specific patching if needed
 
 for i in * ; do
-  # SurgeRack and SurgeXTRack is handled separately below
-  if [ "$i" != "SurgeRack" ] && [ "$i" != "SurgeXTRack" ] ; then
-    if [ -f ${i}/plugin.json ]; then
-      # we only want v2 plugins
-      grep -q '"version": "2' ${i}/plugin.json
-      if [ "$?" = "0" ]; then
-        echo ""
-        echo "===> $i"
-        echo ""
-        cd $i
-        # arch independent patches
-        if [ -f ../../../../patches/${i}.patch ]; then
-          patch -p1 < ../../../../patches/${i}.patch
-        fi
-        # arch specific patches
-        if [ -f ../../../../patches/${i}.$MYARCH.patch ]; then
-          patch -p1 < ../../../../patches/${i}.$MYARCH.patch
-        fi
-        cd ..
+  if [ -f ${i}/plugin.json ]; then
+    # we only want v2 plugins
+    grep -q '"version": "2' ${i}/plugin.json
+    if [ "$?" = "0" ]; then
+      echo ""
+      echo "===> $i"
+      echo ""
+      cd $i
+      # arch independent patches
+      if [ -f ../../../../patches/${i}.patch ]; then
+        patch -p1 < ../../../../patches/${i}.patch
       fi
+      # arch specific patches
+      if [ -f ../../../../patches/${i}.$MYARCH.patch ]; then
+        patch -p1 < ../../../../patches/${i}.$MYARCH.patch
+      fi
+      cd ..
     fi
   fi
 done
@@ -325,52 +322,26 @@ cd ..
 # go back to a defined starting point to be on the safe side
 cd ${WORKDIR}/compile/plugins
  
-# surge-rack
+# surgext-rack-beta
 echo ""
-echo "===> surge-rack extra plugin"
-echo ""
-# if we have a source archive in the source dir use that ...
-if [ -f ../../source/surge-rack-source.tar.gz ]; then
-  echo "INFO: using sources from the source archive"
-  ( cd ../.. ; tar xzf source/surge-rack-source.tar.gz )
-  cd surge-rack
-# ... otherwise get it from git and create a source archive afterwards
-else
-  git clone https://github.com/surge-synthesizer/surge-rack
-  cd surge-rack
-  git checkout release/2.1.7.0
-  git submodule update --init --recursive
-  ( cd ../../.. ; mkdir -p source ; tar czf source/surge-rack-source.tar.gz compile/plugins/surge-rack )
-fi
-find * -type f -exec ../../../simde-ify.sh {} \;
-if [ -f ../../../patches/surge-rack.$MYARCH.patch ]; then
-  patch -p1 < ../../../patches/surge-rack.$MYARCH.patch
-fi
-cd ..
-
-# go back to a defined starting point to be on the safe side
-cd ${WORKDIR}/compile/plugins
- 
-# surgext-rack
-echo ""
-echo "===> surgext-rack extra plugin"
+echo "===> surgext-rack-beta extra plugin"
 echo ""
 # if we have a source archive in the source dir use that ...
-if [ -f ../../source/surgext-rack-source.tar.gz ]; then
+if [ -f ../../source/surgext-rack-beta-source.tar.gz ]; then
   echo "INFO: using sources from the source archive"
-  ( cd ../.. ; tar xzf source/surgext-rack-source.tar.gz )
-  cd surgext-rack
+  ( cd ../.. ; tar xzf source/surgext-rack-beta-source.tar.gz )
+  cd surgext-rack-beta
 # ... otherwise get it from git and create a source archive afterwards
 else
-  git clone https://github.com/surge-synthesizer/surge-rack surgext-rack
-  cd surgext-rack
-  git checkout v2.0.3.0
+  git clone https://github.com/surge-synthesizer/surge-rack surgext-rack-beta
+  cd surgext-rack-beta
+  git checkout main
   git submodule update --init --recursive
-  ( cd ../../.. ; mkdir -p source ; tar czf source/surgext-rack-source.tar.gz compile/plugins/surgext-rack )
+  ( cd ../../.. ; mkdir -p source ; tar czf source/surgext-rack-beta-source.tar.gz compile/plugins/surgext-rack-beta )
 fi
 find * -type f -exec ../../../simde-ify.sh {} \;
-if [ -f ../../../patches/surgext-rack.$MYARCH.patch ]; then
-  patch -p1 < ../../../patches/surgext-rack.$MYARCH.patch
+if [ -f ../../../patches/surgext-rack-beta.$MYARCH.patch ]; then
+  patch -p1 < ../../../patches/surgext-rack-beta.$MYARCH.patch
 fi
 cd ..
 
