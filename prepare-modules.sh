@@ -87,7 +87,7 @@ cd ${WORKDIR}/compile/library/repos
 
 for i in * ; do
   # SurgeRack and SurgeXTRack is handled separately below
-  if [ "$i" != "SurgeRack" ] || [ "$i" != "SurgeXTRack" ] ; then
+  if [ "$i" != "SurgeRack" ] && [ "$i" != "SurgeXTRack" ] ; then
     if [ -f ${i}/plugin.json ]; then
       # we only want v2 plugins
       grep -q '"version": "2' ${i}/plugin.json
