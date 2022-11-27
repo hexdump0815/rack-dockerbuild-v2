@@ -1,0 +1,13 @@
+diff --git a/Makefile b/Makefile
+index 1abcfdd..071adb9 100644
+--- a/Makefile
++++ b/Makefile
+@@ -3,7 +3,7 @@ RACK_DIR ?= ../../Rack-SDK
+ # Compiler flags
+ FLAGS += 
+ CFLAGS +=
+-CXXFLAGS += -Werror
++# CXXFLAGS += -Werror
+ 
+ # Linker flags
+ LDFLAGS += 
