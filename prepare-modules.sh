@@ -262,28 +262,28 @@ cd ..
 # go back to a defined starting point to be on the safe side
 cd ${WORKDIR}/compile/plugins
 
-# vcvrack-packone
+# vcvrack-packone-beta
 echo ""
 echo "===> vcvrack-packone extra plugin"
 echo ""
 # if we have a source archive in the source dir use that ...
-if [ -f ../../source/vcvrack-packone-source.tar.gz ]; then
+if [ -f ../../source/vcvrack-packone-beta-source.tar.gz ]; then
   echo "INFO: using sources from the source archive"
-  ( cd ../.. ; tar xzf source/vcvrack-packone-source.tar.gz )
-  cd vcvrack-packone
+  ( cd ../.. ; tar xzf source/vcvrack-packone-beta-source.tar.gz )
+  cd vcvrack-packone-beta
 # ... otherwise get it from git and create a source archive afterwards
 else
-  git clone https://github.com/stoermelder/vcvrack-packone
-  cd vcvrack-packone
+  git clone https://github.com/stoermelder/vcvrack-packone-beta
+  cd vcvrack-packone-beta
   git checkout v2-dev
   git submodule update --init --recursive
-  ( cd ../../.. ; mkdir -p source ; tar czf source/vcvrack-packone-source.tar.gz compile/plugins/vcvrack-packone )
+  ( cd ../../.. ; mkdir -p source ; tar czf source/vcvrack-packone-beta-source.tar.gz compile/plugins/vcvrack-packone-beta )
 fi
-if [ -f ../../../patches/vcvrack-packone.patch ]; then
-  patch -p1 < ../../../patches/vcvrack-packone.patch
+if [ -f ../../../patches/vcvrack-packone-beta.patch ]; then
+  patch -p1 < ../../../patches/vcvrack-packone-beta.patch
 fi
-if [ -f ../../../patches/vcvrack-packone.$MYARCH.patch ]; then
-  patch -p1 < ../../../patches/vcvrack-packone.$MYARCH.patch
+if [ -f ../../../patches/vcvrack-packone-beta.$MYARCH.patch ]; then
+  patch -p1 < ../../../patches/vcvrack-packone-beta.$MYARCH.patch
 fi
 cd ..
 
