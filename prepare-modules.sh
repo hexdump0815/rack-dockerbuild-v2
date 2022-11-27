@@ -192,6 +192,17 @@ cd ..
 # go back to a defined starting point to be on the safe side
 cd ${WORKDIR}/compile/library/repos
 
+# CosineKitty-Sapphire
+echo ""
+echo "===> CosineKitty-Sapphire extra steps"
+echo ""
+cd CosineKitty-Sapphire
+find * -type f -exec ../../../../simde-ify.sh {} \;
+cd ..
+
+# go back to a defined starting point to be on the safe side
+cd ${WORKDIR}/compile/library/repos
+
 # some extra plugins
 
 cd ${WORKDIR}
