@@ -1,0 +1,13 @@
+diff --git a/surge/libs/JUCE/modules/juce_audio_formats/codecs/flac/libFLAC/cpu.c b/surge/libs/JUCE/modules/juce_audio_formats/codecs/flac/libFLAC/cpu.c
+index 4eac42e95..8e6def873 100644
+--- a/surge/libs/JUCE/modules/juce_audio_formats/codecs/flac/libFLAC/cpu.c
++++ b/surge/libs/JUCE/modules/juce_audio_formats/codecs/flac/libFLAC/cpu.c
+@@ -247,7 +247,7 @@ void FLAC__cpu_info(FLAC__CPUInfo *info)
+       #ifdef __ANDROID__
+         sigemptyset (&sigill_sse.sa_mask);
+       #else
+-		__sigemptyset(&sigill_sse.sa_mask);
++		sigemptyset(&sigill_sse.sa_mask);
+       #endif
+ 		sigill_sse.sa_flags = SA_SIGINFO | SA_RESETHAND; /* SA_RESETHAND just in case our SIGILL return jump breaks, so we don't get stuck in a loop */
+ 		if(0 == sigaction(SIGILL, &sigill_sse, &sigill_save))
