@@ -457,33 +457,33 @@ if [ -f ../../../patches/Volume1.$MYARCH.patch ]; then
 fi
 cd ..
 
+# # go back to a defined starting point to be on the safe side
+# cd ${WORKDIR}/compile/plugins
+#
 # this plugin compiles well but gives an error when starting - more investigation required
-# go back to a defined starting point to be on the safe side
-cd ${WORKDIR}/compile/plugins
-
-# substation-opensource
-echo ""
-echo "===> substation-opensource extra plugin"
-echo ""
-# if we have a source archive in the source dir use that ...
-if [ -f ../../source/substation-opensource-source.tar.gz ]; then
-  echo "INFO: using sources from the source archive"
-  ( cd ../.. ; tar xzf source/substation-opensource-source.tar.gz )
-  cd substation-opensource
-# ... otherwise get it from git and create a source archive afterwards
-else
-  git clone https://gitlab.com/slimechild/substation-opensource.git
-  cd substation-opensource
-  git checkout 9dca160ed29596d5fc64c02c7f43a91dfac5a4d1
-  git submodule update --init --recursive
-  ( cd ../../.. ; mkdir -p source ; tar czf source/substation-opensource-source.tar.gz compile/plugins/substation-opensource )
-fi
-if [ -f ../../../patches/substation-opensource.patch ]; then
-  patch -p1 < ../../../patches/substation-opensource.patch
-fi
-if [ -f ../../../patches/substation-opensource.$MYARCH.patch ]; then
-  patch -p1 < ../../../patches/substation-opensource.$MYARCH.patch
-fi
+# # substation-opensource
+# echo ""
+# echo "===> substation-opensource extra plugin"
+# echo ""
+# # if we have a source archive in the source dir use that ...
+# if [ -f ../../source/substation-opensource-source.tar.gz ]; then
+#   echo "INFO: using sources from the source archive"
+#   ( cd ../.. ; tar xzf source/substation-opensource-source.tar.gz )
+#   cd substation-opensource
+# # ... otherwise get it from git and create a source archive afterwards
+# else
+#   git clone https://gitlab.com/slimechild/substation-opensource.git
+#   cd substation-opensource
+#   git checkout 9dca160ed29596d5fc64c02c7f43a91dfac5a4d1
+#   git submodule update --init --recursive
+#   ( cd ../../.. ; mkdir -p source ; tar czf source/substation-opensource-source.tar.gz compile/plugins/substation-opensource )
+# fi
+# if [ -f ../../../patches/substation-opensource.patch ]; then
+#   patch -p1 < ../../../patches/substation-opensource.patch
+# fi
+# if [ -f ../../../patches/substation-opensource.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/substation-opensource.$MYARCH.patch
+# fi
 
 # go back to a defined starting point to be on the safe side
 cd ${WORKDIR}/compile/plugins
