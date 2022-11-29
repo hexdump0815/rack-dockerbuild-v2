@@ -104,9 +104,18 @@ index e1be07d1..80b56aa4 100644
  ifdef ARCH_MAC
  	STANDALONE_TARGET := Rack
 diff --git a/plugin.mk b/plugin.mk
-index 88a51f51..5353fc41 100644
+index 88a51f51..a7e8faa9 100644
 --- a/plugin.mk
 +++ b/plugin.mk
+@@ -30,7 +30,7 @@ ifdef ARCH_LIN
+ 	# When Rack loads a plugin, it symlinks /tmp/Rack2 to its system dir, so the plugin can link to libRack.
+ 	LDFLAGS += -Wl,-rpath=/tmp/Rack2
+ 	# Since the plugin's compiler could be a different version than Rack's compiler, link libstdc++ and libgcc statically to avoid ABI issues.
+-	LDFLAGS += -static-libstdc++ -static-libgcc
++	LDFLAGS += -static-libstdc++ -static-libgcc -latomic
+ 	RACK_USER_DIR ?= $(HOME)/.Rack2
+ endif
+ 
 @@ -55,6 +55,8 @@ all: $(TARGET)
  
  include $(RACK_DIR)/compile.mk
