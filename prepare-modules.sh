@@ -555,10 +555,9 @@ if [ -f ../../source/qwelk-source.tar.gz ]; then
   cd qwelk
 # ... otherwise get it from git and create a source archive afterwards
 else
-  git clone git clone https://github.com/raincheque/qwelk.git
+  git clone https://github.com/netboy3/qwelk-vcvrack-plugins.git
   cd qwelk
-  # the last commit
-  git checkout e78ee0ccf7a7f1af91d823d0563b0af360933237
+  git checkout v2
   git submodule update --init --recursive
   ( cd ../../.. ; mkdir -p source ; tar czf source/qwelk-source.tar.gz compile/plugins/qwelk )
 fi
@@ -567,6 +566,34 @@ if [ -f ../../../patches/qwelk.patch ]; then
 fi
 if [ -f ../../../patches/qwelk.$MYARCH.patch ]; then
   patch -p1 < ../../../patches/qwelk.$MYARCH.patch
+fi
+cd ..
+
+# go back to a defined starting point to be on the safe side
+cd ${WORKDIR}/compile/plugins
+
+# LocoVCVModules
+echo ""
+echo "===> LocoVCVModules extra plugin"
+echo ""
+# if we have a source archive in the source dir use that ...
+if [ -f ../../source/LocoVCVModules-source.tar.gz ]; then
+  echo "INFO: using sources from the source archive"
+  ( cd ../.. ; tar xzf source/LocoVCVModules-source.tar.gz )
+  cd LocoVCVModules
+# ... otherwise get it from git and create a source archive afterwards
+else
+  git clone https://github.com/SteveRussell33/LocoVCVModules
+  cd LocoVCVModules
+  git checkout master
+  git submodule update --init --recursive
+  ( cd ../../.. ; mkdir -p source ; tar czf source/LocoVCVModules-source.tar.gz compile/plugins/LocoVCVModules )
+fi
+if [ -f ../../../patches/LocoVCVModules.patch ]; then
+  patch -p1 < ../../../patches/LocoVCVModules.patch
+fi
+if [ -f ../../../patches/LocoVCVModules.$MYARCH.patch ]; then
+  patch -p1 < ../../../patches/LocoVCVModules.$MYARCH.patch
 fi
 cd ..
 
