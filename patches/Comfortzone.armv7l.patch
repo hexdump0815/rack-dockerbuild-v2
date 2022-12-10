@@ -1,10 +1,12 @@
 diff --git a/Makefile b/Makefile
-index a4c7d65..3346055 100644
+index e1cf8a0..2ae5879 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -20,3 +20,5 @@ DISTRIBUTABLES += $(wildcard LICENSE*)
- 
+@@ -21,6 +21,7 @@ DISTRIBUTABLES += $(wildcard LICENSE*)
  # Include the Rack plugin Makefile framework
  include $(RACK_DIR)/plugin.mk
-+
+ 
 +FLAGS += -mfpu=vfpv3-d16 -mno-unaligned-access
+ 
+ tags :
+ 	ctags -R src/*.{cpp,h,hpp} /Users/hampa/code/Rack-SDK 
