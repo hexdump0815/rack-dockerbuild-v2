@@ -544,28 +544,28 @@ cd ..
 # go back to a defined starting point to be on the safe side
 cd ${WORKDIR}/compile/plugins
 
-# qwelk
+# qwelk-vcvrack-plugins
 echo ""
-echo "===> qwelk extra plugin"
+echo "===> qwelk-vcvrack-plugins extra plugin"
 echo ""
 # if we have a source archive in the source dir use that ...
-if [ -f ../../source/qwelk-source.tar.gz ]; then
+if [ -f ../../source/qwelk-vcvrack-plugins-source.tar.gz ]; then
   echo "INFO: using sources from the source archive"
-  ( cd ../.. ; tar xzf source/qwelk-source.tar.gz )
-  cd qwelk
+  ( cd ../.. ; tar xzf source/qwelk-vcvrack-plugins-source.tar.gz )
+  cd qwelk-vcvrack-plugins
 # ... otherwise get it from git and create a source archive afterwards
 else
   git clone https://github.com/netboy3/qwelk-vcvrack-plugins.git
-  cd qwelk
+  cd qwelk-vcvrack-plugins-vcvrack-plugins
   git checkout v2
   git submodule update --init --recursive
-  ( cd ../../.. ; mkdir -p source ; tar czf source/qwelk-source.tar.gz compile/plugins/qwelk )
+  ( cd ../../.. ; mkdir -p source ; tar czf source/qwelk-vcvrack-plugins-source.tar.gz compile/plugins/qwelk-vcvrack-plugins )
 fi
-if [ -f ../../../patches/qwelk.patch ]; then
-  patch -p1 < ../../../patches/qwelk.patch
+if [ -f ../../../patches/qwelk-vcvrack-plugins.patch ]; then
+  patch -p1 < ../../../patches/qwelk-vcvrack-plugins.patch
 fi
-if [ -f ../../../patches/qwelk.$MYARCH.patch ]; then
-  patch -p1 < ../../../patches/qwelk.$MYARCH.patch
+if [ -f ../../../patches/qwelk-vcvrack-plugins.$MYARCH.patch ]; then
+  patch -p1 < ../../../patches/qwelk-vcvrack-plugins.$MYARCH.patch
 fi
 cd ..
 
