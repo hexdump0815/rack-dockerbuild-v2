@@ -273,7 +273,7 @@ if [ -f ../../source/vcvrack-packone-beta-source.tar.gz ]; then
   cd vcvrack-packone-beta
 # ... otherwise get it from git and create a source archive afterwards
 else
-  git clone https://github.com/stoermelder/vcvrack-packone-beta
+  git clone https://github.com/stoermelder/vcvrack-packone vcvrack-packone-beta
   cd vcvrack-packone-beta
   git checkout v2-dev
   git submodule update --init --recursive
