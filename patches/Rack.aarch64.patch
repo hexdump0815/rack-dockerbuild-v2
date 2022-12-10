@@ -1,17 +1,3 @@
-diff --git a/arch.mk b/arch.mk
-index 88b50819..a93cb92e 100644
---- a/arch.mk
-+++ b/arch.mk
-@@ -6,6 +6,9 @@ ifneq (,$(findstring x86_64-,$(MACHINE)))
- else ifneq (,$(findstring arm64-,$(MACHINE)))
- 	ARCH_ARM64 := 1
- 	ARCH_CPU := arm64
-+else ifneq (,$(findstring aarch64-,$(MACHINE)))
-+	ARCH_ARM64 := 1
-+	ARCH_CPU := arm64
- else
- $(error Could not determine CPU architecture of $(MACHINE))
- endif
 diff --git a/compile.mk b/compile.mk
 index b72fd683..e167bc39 100644
 --- a/compile.mk
