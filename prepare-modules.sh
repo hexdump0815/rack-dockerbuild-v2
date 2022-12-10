@@ -264,7 +264,7 @@ cd ${WORKDIR}/compile/plugins
 
 # vcvrack-packone-beta
 echo ""
-echo "===> vcvrack-packone extra plugin"
+echo "===> vcvrack-packone-beta extra plugin"
 echo ""
 # if we have a source archive in the source dir use that ...
 if [ -f ../../source/vcvrack-packone-beta-source.tar.gz ]; then
