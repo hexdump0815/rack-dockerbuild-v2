@@ -11,3 +11,14 @@ index bedf4929..becabf1c 100644
  
      # PE/COFF doesn't support visibility
      $<$<NOT:$<BOOL:${WIN32}>>:-fvisibility=hidden>
+diff --git a/RackSDK.cmake b/RackSDK.cmake
+index c2c09eb..403b7cf 100644
+--- a/RackSDK.cmake
++++ b/RackSDK.cmake
+@@ -58,5 +58,5 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+   add_compile_options(-Wl,-rpath=/tmp/Rack2)
+   # Since the plugin's compiler could be a different version than Rack's compiler, link libstdc++ and libgcc statically to avoid ABI issues.
+   add_link_options(-static-libgcc)
+-  add_compile_options(-march=nehalem)
++  #add_compile_options(-march=nehalem)
+ endif ()
