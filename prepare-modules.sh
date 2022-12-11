@@ -200,6 +200,28 @@ cd ..
 # go back to a defined starting point to be on the safe side
 cd ${WORKDIR}/compile/library/repos
 
+# SurgeRack
+echo ""
+echo "===> SurgeRack extra steps"
+echo ""
+cd SurgeRack
+find * -type f -exec ../../../../simde-ify.sh {} \;
+cd ..
+
+# go back to a defined starting point to be on the safe side
+cd ${WORKDIR}/compile/library/repos
+
+# SurgeXTRack
+echo ""
+echo "===> SurgeXTRack extra steps"
+echo ""
+cd SurgeXTRack
+find * -type f -exec ../../../../simde-ify.sh {} \;
+cd ..
+
+# go back to a defined starting point to be on the safe side
+cd ${WORKDIR}/compile/library/repos
+
 # some extra plugins
 
 cd ${WORKDIR}
