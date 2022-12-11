@@ -281,33 +281,33 @@ if [ -f ../../../patches/VCV-Recorder.$MYARCH.patch ]; then
 fi
 cd ..
 
-# go back to a defined starting point to be on the safe side
-cd ${WORKDIR}/compile/plugins
-
-# vcvrack-packone-beta
-echo ""
-echo "===> vcvrack-packone-beta extra plugin"
-echo ""
-# if we have a source archive in the source dir use that ...
-if [ -f ../../source/vcvrack-packone-beta-source.tar.gz ]; then
-  echo "INFO: using sources from the source archive"
-  ( cd ../.. ; tar xzf source/vcvrack-packone-beta-source.tar.gz )
-  cd vcvrack-packone-beta
-# ... otherwise get it from git and create a source archive afterwards
-else
-  git clone https://github.com/stoermelder/vcvrack-packone vcvrack-packone-beta
-  cd vcvrack-packone-beta
-  git checkout v2-dev
-  git submodule update --init --recursive
-  ( cd ../../.. ; mkdir -p source ; tar czf source/vcvrack-packone-beta-source.tar.gz compile/plugins/vcvrack-packone-beta )
-fi
-if [ -f ../../../patches/vcvrack-packone-beta.patch ]; then
-  patch -p1 < ../../../patches/vcvrack-packone-beta.patch
-fi
-if [ -f ../../../patches/vcvrack-packone-beta.$MYARCH.patch ]; then
-  patch -p1 < ../../../patches/vcvrack-packone-beta.$MYARCH.patch
-fi
-cd ..
+# # go back to a defined starting point to be on the safe side
+# cd ${WORKDIR}/compile/plugins
+#
+# # vcvrack-packone-beta
+# echo ""
+# echo "===> vcvrack-packone-beta extra plugin"
+# echo ""
+# # if we have a source archive in the source dir use that ...
+# if [ -f ../../source/vcvrack-packone-beta-source.tar.gz ]; then
+#   echo "INFO: using sources from the source archive"
+#   ( cd ../.. ; tar xzf source/vcvrack-packone-beta-source.tar.gz )
+#   cd vcvrack-packone-beta
+# # ... otherwise get it from git and create a source archive afterwards
+# else
+#   git clone https://github.com/stoermelder/vcvrack-packone vcvrack-packone-beta
+#   cd vcvrack-packone-beta
+#   git checkout v2-dev
+#   git submodule update --init --recursive
+#   ( cd ../../.. ; mkdir -p source ; tar czf source/vcvrack-packone-beta-source.tar.gz compile/plugins/vcvrack-packone-beta )
+# fi
+# if [ -f ../../../patches/vcvrack-packone-beta.patch ]; then
+#   patch -p1 < ../../../patches/vcvrack-packone-beta.patch
+# fi
+# if [ -f ../../../patches/vcvrack-packone-beta.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/vcvrack-packone-beta.$MYARCH.patch
+# fi
+# cd ..
 
 # go back to a defined starting point to be on the safe side
 cd ${WORKDIR}/compile/plugins
@@ -341,31 +341,31 @@ if [ -f ../../../patches/vcv-link.$MYARCH.patch ]; then
 fi
 cd ..
 
-# go back to a defined starting point to be on the safe side
-cd ${WORKDIR}/compile/plugins
- 
-# surgext-rack-beta
-echo ""
-echo "===> surgext-rack-beta extra plugin"
-echo ""
-# if we have a source archive in the source dir use that ...
-if [ -f ../../source/surgext-rack-beta-source.tar.gz ]; then
-  echo "INFO: using sources from the source archive"
-  ( cd ../.. ; tar xzf source/surgext-rack-beta-source.tar.gz )
-  cd surgext-rack-beta
-# ... otherwise get it from git and create a source archive afterwards
-else
-  git clone https://github.com/surge-synthesizer/surge-rack surgext-rack-beta
-  cd surgext-rack-beta
-  git checkout main
-  git submodule update --init --recursive
-  ( cd ../../.. ; mkdir -p source ; tar czf source/surgext-rack-beta-source.tar.gz compile/plugins/surgext-rack-beta )
-fi
-find * -type f -exec ../../../simde-ify.sh {} \;
-if [ -f ../../../patches/surgext-rack-beta.$MYARCH.patch ]; then
-  patch -p1 < ../../../patches/surgext-rack-beta.$MYARCH.patch
-fi
-cd ..
+# # go back to a defined starting point to be on the safe side
+# cd ${WORKDIR}/compile/plugins
+#
+# # surgext-rack-beta
+# echo ""
+# echo "===> surgext-rack-beta extra plugin"
+# echo ""
+# # if we have a source archive in the source dir use that ...
+# if [ -f ../../source/surgext-rack-beta-source.tar.gz ]; then
+#   echo "INFO: using sources from the source archive"
+#   ( cd ../.. ; tar xzf source/surgext-rack-beta-source.tar.gz )
+#   cd surgext-rack-beta
+# # ... otherwise get it from git and create a source archive afterwards
+# else
+#   git clone https://github.com/surge-synthesizer/surge-rack surgext-rack-beta
+#   cd surgext-rack-beta
+#   git checkout main
+#   git submodule update --init --recursive
+#   ( cd ../../.. ; mkdir -p source ; tar czf source/surgext-rack-beta-source.tar.gz compile/plugins/surgext-rack-beta )
+# fi
+# find * -type f -exec ../../../simde-ify.sh {} \;
+# if [ -f ../../../patches/surgext-rack-beta.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/surgext-rack-beta.$MYARCH.patch
+# fi
+# cd ..
 
 # go back to a defined starting point to be on the safe side
 cd ${WORKDIR}/compile/plugins
@@ -535,33 +535,33 @@ if [ -f ../../../patches/vcvrack-packtau.$MYARCH.patch ]; then
 fi
 cd ..
 
-# go back to a defined starting point to be on the safe side
-cd ${WORKDIR}/compile/plugins
-
-# MindMeldModular-beta
-echo ""
-echo "===> MindMeldModular-beta extra plugin"
-echo ""
-# if we have a source archive in the source dir use that ...
-if [ -f ../../source/MindMeldModular-beta-source.tar.gz ]; then
-  echo "INFO: using sources from the source archive"
-  ( cd ../.. ; tar xzf source/MindMeldModular-beta-source.tar.gz )
-  cd MindMeldModular-beta
-# ... otherwise get it from git and create a source archive afterwards
-else
-  git clone https://github.com/MarcBoule/MindMeldModular.git MindMeldModular-beta
-  cd MindMeldModular-beta
-  git checkout v2.1.1b
-  git submodule update --init --recursive
-  ( cd ../../.. ; mkdir -p source ; tar czf source/MindMeldModular-beta-source.tar.gz compile/plugins/MindMeldModular-beta )
-fi
-if [ -f ../../../patches/MindMeldModular-beta.patch ]; then
-  patch -p1 < ../../../patches/MindMeldModular-beta.patch
-fi
-if [ -f ../../../patches/MindMeldModular-beta.$MYARCH.patch ]; then
-  patch -p1 < ../../../patches/MindMeldModular-beta.$MYARCH.patch
-fi
-cd ..
+# # go back to a defined starting point to be on the safe side
+# cd ${WORKDIR}/compile/plugins
+#
+# # MindMeldModular-beta
+# echo ""
+# echo "===> MindMeldModular-beta extra plugin"
+# echo ""
+# # if we have a source archive in the source dir use that ...
+# if [ -f ../../source/MindMeldModular-beta-source.tar.gz ]; then
+#   echo "INFO: using sources from the source archive"
+#   ( cd ../.. ; tar xzf source/MindMeldModular-beta-source.tar.gz )
+#   cd MindMeldModular-beta
+# # ... otherwise get it from git and create a source archive afterwards
+# else
+#   git clone https://github.com/MarcBoule/MindMeldModular.git MindMeldModular-beta
+#   cd MindMeldModular-beta
+#   git checkout v2.1.1b
+#   git submodule update --init --recursive
+#   ( cd ../../.. ; mkdir -p source ; tar czf source/MindMeldModular-beta-source.tar.gz compile/plugins/MindMeldModular-beta )
+# fi
+# if [ -f ../../../patches/MindMeldModular-beta.patch ]; then
+#   patch -p1 < ../../../patches/MindMeldModular-beta.patch
+# fi
+# if [ -f ../../../patches/MindMeldModular-beta.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/MindMeldModular-beta.$MYARCH.patch
+# fi
+# cd ..
 
 # go back to a defined starting point to be on the safe side
 cd ${WORKDIR}/compile/plugins

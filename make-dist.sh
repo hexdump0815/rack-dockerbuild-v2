@@ -13,8 +13,8 @@ mkdir -p dist/plugins
 ( cd dist/plugins ; for i in ../../compile/library/repos/*/dist/*.vcvplugin ; do cp -ri $i . ; done )
 ( cd dist/plugins ; for i in ../../compile/plugins/*/dist/*.vcvplugin ; do cp -ri $i . ; done )
 
-mkdir -p dist/plugins-beta
-( cd dist/plugins-beta ; for i in ../../compile/plugins/*-beta/dist/*.vcvplugin ; do cp -ri $i . ; done )
+# mkdir -p dist/plugins-beta
+# ( cd dist/plugins-beta ; for i in ../../compile/plugins/*-beta/dist/*.vcvplugin ; do cp -ri $i . ; done )
 
 mkdir -p dist/rack-sdk/dep
 for i in *.mk helper.py include LICENSE-dist.md LICENSE-GPLv3.txt LICENSE.md; do
