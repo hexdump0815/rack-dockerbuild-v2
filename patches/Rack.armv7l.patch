@@ -125,3 +125,18 @@ index 88a51f51..a7e8faa9 100644
  clean:
  	rm -rfv build $(TARGET) dist
  
+diff --git a/src/common.cpp b/src/common.cpp
+index 4f2869c0..77af2ae9 100644
+--- a/src/common.cpp
++++ b/src/common.cpp
+@@ -34,8 +34,8 @@ const std::string APP_VERSION = TOSTRING(_APP_VERSION);
+ 	const std::string APP_CPU = "x64";
+ 	const std::string APP_CPU_NAME = "x64";
+ #elif defined ARCH_ARM64
+-	const std::string APP_CPU = "arm64";
+-	const std::string APP_CPU_NAME = "ARM64";
++	const std::string APP_CPU = "arm32";
++	const std::string APP_CPU_NAME = "ARM32";
+ #endif
+ const std::string API_URL = "https://api.vcvrack.com";
+ 

@@ -26,3 +26,18 @@ index 88b50819..cd204fe3 100644
  else ifneq (,$(findstring arm64-,$(MACHINE)))
  	ARCH_ARM64 := 1
  	ARCH_CPU := arm64
+diff --git a/src/common.cpp b/src/common.cpp
+index 4f2869c0..cca2aecc 100644
+--- a/src/common.cpp
++++ b/src/common.cpp
+@@ -31,8 +31,8 @@ const std::string APP_VERSION = TOSTRING(_APP_VERSION);
+ 	const std::string APP_OS_NAME = "Linux";
+ #endif
+ #if defined ARCH_X64
+-	const std::string APP_CPU = "x64";
+-	const std::string APP_CPU_NAME = "x64";
++	const std::string APP_CPU = "i686";
++	const std::string APP_CPU_NAME = "i686";
+ #elif defined ARCH_ARM64
+ 	const std::string APP_CPU = "arm64";
+ 	const std::string APP_CPU_NAME = "ARM64";
