@@ -4,8 +4,6 @@ WORKDIR=`dirname $0`
 cd $WORKDIR
 WORKDIR=`pwd`
 
-MYARCH=`uname -m`
-
 mkdir -p dist
 for i in CHANGELOG.md LICENSE-dist.md LICENSE-GPLv3.txt LICENSE.md res template.vcv Core.json; do  cp -r compile/Rack/$i dist; done
 cp compile/Rack/Rack dist
