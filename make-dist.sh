@@ -24,9 +24,3 @@ done
 cp -ri compile/Rack/dep/include dist/rack-sdk/dep
 
 cp simde-ify.sh dist/rack-sdk
-
-# this is for the dbRackCsound extra plugin: it brings its own libraries with
-# it, but only for linux x86_64, so the idea is to install the system
-# libraries instead and link against them to not having to build them by hand
-# for that we bundle the shared csound lib used to compile the module in dist
-cp -a compile/plugins/dbRackCsound/lib/linux/lib*.so* dist
