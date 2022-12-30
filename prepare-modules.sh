@@ -789,15 +789,6 @@ fi
 if [ -f ../../../patches/dbRackCsound.$MYARCH.patch ]; then
   patch -p1 < ../../../patches/dbRackCsound.$MYARCH.patch
 fi
-# this is for the dbRackCsound extra plugin: it brings its own libraries with
-# it, but only for linux x86_64, so the idea is to install the system
-# libraries instead and link against them to not having to build them by hand
-if [ "$MYARCH" = "aarch64" ] || [ "$MYARCH" = "armv7l" ]; then
-  apt-get -y install libcsound64-dev libsndfile1-dev
-  rm -f lib/linux/lib*
-  cp -a /usr/lib/aarch64-linux-gnu/libsndfile.a /usr/lib/arm-linux-gnueabihf/libsndfile.a lib/linux
-  cp -a /usr/lib/aarch64-linux-gnu/libcsound64.so* /usr/lib/arm-linux-gnueabihf/libcsound64.so* lib/linux
-fi
 cd ..
 
 # go back to a defined point
