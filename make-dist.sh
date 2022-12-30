@@ -31,6 +31,4 @@ cp simde-ify.sh dist/rack-sdk
 # it, but only for linux x86_64, so the idea is to install the system
 # libraries instead and link against them to not having to build them by hand
 # for that we bundle the shared csound lib used to compile the module in dist
-if [ "$MYARCH" = "aarch64" ] || [ "$MYARCH" = "armv7l" ]; then
-  cp -a compile/plugins/dbRackCsound/lib/linux/lib*.so* dist
-fi
+cp -a compile/plugins/dbRackCsound/lib/linux/lib*.so* dist
