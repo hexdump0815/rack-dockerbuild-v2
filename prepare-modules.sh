@@ -762,34 +762,36 @@ if [ -f ../../../patches/ihtsyn.$MYARCH.patch ]; then
 fi
 cd ..
 
-# go back to a defined starting point to be on the safe side
-cd ${WORKDIR}/compile/plugins
-
-# dbRackCsound
-echo ""
-echo "===> dbRackCsound extra plugin"
-echo ""
-# if we have a source archive in the source dir use that ...
-if [ -f ../../source/dbRackCsound-source.tar.gz ]; then
-  echo "INFO: using sources from the source archive"
-  ( cd ../.. ; tar xzf source/dbRackCsound-source.tar.gz )
-  cd dbRackCsound
-# ... otherwise get it from git and create a source archive afterwards
-else
-  git clone https://github.com/docb/dbRackCsound
-  cd dbRackCsound
-  git checkout v2.0.3
-  git submodule update --init --recursive
-  ( cd ../../.. ; mkdir -p source ; tar czf source/dbRackCsound-source.tar.gz compile/plugins/dbRackCsound )
-fi
-find * -type f -exec ../../../simde-ify.sh {} \;
-if [ -f ../../../patches/dbRackCsound.patch ]; then
-  patch -p1 < ../../../patches/dbRackCsound.patch
-fi
-if [ -f ../../../patches/dbRackCsound.$MYARCH.patch ]; then
-  patch -p1 < ../../../patches/dbRackCsound.$MYARCH.patch
-fi
-cd ..
+# still some things to be sorted out to get this built properly
+# on all supported arches - see build-modules.sh-proto
+# # go back to a defined starting point to be on the safe side
+# cd ${WORKDIR}/compile/plugins
+#
+# # dbRackCsound
+# echo ""
+# echo "===> dbRackCsound extra plugin"
+# echo ""
+# # if we have a source archive in the source dir use that ...
+# if [ -f ../../source/dbRackCsound-source.tar.gz ]; then
+#   echo "INFO: using sources from the source archive"
+#   ( cd ../.. ; tar xzf source/dbRackCsound-source.tar.gz )
+#   cd dbRackCsound
+# # ... otherwise get it from git and create a source archive afterwards
+# else
+#   git clone https://github.com/docb/dbRackCsound
+#   cd dbRackCsound
+#   git checkout v2.0.3
+#   git submodule update --init --recursive
+#   ( cd ../../.. ; mkdir -p source ; tar czf source/dbRackCsound-source.tar.gz compile/plugins/dbRackCsound )
+# fi
+# find * -type f -exec ../../../simde-ify.sh {} \;
+# if [ -f ../../../patches/dbRackCsound.patch ]; then
+#   patch -p1 < ../../../patches/dbRackCsound.patch
+# fi
+# if [ -f ../../../patches/dbRackCsound.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/dbRackCsound.$MYARCH.patch
+# fi
+# cd ..
 
 # go back to a defined point
 cd ${WORKDIR}

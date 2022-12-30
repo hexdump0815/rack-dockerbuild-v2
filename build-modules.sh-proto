@@ -43,58 +43,65 @@ for i in * ; do
   echo "=== $i ==="
   echo ""
   cd $i
-  if [ "$i" = "dbRackCsound" ]; then
-    # this is for the dbRackCsound extra plugin: it brings its own libraries with
-    # it, but only for linux x86_64, so the idea is to install the system
-    # libsndfile library instead, build our own libcsound64 (as there is no static
-    # lib available in the debian one and it is missing the INIT_STATIC_MODUES
-    # build flag as well) and link against them
-    echo ""
-    echo "=== building libcsound64.a for dbRackCsound"
-    echo ""
-    set -x
-    apt-get -y install libsndfile1-dev bison flex
-    rm -f lib/linux/lib*
-    MYARCH=`uname -m`
-    if [ "$MYARCH" = "x86_64" ]; then
-      cp /usr/lib/x86_64-linux-gnu/libsndfile.a lib/linux
-    fi
-    if [ "$MYARCH" = "i686" ]; then
-      cp /usr/lib/i386-linux-gnu/libsndfile.a lib/linux
-    fi
-    if [ "$MYARCH" = "aarch64" ]; then
-      cp /usr/lib/aarch64-linux-gnu/libsndfile.a lib/linux
-    fi
-    if [ "$MYARCH" = "armv7l" ]; then
-      cp /usr/lib/arm-linux-gnueabihf/libsndfile.a lib/linux
-    fi
-    # ok - lets build libcsound64.a in the proper way ourself - ugly, but it seems to work ...
-    if [ ! -f /compile/misc/csound/build/libcsound64.a ]; then
-      OLD_WORKDIR=`pwd`
-      mkdir -p /compile/misc
-      cd /compile/misc
-      git clone https://github.com/csound/csound.git
-      cd csound
-      git checkout 6.18.1
-      cp Custom.cmake.ex Custom.cmake
-      if [ "$MYARCH" = "x86_64" ] || [ "$MYARCH" = "i686" ]; then
-        echo 'set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=nehalem -fPIC")' >> Custom.cmake
-      fi
-      if [ "$MYARCH" = "aarch64" ]; then
-        echo 'set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv8-a -mtune=cortex-a53 -fPIC")' >> Custom.cmake
-      fi
-      if [ "$MYARCH" = "armv7l" ]; then
-        echo 'set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv7 -mtune=cortex-a9 -mfpu=neon -mno-unaligned-access -fPIC")' >> Custom.cmake
-      fi
-      mkdir build
-      cd build
-      cmake .. -DINIT_STATIC_MODULES=true
-      make -j 4 csound64-static
-      cd $OLD_WORKDIR
-    fi
-    cp /compile/misc/csound/build/libcsound64.a /compile/plugins/dbRackCsound/lib/linux
-    set +x
-  fi
+
+  # giving up on dbRackCsound for now - to get libcsound64.a built properly the
+  # following line needs to be adjusted in the csound root dir CMakeLists.txt
+  # set_source_files_properties(${static_modules_SRCS} PROPERTIES COMPILE_FLAGS "-DINIT_STATIC_MODULES -fPIC")
+  # to also build the INIT_STATIC_MODULES files with -fPIC, but then it looks
+  # like libsndfile also needs be get recompiled with -fPIC ... another time :)
+  # if [ "$i" = "dbRackCsound" ]; then
+  #   # this is for the dbRackCsound extra plugin: it brings its own libraries with
+  #   # it, but only for linux x86_64, so the idea is to install the system
+  #   # libsndfile library instead, build our own libcsound64 (as there is no static
+  #   # lib available in the debian one and it is missing the INIT_STATIC_MODUES
+  #   # build flag as well) and link against them
+  #   echo ""
+  #   echo "=== building libcsound64.a for dbRackCsound"
+  #   echo ""
+  #   set -x
+  #   apt-get -y install libsndfile1-dev bison flex
+  #   rm -f lib/linux/lib*
+  #   MYARCH=`uname -m`
+  #   if [ "$MYARCH" = "x86_64" ]; then
+  #     cp /usr/lib/x86_64-linux-gnu/libsndfile.a lib/linux
+  #   fi
+  #   if [ "$MYARCH" = "i686" ]; then
+  #     cp /usr/lib/i386-linux-gnu/libsndfile.a lib/linux
+  #   fi
+  #   if [ "$MYARCH" = "aarch64" ]; then
+  #     cp /usr/lib/aarch64-linux-gnu/libsndfile.a lib/linux
+  #   fi
+  #   if [ "$MYARCH" = "armv7l" ]; then
+  #     cp /usr/lib/arm-linux-gnueabihf/libsndfile.a lib/linux
+  #   fi
+  #   # ok - lets build libcsound64.a in the proper way ourself - ugly, but it seems to work ...
+  #   if [ ! -f /compile/misc/csound/build/libcsound64.a ]; then
+  #     OLD_WORKDIR=`pwd`
+  #     mkdir -p /compile/misc
+  #     cd /compile/misc
+  #     git clone https://github.com/csound/csound.git
+  #     cd csound
+  #     git checkout 6.18.1
+  #     cp Custom.cmake.ex Custom.cmake
+  #     if [ "$MYARCH" = "x86_64" ] || [ "$MYARCH" = "i686" ]; then
+  #       echo 'set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=nehalem -fPIC")' >> Custom.cmake
+  #     fi
+  #     if [ "$MYARCH" = "aarch64" ]; then
+  #       echo 'set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv8-a -mtune=cortex-a53 -fPIC")' >> Custom.cmake
+  #     fi
+  #     if [ "$MYARCH" = "armv7l" ]; then
+  #       echo 'set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv7 -mtune=cortex-a9 -mfpu=neon -mno-unaligned-access -fPIC")' >> Custom.cmake
+  #     fi
+  #     mkdir build
+  #     cd build
+  #     cmake .. -DINIT_STATIC_MODULES=true
+  #     make -j 4 csound64-static
+  #     cd $OLD_WORKDIR
+  #   fi
+  #   cp /compile/misc/csound/build/libcsound64.a /compile/plugins/dbRackCsound/lib/linux
+  #   set +x
+  # fi
+
   # Volume1 currently uses too many ressources during
   # build on small systems, so only use one compile thread for it
   if [ "$i" = "Volume1" ]; then
