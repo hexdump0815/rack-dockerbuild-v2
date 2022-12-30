@@ -38,7 +38,7 @@ else
   cd library
   git checkout v2
   # this is the version i used this script last with
-  #git checkout d74ab0b505311a8f77c80963d13612b116ff6ce9
+  #git checkout 260ba9dc1e92f37993fb2b5efa9fc36c75589e0d
 
   # looks like the the-xor plugin is no longer available via github
   cd repos
@@ -578,7 +578,7 @@ if [ -f ../../source/qwelk-vcvrack-plugins-source.tar.gz ]; then
 # ... otherwise get it from git and create a source archive afterwards
 else
   git clone https://github.com/netboy3/qwelk-vcvrack-plugins.git
-  cd qwelk-vcvrack-plugins-vcvrack-plugins
+  cd qwelk-vcvrack-plugins
   git checkout v2
   git submodule update --init --recursive
   ( cd ../../.. ; mkdir -p source ; tar czf source/qwelk-vcvrack-plugins-source.tar.gz compile/plugins/qwelk-vcvrack-plugins )
@@ -616,6 +616,174 @@ if [ -f ../../../patches/LocoVCVModules.patch ]; then
 fi
 if [ -f ../../../patches/LocoVCVModules.$MYARCH.patch ]; then
   patch -p1 < ../../../patches/LocoVCVModules.$MYARCH.patch
+fi
+cd ..
+
+# go back to a defined starting point to be on the safe side
+cd ${WORKDIR}/compile/plugins
+
+# rackwindows
+echo ""
+echo "===> rackwindows extra plugin"
+echo ""
+# if we have a source archive in the source dir use that ...
+if [ -f ../../source/rackwindows-source.tar.gz ]; then
+  echo "INFO: using sources from the source archive"
+  ( cd ../.. ; tar xzf source/rackwindows-source.tar.gz )
+  cd rackwindows
+# ... otherwise get it from git and create a source archive afterwards
+else
+  git clone https://github.com/Ahornberg/rackwindows
+  cd rackwindows
+  git checkout v2.0.1
+  git submodule update --init --recursive
+  ( cd ../../.. ; mkdir -p source ; tar czf source/rackwindows-source.tar.gz compile/plugins/rackwindows )
+fi
+if [ -f ../../../patches/rackwindows.patch ]; then
+  patch -p1 < ../../../patches/rackwindows.patch
+fi
+if [ -f ../../../patches/rackwindows.$MYARCH.patch ]; then
+  patch -p1 < ../../../patches/rackwindows.$MYARCH.patch
+fi
+cd ..
+
+# go back to a defined starting point to be on the safe side
+cd ${WORKDIR}/compile/plugins
+
+# Mog-VCV
+echo ""
+echo "===> Mog-VCV extra plugin"
+echo ""
+# if we have a source archive in the source dir use that ...
+if [ -f ../../source/Mog-VCV-source.tar.gz ]; then
+  echo "INFO: using sources from the source archive"
+  ( cd ../.. ; tar xzf source/Mog-VCV-source.tar.gz )
+  cd Mog-VCV
+# ... otherwise get it from git and create a source archive afterwards
+else
+  git clone https://github.com/Ahornberg/Mog-VCV
+  cd Mog-VCV
+  git checkout v2.0.0
+  git submodule update --init --recursive
+  ( cd ../../.. ; mkdir -p source ; tar czf source/Mog-VCV-source.tar.gz compile/plugins/Mog-VCV )
+fi
+if [ -f ../../../patches/Mog-VCV.patch ]; then
+  patch -p1 < ../../../patches/Mog-VCV.patch
+fi
+if [ -f ../../../patches/Mog-VCV.$MYARCH.patch ]; then
+  patch -p1 < ../../../patches/Mog-VCV.$MYARCH.patch
+fi
+cd ..
+
+# go back to a defined starting point to be on the safe side
+cd ${WORKDIR}/compile/plugins
+
+# forsitan-modulare
+echo ""
+echo "===> forsitan-modulare extra plugin"
+echo ""
+# if we have a source archive in the source dir use that ...
+if [ -f ../../source/forsitan-modulare-source.tar.gz ]; then
+  echo "INFO: using sources from the source archive"
+  ( cd ../.. ; tar xzf source/forsitan-modulare-source.tar.gz )
+  cd forsitan-modulare
+# ... otherwise get it from git and create a source archive afterwards
+else
+  git clone https://github.com/Ahornberg/forsitan-modulare
+  cd forsitan-modulare
+  git checkout v2.0.1
+  git submodule update --init --recursive
+  ( cd ../../.. ; mkdir -p source ; tar czf source/forsitan-modulare-source.tar.gz compile/plugins/forsitan-modulare )
+fi
+if [ -f ../../../patches/forsitan-modulare.patch ]; then
+  patch -p1 < ../../../patches/forsitan-modulare.patch
+fi
+if [ -f ../../../patches/forsitan-modulare.$MYARCH.patch ]; then
+  patch -p1 < ../../../patches/forsitan-modulare.$MYARCH.patch
+fi
+cd ..
+
+# go back to a defined starting point to be on the safe side
+cd ${WORKDIR}/compile/plugins
+
+# AriaModules
+echo ""
+echo "===> AriaModules extra plugin"
+echo ""
+# if we have a source archive in the source dir use that ...
+if [ -f ../../source/AriaModules-source.tar.gz ]; then
+  echo "INFO: using sources from the source archive"
+  ( cd ../.. ; tar xzf source/AriaModules-source.tar.gz )
+  cd AriaModules
+# ... otherwise get it from git and create a source archive afterwards
+else
+  git clone https://github.com/Ahornberg/AriaModules
+  cd AriaModules
+  git checkout v2.0.0
+  git submodule update --init --recursive
+  ( cd ../../.. ; mkdir -p source ; tar czf source/AriaModules-source.tar.gz compile/plugins/AriaModules )
+fi
+if [ -f ../../../patches/AriaModules.patch ]; then
+  patch -p1 < ../../../patches/AriaModules.patch
+fi
+if [ -f ../../../patches/AriaModules.$MYARCH.patch ]; then
+  patch -p1 < ../../../patches/AriaModules.$MYARCH.patch
+fi
+cd ..
+
+# go back to a defined starting point to be on the safe side
+cd ${WORKDIR}/compile/plugins
+
+# ihtsyn
+echo ""
+echo "===> ihtsyn extra plugin"
+echo ""
+# if we have a source archive in the source dir use that ...
+if [ -f ../../source/ihtsyn-source.tar.gz ]; then
+  echo "INFO: using sources from the source archive"
+  ( cd ../.. ; tar xzf source/ihtsyn-source.tar.gz )
+  cd ihtsyn
+# ... otherwise get it from git and create a source archive afterwards
+else
+  git clone https://github.com/Ahornberg/ihtsyn
+  cd ihtsyn
+  git checkout v2.0.0
+  git submodule update --init --recursive
+  ( cd ../../.. ; mkdir -p source ; tar czf source/ihtsyn-source.tar.gz compile/plugins/ihtsyn )
+fi
+if [ -f ../../../patches/ihtsyn.patch ]; then
+  patch -p1 < ../../../patches/ihtsyn.patch
+fi
+if [ -f ../../../patches/ihtsyn.$MYARCH.patch ]; then
+  patch -p1 < ../../../patches/ihtsyn.$MYARCH.patch
+fi
+cd ..
+
+# go back to a defined starting point to be on the safe side
+cd ${WORKDIR}/compile/plugins
+
+# dbRackCsound
+echo ""
+echo "===> dbRackCsound extra plugin"
+echo ""
+# if we have a source archive in the source dir use that ...
+if [ -f ../../source/dbRackCsound-source.tar.gz ]; then
+  echo "INFO: using sources from the source archive"
+  ( cd ../.. ; tar xzf source/dbRackCsound-source.tar.gz )
+  cd dbRackCsound
+# ... otherwise get it from git and create a source archive afterwards
+else
+  git clone https://github.com/docb/dbRackCsound
+  cd dbRackCsound
+  git checkout v2.0.3
+  git submodule update --init --recursive
+  ( cd ../../.. ; mkdir -p source ; tar czf source/dbRackCsound-source.tar.gz compile/plugins/dbRackCsound )
+fi
+if [ -f ../../../patches/dbRackCsound.patch ]; then
+  patch -p1 < ../../../patches/dbRackCsound.patch
+fi
+if [ -f ../../../patches/dbRackCsound.$MYARCH.patch ]; then
+  patch -p1 < ../../../patches/dbRackCsound.$MYARCH.patch
 fi
 cd ..
 
