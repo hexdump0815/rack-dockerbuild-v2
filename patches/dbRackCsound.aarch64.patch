@@ -1,0 +1,13 @@
+diff --git a/Makefile b/Makefile
+index 85dbd91..27a2427 100644
+--- a/Makefile
++++ b/Makefile
+@@ -17,7 +17,7 @@ else ifdef ARCH_WIN
+   LDFLAGS += -Wl,--export-all-symbols lib/win/libcsound64.a lib/win/libsndfile.a -lws2_32
+ else
+   FLAGS += -I lib/linux/csound
+-  LDFLAGS += lib/linux/libcsound64.a lib/linux/libsndfile.a
++  LDFLAGS += lib/linux/libsndfile.a -Llib/linux -lcsound64
+ endif
+ 
+ # Add .cpp files to the build

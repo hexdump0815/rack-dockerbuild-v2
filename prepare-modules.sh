@@ -362,6 +362,9 @@ cd ..
 #   ( cd ../../.. ; mkdir -p source ; tar czf source/surgext-rack-beta-source.tar.gz compile/plugins/surgext-rack-beta )
 # fi
 # find * -type f -exec ../../../simde-ify.sh {} \;
+# if [ -f ../../../patches/surgext-rack-beta.patch ]; then
+#   patch -p1 < ../../../patches/surgext-rack-beta.patch
+# fi
 # if [ -f ../../../patches/surgext-rack-beta.$MYARCH.patch ]; then
 #   patch -p1 < ../../../patches/surgext-rack-beta.$MYARCH.patch
 # fi
@@ -779,11 +782,21 @@ else
   git submodule update --init --recursive
   ( cd ../../.. ; mkdir -p source ; tar czf source/dbRackCsound-source.tar.gz compile/plugins/dbRackCsound )
 fi
+find * -type f -exec ../../../simde-ify.sh {} \;
 if [ -f ../../../patches/dbRackCsound.patch ]; then
   patch -p1 < ../../../patches/dbRackCsound.patch
 fi
 if [ -f ../../../patches/dbRackCsound.$MYARCH.patch ]; then
   patch -p1 < ../../../patches/dbRackCsound.$MYARCH.patch
+fi
+# this is for the dbRackCsound extra plugin: it brings its own libraries with
+# it, but only for linux x86_64, so the idea is to install the system
+# libraries instead and link against them to not having to build them by hand
+if [ "$MYARCH" = "aarch64" ] || [ "$MYARCH" = "armv7l" ]; then
+  apt-get -y install libcsound64-dev libsndfile1-dev
+  rm -f lib/linux/lib*
+  cp -a /usr/lib/aarch64-linux-gnu/libsndfile.a /usr/lib/arm-linux-gnueabihf/libsndfile.a lib/linux
+  cp -a /usr/lib/aarch64-linux-gnu/libcsound64.so* /usr/lib/arm-linux-gnueabihf/libcsound64.so* lib/linux
 fi
 cd ..
 
