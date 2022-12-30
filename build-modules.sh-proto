@@ -49,8 +49,13 @@ for i in * ; do
     # libsndfile library instead, build our own libcsound64 (as there is no static
     # lib available in the debian one and it is missing the INIT_STATIC_MODUES
     # build flag as well) and link against them
+    echo ""
+    echo "=== building libcsound64.a for dbRackCsound"
+    echo ""
+    set -x
     apt-get -y install libsndfile1-dev bison flex
     rm -f lib/linux/lib*
+    MYARCH=`uname -m`
     if [ "$MYARCH" = "x86_64" ]; then
       cp /usr/lib/x86_64-linux-gnu/libsndfile.a lib/linux
     fi
@@ -88,6 +93,7 @@ for i in * ; do
       cd $OLD_WORKDIR
     fi
     cp /compile/misc/csound/build/libcsound64.a /compile/plugins/dbRackCsound/lib/linux
+    set +x
   fi
   # Volume1 currently uses too many ressources during
   # build on small systems, so only use one compile thread for it
