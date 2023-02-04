@@ -38,7 +38,7 @@ else
   cd library
   git checkout v2
   # this is the version i used this script last with
-  #git checkout 260ba9dc1e92f37993fb2b5efa9fc36c75589e0d
+  #git checkout 6939f7073fb6c13d347938d2a978a5ca5019b2b0
 
   # looks like the the-xor plugin is no longer available via github
   cd repos
@@ -75,6 +75,14 @@ else
   git submodule deinit -f -- RacketScience
   git rm -f RacketScience
   cd ..
+
+  # and the questionablemodules repo seems to make trouble as well, so lets fix its gitmodules
+  cd repos/questionablemodules
+  git submodule deinit .
+  sed -i 's,git@github.com:imvu/gmtl.git,https://github.com/imvu/gmtl.git,g' .gitmodules
+  git submodule init .
+  git submodule update .
+  cd ../..
 
   git submodule update --init --recursive
   ( cd ../.. ; mkdir -p source ; tar czf source/library-source.tar.gz compile/library )
