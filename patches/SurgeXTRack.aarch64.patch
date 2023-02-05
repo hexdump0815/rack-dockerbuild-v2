@@ -11,3 +11,16 @@ index bedf4929..becabf1c 100644
  
      # PE/COFF doesn't support visibility
      $<$<NOT:$<BOOL:${WIN32}>>:-fvisibility=hidden>
+diff --git a/RackSDK.cmake b/RackSDK.cmake
+index 0abbf43..6685454 100644
+--- a/RackSDK.cmake
++++ b/RackSDK.cmake
+@@ -70,7 +70,7 @@ set_target_properties(${RACK_PLUGIN_LIB} PROPERTIES PREFIX "")
+ 
+ # Since the plugin's compiler could be a different version than Rack's compiler, link libstdc++ and libgcc statically to avoid ABI issues.
+ add_link_options($<$<CXX_COMPILER_ID:GNU>:-static-libstdc++> $<$<PLATFORM_ID:Linux>:-static-libgcc>)
+-add_compile_options($<IF:$<STREQUAL:${CMAKE_OSX_ARCHITECTURES},arm64>,-march=armv8-a+fp+simd,-march=nehalem>)
++add_compile_options(-march=armv8-a -mtune=cortex-a53 -DSIMDE_ENABLE_NATIVE_ALIASES)
+ 
+ add_library(RackSDK INTERFACE)
+ target_include_directories(RackSDK INTERFACE ${RACK_SDK_DIR}/include ${RACK_SDK_DIR}/dep/include)
