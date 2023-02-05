@@ -12,29 +12,15 @@ index bedf4929..becabf1c 100644
      # PE/COFF doesn't support visibility
      $<$<NOT:$<BOOL:${WIN32}>>:-fvisibility=hidden>
 diff --git a/RackSDK.cmake b/RackSDK.cmake
-index 0abbf43..1b53800 100644
+index 0abbf43..f6b78d4 100644
 --- a/RackSDK.cmake
 +++ b/RackSDK.cmake
-@@ -69,8 +69,8 @@ add_library(${RACK_PLUGIN_LIB} MODULE)
- set_target_properties(${RACK_PLUGIN_LIB} PROPERTIES PREFIX "")
+@@ -70,7 +70,7 @@ set_target_properties(${RACK_PLUGIN_LIB} PROPERTIES PREFIX "")
  
  # Since the plugin's compiler could be a different version than Rack's compiler, link libstdc++ and libgcc statically to avoid ABI issues.
--add_link_options($<$<CXX_COMPILER_ID:GNU>:-static-libstdc++> $<$<PLATFORM_ID:Linux>:-static-libgcc>)
+ add_link_options($<$<CXX_COMPILER_ID:GNU>:-static-libstdc++> $<$<PLATFORM_ID:Linux>:-static-libgcc>)
 -add_compile_options($<IF:$<STREQUAL:${CMAKE_OSX_ARCHITECTURES},arm64>,-march=armv8-a+fp+simd,-march=nehalem>)
-+add_link_options($<$<CXX_COMPILER_ID:GNU>:-static-libstdc++> $<$<PLATFORM_ID:Linux>:-static-libgcc -latomic>)
 +add_compile_options(-march=armv7 -mtune=cortex-a9 -mfpu=neon -mno-unaligned-access -DSIMDE_ENABLE_NATIVE_ALIASES)
  
  add_library(RackSDK INTERFACE)
  target_include_directories(RackSDK INTERFACE ${RACK_SDK_DIR}/include ${RACK_SDK_DIR}/dep/include)
-diff --git a/Makefile b/Makefile
-index 831cbbd..8dc6eeb 100644
---- a/Makefile
-+++ b/Makefile
-@@ -56,6 +56,7 @@ DISTRIBUTABLES += $(wildcard LICENSE*) res docs patches presets README.md build/
- # Include the VCV plugin Makefile framework
- include $(RACK_DIR)/plugin.mk
- 
-+LDFLAGS += -latomic
- 
- COMMUNITY_ISSUE=https://github.com/VCVRack/community/issues/745
- 
