@@ -7,6 +7,10 @@ WORKDIR=`dirname $0`
 cd $WORKDIR
 WORKDIR=`pwd`
 
+# this seems to be good for newer cmake versions
+# possible options are "GLVND" or "LEGACY"
+export OpenGL_GL_PREFERENCE="LEGACY"
+
 echo Rack
 cd Rack
 make -j4 clean
