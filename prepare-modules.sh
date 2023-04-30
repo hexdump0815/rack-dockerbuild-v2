@@ -38,7 +38,7 @@ else
   cd library
   git checkout v2
   # this is the version i used this script last with
-  #git checkout 6939f7073fb6c13d347938d2a978a5ca5019b2b0
+  #git checkout d9fd9a6d4a61c02f1c5b1ddc9a5794a73a5bd4c9
 
   # looks like the the-xor plugin is no longer available via github
   cd repos
@@ -76,12 +76,21 @@ else
   git rm -f RacketScience
   cd ..
 
+  # and the Digital-Apothecary repo seems to make trouble as well, so get rid of it too
+  cd repos
+  git submodule deinit -f -- Digital-Apothecary
+  git rm -f Digital-Apothecary
+  cd ..
+
   # and the questionablemodules repo seems to make trouble as well, so lets fix its gitmodules
-  cd repos/questionablemodules
-  git submodule deinit .
-  sed -i 's,git@github.com:imvu/gmtl.git,https://github.com/imvu/gmtl.git,g' .gitmodules
-  git submodule init .
-  git submodule update .
+  cd repos
+  git submodule deinit -f -- questionablemodules
+  git submodule init questionablemodules
+  git submodule update questionablemodules
+  sed -i 's,git@github.com:imvu/gmtl.git,https://github.com/imvu/gmtl.git,g' questionablemodules/.gitmodules
+  cd questionablemodules
+  git submodule init
+  git submodule update
   cd ../..
 
   git submodule update --init --recursive
