@@ -85,8 +85,8 @@ index 87c1278b..8bed24e0 100755
  	# The CFLAGS environment variable is ignored, so pass CFLAGS to their custom ./config script, which passes them to the compiler.
  	# Set no-pinshared so OpenSSL doesn't call GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_PIN, ...) on initialization on Windows. This prevents libRack from being unloaded on Windows with FreeLibrary().
 -	cd openssl-1.1.1k && ./config --prefix="$(DEP_PATH)" no-shared no-hw threads no-zlib no-capieng no-pinshared $(CFLAGS)
-+	# we do not pass CFLAGS for armv7l, as otherwise it will try to compile armv8 asm
-+	cd openssl-1.1.1k && CFLAGS="" ./config --prefix="$(DEP_PATH)" no-shared no-hw threads no-zlib no-capieng no-pinshared
++	# disable asm as otherwise it will try to compile armv8 asm, which will of course not work on armv7
++	cd openssl-1.1.1k && ./config --prefix="$(DEP_PATH)" no-shared no-hw threads no-zlib no-capieng no-pinshared no-asm $(CFLAGS)
  	$(MAKE) -C openssl-1.1.1k
  	$(MAKE) -C openssl-1.1.1k install_sw
  
