@@ -1,0 +1,26 @@
+diff --git a/src/L3DS3Q.cpp b/src/L3DS3Q.cpp
+index 1802652..739f6ef 100644
+--- a/src/L3DS3Q.cpp
++++ b/src/L3DS3Q.cpp
+@@ -30,7 +30,7 @@ bool editState = false ;
+ dsp::SchmittTrigger rstTrigger;
+ dsp::SchmittTrigger upTrigger;
+ dsp::SchmittTrigger editTrigger;
+-dsp::SchmittTrigger ledTrigger[80] ={};
++dsp::SchmittTrigger ledTrigger[80];
+ 
+ 	L3DS3Q() {
+ 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+diff --git a/src/LEDSEQ.cpp b/src/LEDSEQ.cpp
+index 7ba15c5..8097e58 100644
+--- a/src/LEDSEQ.cpp
++++ b/src/LEDSEQ.cpp
+@@ -32,7 +32,7 @@ bool editState = false ;
+ dsp::SchmittTrigger rstTrigger;
+ dsp::SchmittTrigger upTrigger;
+ dsp::SchmittTrigger editTrigger;
+-dsp::SchmittTrigger ledTrigger[80] ={};
++dsp::SchmittTrigger ledTrigger[80];
+ 
+ 
+ 	LEDSEQ() {
