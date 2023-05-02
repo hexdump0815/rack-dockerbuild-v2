@@ -1,0 +1,13 @@
+diff --git a/Makefile b/Makefile
+index 1adeea8..089fb3f 100644
+--- a/Makefile
++++ b/Makefile
+@@ -34,7 +34,7 @@ $(cmake_rack_plugin): CMakeLists.txt
+ 	cmake --install $(CMAKE_BUILD)
+ 
+ rack_plugin: $(cmake_rack_plugin)
+-	cp -vf $(cmake_rack_plugin) .
++	cp -vf $(cmake_rack_plugin) plugin-arm32.so
+ 
+ # Add files to the ZIP package when running `make dist`
+ dist: rack_plugin res

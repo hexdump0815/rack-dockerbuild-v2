@@ -24,3 +24,16 @@ index 0abbf43..6685454 100644
  
  add_library(RackSDK INTERFACE)
  target_include_directories(RackSDK INTERFACE ${RACK_SDK_DIR}/include ${RACK_SDK_DIR}/dep/include)
+diff --git a/Makefile b/Makefile
+index 831cbbd..3f24b18 100644
+--- a/Makefile
++++ b/Makefile
+@@ -37,7 +37,7 @@ $(cmake_rack_plugin): CMakeLists.txt
+ 	cmake --install $(CMAKE_BUILD)
+ 
+ rack_plugin: $(cmake_rack_plugin)
+-	cp -vf $(cmake_rack_plugin) .
++	cp -vf $(cmake_rack_plugin) plugin-arm64.so
+ 
+ # Add files to the ZIP package when running `make dist`
+ dist: rack_plugin build/surge-data res
