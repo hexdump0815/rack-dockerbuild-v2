@@ -452,33 +452,33 @@ cd ..
 # go back to a defined starting point to be on the safe side
 cd ${WORKDIR}/compile/plugins
 
-# NullPath
-echo ""
-echo "===> NullPath extra plugin"
-echo ""
-# if we have a source archive in the source dir use that ...
-if [ -f ../../source/NullPath-source.tar.gz ]; then
-  echo "INFO: using sources from the source archive"
-  ( cd ../.. ; tar xzf source/NullPath-source.tar.gz )
-  cd NullPath
-# ... otherwise get it from git and create a source archive afterwards
-else
-  git clone https://github.com/alefnull/NullPath.git
-  cd NullPath
-  git checkout main
-  git submodule update --init --recursive
-  ( cd ../../.. ; mkdir -p source ; tar czf source/NullPath-source.tar.gz compile/plugins/NullPath )
-fi
-if [ -f ../../../patches/NullPath.patch ]; then
-  patch -p1 < ../../../patches/NullPath.patch
-fi
-if [ -f ../../../patches/NullPath.$MYARCH.patch ]; then
-  patch -p1 < ../../../patches/NullPath.$MYARCH.patch
-fi
-cd ..
-
-# go back to a defined starting point to be on the safe side
-cd ${WORKDIR}/compile/plugins
+# # NullPath
+# echo ""
+# echo "===> NullPath extra plugin"
+# echo ""
+# # if we have a source archive in the source dir use that ...
+# if [ -f ../../source/NullPath-source.tar.gz ]; then
+#   echo "INFO: using sources from the source archive"
+#   ( cd ../.. ; tar xzf source/NullPath-source.tar.gz )
+#   cd NullPath
+# # ... otherwise get it from git and create a source archive afterwards
+# else
+#   git clone https://github.com/alefnull/NullPath.git
+#   cd NullPath
+#   git checkout main
+#   git submodule update --init --recursive
+#   ( cd ../../.. ; mkdir -p source ; tar czf source/NullPath-source.tar.gz compile/plugins/NullPath )
+# fi
+# if [ -f ../../../patches/NullPath.patch ]; then
+#   patch -p1 < ../../../patches/NullPath.patch
+# fi
+# if [ -f ../../../patches/NullPath.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/NullPath.$MYARCH.patch
+# fi
+# cd ..
+#
+# # go back to a defined starting point to be on the safe side
+# cd ${WORKDIR}/compile/plugins
 
 # Volume1
 echo ""
