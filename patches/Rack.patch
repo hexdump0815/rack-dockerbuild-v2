@@ -4,6 +4,7 @@
   - default sample rate = 22.05 khz
   - 2 threads
   - frame swap interval = 15
+- adjust openssl 1.1.1 to latest version
 
 diff --git a/include/settings.hpp b/include/settings.hpp
 index 2b7c1a9b..7e6a1b21 100644
@@ -153,3 +154,44 @@ index 621a395a..46979382 100644
  	json_t* knobModeJ = json_object_get(rootJ, "knobMode");
  	if (knobModeJ)
  		knobMode = (KnobMode) json_integer_value(knobModeJ);
+diff --git a/dep/Makefile b/dep/Makefile
+index 87c1278b..59aad868 100755
+--- a/dep/Makefile
++++ b/dep/Makefile
+@@ -115,18 +115,18 @@ $(jansson): | jansson-2.12
+ 	$(MAKE) -C jansson-2.12
+ 	$(MAKE) -C jansson-2.12 install
+ 
+-openssl-1.1.1k:
+-	$(WGET) "https://www.openssl.org/source/openssl-1.1.1k.tar.gz"
+-	$(SHA256) openssl-1.1.1k.tar.gz 892a0875b9872acd04a9fde79b1f943075d5ea162415de3047c327df33fbaee5
+-	$(UNTAR) openssl-1.1.1k.tar.gz
+-	rm openssl-1.1.1k.tar.gz
++openssl-1.1.1w:
++	$(WGET) "https://www.openssl.org/source/openssl-1.1.1w.tar.gz"
++	$(SHA256) openssl-1.1.1w.tar.gz cf3098950cb4d853ad95c0841f1f9c6d3dc102dccfcacd521d93925208b76ac8
++	$(UNTAR) openssl-1.1.1w.tar.gz
++	rm openssl-1.1.1w.tar.gz
+ 
+-$(openssl): | openssl-1.1.1k
++$(openssl): | openssl-1.1.1w
+ 	# The CFLAGS environment variable is ignored, so pass CFLAGS to their custom ./config script, which passes them to the compiler.
+ 	# Set no-pinshared so OpenSSL doesn't call GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_PIN, ...) on initialization on Windows. This prevents libRack from being unloaded on Windows with FreeLibrary().
+-	cd openssl-1.1.1k && ./config --prefix="$(DEP_PATH)" no-shared no-hw threads no-zlib no-capieng no-pinshared $(CFLAGS)
+-	$(MAKE) -C openssl-1.1.1k
+-	$(MAKE) -C openssl-1.1.1k install_sw
++	cd openssl-1.1.1w && ./config --prefix="$(DEP_PATH)" no-shared no-hw threads no-zlib no-capieng no-pinshared $(CFLAGS)
++	$(MAKE) -C openssl-1.1.1w
++	$(MAKE) -C openssl-1.1.1w install_sw
+ 
+ curl-7.79.1:
+ 	$(WGET) "https://github.com/curl/curl/releases/download/curl-7_79_1/curl-7.79.1.tar.gz" || $(WGET) "https://curl.se/download/curl-7.79.1.tar.gz"
+@@ -264,7 +264,7 @@ $(simde): simde/simde
+ 
+ # Helpers
+ 
+-src: glew-2.1.0 glfw jansson-2.12 libsamplerate-0.1.9 openssl-1.1.1k curl-7.79.1 zstd-1.4.5 libarchive-3.4.3 rtaudio nanovg nanosvg oui-blendish osdialog
++src: glew-2.1.0 glfw jansson-2.12 libsamplerate-0.1.9 openssl-1.1.1w curl-7.79.1 zstd-1.4.5 libarchive-3.4.3 rtaudio nanovg nanosvg oui-blendish osdialog
+ 
+ clean:
+ 	git clean -fdx
