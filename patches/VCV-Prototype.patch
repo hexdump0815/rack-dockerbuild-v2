@@ -1,8 +1,21 @@
 diff --git a/Makefile b/Makefile
-index 2d535f9..bccb988 100644
+index 2d535f9..9e0f184 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -250,7 +250,7 @@ ifdef ARCH_MAC
+@@ -240,8 +240,10 @@ ifdef ARCH_WIN
+ endif
+ 
+ $(libpd):
+-	cd dep && git clone "https://github.com/libpd/libpd.git" --recursive
+-	cd dep/libpd && git checkout e3980d2fe45ef9eaaec1d45e4d68637eaf76a8b1
++	# see: https://community.vcvrack.com/t/vult-on-vcv-prototype-works-again/19420/39
++	cd dep && git clone "https://github.com/libpd/libpd.git"
++	cd dep/libpd && git checkout 0.14.1
++	cd dep/libpd && git submodule update --init --recursive
+ 
+ ifdef ARCH_MAC
+ 	# libpd's Makefile is handmade, and it doesn't honor CFLAGS and LDFLAGS environments.
+@@ -250,7 +252,7 @@ ifdef ARCH_MAC
  	# Perhaps inline assembly is used in libpd? Who knows.
  	cd dep/libpd && $(MAKE) MULTI=true STATIC=true ADDITIONAL_CFLAGS='-DPD_LONGINTTYPE="long long" $(DEP_MAC_SDK_FLAGS) -stdlib=libc++' ADDITIONAL_LDFLAGS='$(DEP_MAC_SDK_FLAGS) -stdlib=libc++'
  else
@@ -11,7 +24,7 @@ index 2d535f9..bccb988 100644
  endif
  	cd dep/libpd && $(MAKE) install prefix="$(DEP_PATH)"
  endif
-@@ -272,8 +272,12 @@ DISTRIBUTABLES += faust_libraries
+@@ -272,8 +274,12 @@ DISTRIBUTABLES += faust_libraries
  #LDFLAGS += -L/usr/local/lib -lfaust dep/lib/mir-gen.o dep/lib/mir.o
  
  $(libfaust):
