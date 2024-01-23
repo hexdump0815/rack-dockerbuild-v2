@@ -667,33 +667,33 @@ cd ..
 # go back to a defined starting point to be on the safe side
 cd ${WORKDIR}/compile/plugins
 
-# stkjack-vcv2
-echo ""
-echo "===> stkjack-vcv2 extra plugin"
-echo ""
-# if we have a source archive in the source dir use that ...
-if [ -f ../../source/stkjack-vcv2-source.tar.gz ]; then
-  echo "INFO: using sources from the source archive"
-  ( cd ../.. ; tar xzf source/stkjack-vcv2-source.tar.gz )
-  cd stkjack-vcv2
-# ... otherwise get it from git and create a source archive afterwards
-else
-  git clone https://github.com/simotek/stkjack-vcv2.git
-  cd stkjack-vcv2
-  git checkout master
-  git submodule update --init --recursive
-  ( cd ../../.. ; mkdir -p source ; tar czf source/stkjack-vcv2-source.tar.gz compile/plugins/stkjack-vcv2 )
-fi
-if [ -f ../../../patches/stkjack-vcv2.patch ]; then
-  patch -p1 < ../../../patches/stkjack-vcv2.patch
-fi
-if [ -f ../../../patches/stkjack-vcv2.$MYARCH.patch ]; then
-  patch -p1 < ../../../patches/stkjack-vcv2.$MYARCH.patch
-fi
-cd ..
-
-# go back to a defined starting point to be on the safe side
-cd ${WORKDIR}/compile/plugins
+# # stkjack-vcv2
+# echo ""
+# echo "===> stkjack-vcv2 extra plugin"
+# echo ""
+# # if we have a source archive in the source dir use that ...
+# if [ -f ../../source/stkjack-vcv2-source.tar.gz ]; then
+#   echo "INFO: using sources from the source archive"
+#   ( cd ../.. ; tar xzf source/stkjack-vcv2-source.tar.gz )
+#   cd stkjack-vcv2
+# # ... otherwise get it from git and create a source archive afterwards
+# else
+#   git clone https://github.com/simotek/stkjack-vcv2.git
+#   cd stkjack-vcv2
+#   git checkout master
+#   git submodule update --init --recursive
+#   ( cd ../../.. ; mkdir -p source ; tar czf source/stkjack-vcv2-source.tar.gz compile/plugins/stkjack-vcv2 )
+# fi
+# if [ -f ../../../patches/stkjack-vcv2.patch ]; then
+#   patch -p1 < ../../../patches/stkjack-vcv2.patch
+# fi
+# if [ -f ../../../patches/stkjack-vcv2.$MYARCH.patch ]; then
+#   patch -p1 < ../../../patches/stkjack-vcv2.$MYARCH.patch
+# fi
+# cd ..
+# 
+# # go back to a defined starting point to be on the safe side
+# cd ${WORKDIR}/compile/plugins
 
 # Southpole
 echo ""
