@@ -33,7 +33,7 @@ index 831cbbd..3f24b18 100644
  
  rack_plugin: $(cmake_rack_plugin)
 -	cp -vf $(cmake_rack_plugin) .
-+	cp -vf $(cmake_rack_plugin) plugin-arm32.so
++	cp -vf $(cmake_rack_plugin) plugin.so
  
  # Add files to the ZIP package when running `make dist`
  dist: rack_plugin build/surge-data res
