@@ -80,15 +80,15 @@ diff --git a/dep/Makefile b/dep/Makefile
 index 87c1278b..8bed24e0 100755
 --- a/dep/Makefile
 +++ b/dep/Makefile
-@@ -124,7 +124,8 @@ openssl-1.1.1k:
- $(openssl): | openssl-1.1.1k
+@@ -124,7 +124,8 @@
+ $(openssl): | openssl-1.1.1w
  	# The CFLAGS environment variable is ignored, so pass CFLAGS to their custom ./config script, which passes them to the compiler.
  	# Set no-pinshared so OpenSSL doesn't call GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_PIN, ...) on initialization on Windows. This prevents libRack from being unloaded on Windows with FreeLibrary().
--	cd openssl-1.1.1k && ./config --prefix="$(DEP_PATH)" no-shared no-hw threads no-zlib no-capieng no-pinshared $(CFLAGS)
+-	cd openssl-1.1.1w && ./config --prefix="$(DEP_PATH)" no-shared no-hw threads no-zlib no-capieng no-pinshared $(CFLAGS)
 +	# disable asm as otherwise it will try to compile armv8 asm, which will of course not work on armv7
-+	cd openssl-1.1.1k && ./config --prefix="$(DEP_PATH)" no-shared no-hw threads no-zlib no-capieng no-pinshared no-asm $(CFLAGS)
- 	$(MAKE) -C openssl-1.1.1k
- 	$(MAKE) -C openssl-1.1.1k install_sw
++	cd openssl-1.1.1w && ./config --prefix="$(DEP_PATH)" no-shared no-hw threads no-zlib no-capieng no-pinshared no-asm $(CFLAGS)
+ 	$(MAKE) -C openssl-1.1.1w
+ 	$(MAKE) -C openssl-1.1.1w install_sw
  
 diff --git a/Makefile b/Makefile
 index e1be07d1..80b56aa4 100644
