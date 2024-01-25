@@ -1,3 +1,11 @@
+there is some ugly build hack required to make it compile and work properly on
+armv7l - so far i did not manage to get this properly into the make/cmake setup
+and some magic steps have to be done by hand still as a result: i simply
+started the build via "RACK_DIR=/compile/Rack make dist" and as soon as it
+started compiling i added "-latomic" to the end of
+dep/cmake-build/CMakeFiles/plugin.dir/link.txt - not a proper solution, but at
+least a way to get it built for now :)
+
 diff --git a/surge/CMakeLists.txt b/surge/CMakeLists.txt
 index bedf4929..becabf1c 100644
 --- a/surge/CMakeLists.txt
