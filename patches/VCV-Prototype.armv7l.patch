@@ -1,0 +1,37 @@
+diff --git a/Makefile b/Makefile
+index 2d535f9..b27cfc4 100644
+--- a/Makefile
++++ b/Makefile
+@@ -83,6 +83,11 @@ QUICKJS_MAKE_FLAGS += prefix="$(DEP_PATH)"
+ ifdef ARCH_WIN
+ 	QUICKJS_MAKE_FLAGS += CONFIG_WIN32=y
+ endif
++
++#$(quickjs): DEP_CFLAGS := $(filter-out -march=armv7 -mfpu=neon -mno-unaligned-access,$(CFLAGS))
++# use the below options to optimize for the odroid u3
++$(quickjs): DEP_CFLAGS := $(filter-out -march=armv7 -mtune=cortex-a9 -mfpu=neon -mno-unaligned-access,$(CFLAGS))
++
+ $(quickjs):
+ 	cd dep && git clone "https://github.com/JerrySievert/QuickJS.git"
+ 	cd dep/QuickJS && git checkout 807adc8ca9010502853d471bd8331cdc1d376b94
+@@ -96,6 +101,11 @@ SOURCES += src/LuaJITEngine.cpp
+ luajit := dep/LuaJIT/src/libluajit.a
+ OBJECTS += $(luajit)
+ DEPS += $(luajit)
++
++#$(luajit): DEP_CFLAGS := $(filter-out -march=armv7 -mfpu=neon -mno-unaligned-access,$(CFLAGS))
++# use the below options to optimize for the odroid u3
++$(luajit): DEP_CFLAGS := $(filter-out -march=armv7 -mtune=cortex-a9 -mfpu=neon -mno-unaligned-access,$(CFLAGS))
++
+ $(luajit):
+ 	cd dep && git clone "https://github.com/LuaJIT/LuaJIT.git"
+ 	cd dep/LuaJIT && git checkout v2.1
+@@ -113,7 +123,7 @@ OBJECTS += $(supercollider)
+ DEPS += $(supercollider)
+ DISTRIBUTABLES += dep/supercollider/SCClassLibrary
+ DISTRIBUTABLES += support/supercollider_extensions
+-SUPERCOLLIDER_CMAKE_FLAGS += -DSUPERNOVA=0 -DSC_EL=0 -DSC_VIM=0 -DSC_ED=0 -DSC_IDE=0 -DSC_ABLETON_LINK=0 -DSC_QT=0 -DCMAKE_BUILD_TYPE=Release -DSCLANG_SERVER=0 -DBUILD_TESTING=0 -DNO_LIBSNDFILE=1
++SUPERCOLLIDER_CMAKE_FLAGS += -DSUPERNOVA=0 -DSC_EL=0 -DSC_VIM=0 -DSC_ED=0 -DSC_IDE=0 -DSC_ABLETON_LINK=0 -DSC_QT=0 -DCMAKE_BUILD_TYPE=Release -DSCLANG_SERVER=0 -DBUILD_TESTING=0 -DNO_LIBSNDFILE=1 -DSSE=0 -DSSE2=0 -DNATIVE=0
+ SUPERCOLLIDER_SUBMODULES += external_libraries/hidapi external_libraries/nova-simd external_libraries/nova-tt external_libraries/portaudio/portaudio_submodule external_libraries/yaml-cpp
+ SUPERCOLLIDER_BRANCH := 3.13
+ 
