@@ -1,13 +1,13 @@
 diff --git a/surge/CMakeLists.txt b/surge/CMakeLists.txt
-index bedf4929..becabf1c 100644
+index d0a8984b..8eb28e2d 100644
 --- a/surge/CMakeLists.txt
 +++ b/surge/CMakeLists.txt
-@@ -52,7 +52,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+@@ -77,7 +77,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
    add_compile_options(
      -Wno-multichar
      # Targeting Windows with GCC/Clang is experimental
--    $<$<NOT:$<BOOL:${WIN32}>>:-Werror>
-+    # $<$<NOT:$<BOOL:${WIN32}>>:-Werror>
+-    $<$<NOT:$<OR:$<BOOL:${WIN32}>,$<BOOL:${SURGE_SKIP_WERROR}>>>:-Werror>
++    # $<$<NOT:$<OR:$<BOOL:${WIN32}>,$<BOOL:${SURGE_SKIP_WERROR}>>>:-Werror>
  
      # PE/COFF doesn't support visibility
      $<$<NOT:$<BOOL:${WIN32}>>:-fvisibility=hidden>

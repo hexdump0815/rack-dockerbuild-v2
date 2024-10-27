@@ -1,11 +1,11 @@
 diff --git a/compile.mk b/compile.mk
-index b72fd683..e167bc39 100644
+index dcc6af0d..4e453d5c 100644
 --- a/compile.mk
 +++ b/compile.mk
-@@ -27,7 +27,7 @@ ifdef ARCH_X64
+@@ -30,7 +30,7 @@ ifdef ARCH_X64
+ 	FLAGS += -march=nehalem
  endif
  ifdef ARCH_ARM64
- 	FLAGS += -DARCH_ARM64
 -	FLAGS += -march=armv8-a+fp+simd
 +	FLAGS += -march=armv8-a -mtune=cortex-a53 -DSIMDE_ENABLE_NATIVE_ALIASES
  endif

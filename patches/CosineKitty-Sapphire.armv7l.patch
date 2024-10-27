@@ -1,13 +1,13 @@
 diff --git a/Makefile b/Makefile
-index 8f1b6ad..7853d9b 100644
+index 732f040..08373a4 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -2,7 +2,7 @@
  RACK_DIR ?= ../..
  
  # FLAGS will be passed to both the C and C++ compiler
--FLAGS += -Werror
-+#FLAGS += -Werror
+-FLAGS += -Wall -Werror
++FLAGS += -Wall
  CFLAGS +=
  CXXFLAGS +=
  

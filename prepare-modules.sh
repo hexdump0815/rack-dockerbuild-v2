@@ -39,19 +39,7 @@ else
   git checkout v2
   # this is the version i used this script last with - uncomment this
   # line to build the same versions, which should compile quite well
-  #git checkout c8e95a51961306858e6f1e1fdee06db774aed2b1
-
-  # looks like the the-xor plugin is no longer available via github
-  cd repos
-  git submodule deinit -f -- TheXOR
-  git rm -f TheXOR
-  cd ..
-
-  # and the rjmodules repo seems to make trouble as well, so get rid of it too
-  cd repos
-  git submodule deinit -f -- RJModules
-  git rm -f RJModules
-  cd ..
+  #git checkout c9719506a42d49b20a344226d8f44dcc22c9ca29
 
   # and the SunsetSignals repo seems to make trouble as well, so get rid of it too
   cd repos
@@ -71,30 +59,6 @@ else
   git rm -f EH_modules
   cd ..
 
-  # and the RacketScience repo seems to make trouble as well, so get rid of it too
-  cd repos
-  git submodule deinit -f -- RacketScience
-  git rm -f RacketScience
-  cd ..
-
-#  # and the Digital-Apothecary repo seems to make trouble as well, so get rid of it too
-#  cd repos
-#  git submodule deinit -f -- Digital-Apothecary
-#  git rm -f Digital-Apothecary
-#  cd ..
-
-  # and the luckyxxl repo seems to make trouble as well, so get rid of it too
-  cd repos
-  git submodule deinit -f -- luckyxxl
-  git rm -f luckyxxl
-  cd ..
-
-  # and the Mantra repo seems to make trouble as well, so get rid of it too
-  cd repos
-  git submodule deinit -f -- Mantra
-  git rm -f Mantra
-  cd ..
-
   # and the questionablemodules repo seems to make trouble as well, so lets fix its gitmodules
   cd repos
   git submodule deinit -f -- questionablemodules
@@ -106,10 +70,10 @@ else
   git submodule update
   cd ../..
 
-  # GlueTheGiant requires the latest development version to compile meanwhile
-  cd repos/GlueTheGiant
-  git checkout development
-  cd ../..
+#  # GlueTheGiant requires the latest development version to compile meanwhile
+#  cd repos/GlueTheGiant
+#  git checkout development
+#  cd ../..
 
   # ugly hack to make SubmarineFree compile with rack v2.4.1
   cd repos/SubmarineFree
@@ -347,9 +311,10 @@ fi
 if [ -f ../../../patches/VCV-Prototype.$MYARCH.patch ]; then
   patch -p1 < ../../../patches/VCV-Prototype.$MYARCH.patch
 fi
-# some extra step for later is required for this plugin to make it compile and link
-cp ../../../patches/VCV-Prototype-dep-libfaust.patch .
-cp ../../../patches/VCV-Prototype-dep-supercollider.patch .
+# TODO: patches do not seem to be there ...
+# # some extra step for later is required for this plugin to make it compile and link
+# cp ../../../patches/VCV-Prototype-dep-libfaust.patch .
+# cp ../../../patches/VCV-Prototype-dep-supercollider.patch .
 cd ..
 
 # go back to a defined starting point to be on the safe side

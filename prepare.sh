@@ -34,7 +34,7 @@ if [ -f ../source/Rack-source.tar.gz ]; then
 else
   git clone https://github.com/VCVRack/Rack.git
   cd Rack
-  git checkout v2.4.1
+  git checkout v2.5.2
   git submodule update --init --recursive
   # create a backup copy of the unpatched sources if needed to build elsewhere later from them
   ( cd ../.. ; mkdir -p source ; tar czf source/Rack-source.tar.gz compile/Rack )
