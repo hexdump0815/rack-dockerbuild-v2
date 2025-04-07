@@ -1,4 +1,4 @@
 #!/bin/bash
 
-cd docker-bookworm
-docker build --no-cache -t vcvrack-buildenv-v2-bookworm .
+cd docker-trixie
+docker build --no-cache -t vcvrack-buildenv-v2-trixie .
