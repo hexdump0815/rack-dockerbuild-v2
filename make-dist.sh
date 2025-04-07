@@ -22,5 +22,6 @@ for i in *.mk helper.py include LICENSE-dist.md LICENSE-GPLv3.txt LICENSE.md; do
 done
 
 cp -ri compile/Rack/dep/include dist/rack-sdk/dep
+cp -ri compile/Rack/translations dist
 
 cp simde-ify.sh dist/rack-sdk

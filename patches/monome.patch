@@ -1,0 +1,1152 @@
+this is the diff between the version referenced in the library
+as of today and the current stte of the repo to make it compile
+git diff a60f6763f47ceea3acd1f4c0746ed9d35b8d8cb2 1f5a9ca734a1dbe54db3076f9d6ace806bd02629
+
+diff --git a/.github/workflows/build-plugin.yaml b/.github/workflows/build-plugin.yaml
+index e6c6392..c0d6605 100644
+--- a/.github/workflows/build-plugin.yaml
++++ b/.github/workflows/build-plugin.yaml
+@@ -65,7 +65,7 @@ jobs:
+           make rack-sdk-${{ matrix.platform }}
+           make plugin-build-${{ matrix.platform }}
+       - name: Upload artifact
+-        uses: actions/upload-artifact@v3
++        uses: actions/upload-artifact@v4
+         with:
+           path: ${{ env.rack-plugin-toolchain-dir }}/plugin-build
+           name: ${{ matrix.platform }}
+@@ -102,7 +102,7 @@ jobs:
+           make dep
+           make dist
+       - name: Upload artifact
+-        uses: actions/upload-artifact@v3
++        uses: actions/upload-artifact@v4
+         with:
+           path: dist/*.vcvplugin
+           name: mac-${{ matrix.platform }}
+@@ -135,7 +135,7 @@ jobs:
+             ${{ env.CI_REPOSITORY_NAME }} VCV Rack Plugin ${{ env.CI_REF_NAME }}
+           draft: false
+           prerelease: false
+-      - uses: actions/download-artifact@v3
++      - uses: actions/download-artifact@v4
+         with:
+           path: _artifacts
+       - name: Upload release assets
+diff --git a/.vscode/settings.json b/.vscode/settings.json
+index cfe82f9..cd9e799 100644
+--- a/.vscode/settings.json
++++ b/.vscode/settings.json
+@@ -99,6 +99,16 @@
+         "__node_handle": "cpp",
+         "mock_hardware_api_private.h": "c",
+         "__functional_03": "cpp",
+-        "mutex": "cpp"
++        "mutex": "cpp",
++        "__config": "cpp",
++        "__hash_table": "cpp",
++        "__split_buffer": "cpp",
++        "__threading_support": "cpp",
++        "__tree": "cpp",
++        "__verbose_abort": "cpp",
++        "cfenv": "cpp",
++        "charconv": "cpp",
++        "execution": "cpp",
++        "stack": "cpp"
+     }
+ }
+\ No newline at end of file
+diff --git a/DEVELOPING.md b/DEVELOPING.md
+index caa9ec1..31d0348 100644
+--- a/DEVELOPING.md
++++ b/DEVELOPING.md
+@@ -1,40 +1,40 @@
+ 
+-## To install prerelease builds:
++## Installing prerelease builds
+ 
+-Download a release for your platform from the [Releases page](../../releases) and place it in your `Rack2\plugins` folder.
++Download a release for your platform from the [Releases page](../../releases) and place the .vcvplugin file into the plugins subfolder inside your Rack 2 user folder. The user folder on your OS can be opened from the Rack menu bar at **Help** > **Open user folder**. The plugins subfolder will be named `plugins-<os>-<cpu>`
+ 
+-More detailed instructions are available in the [Rack documentation on installing non-library plugins](https://vcvrack.com/manual/Installing#Installing-plugins-not-available-on-the-VCV-Library).
++More detailed instructions for installing non-library plugins are available in the [Rack manual](https://vcvrack.com/manual/Installing#Installing-plugins-not-available-on-the-VCV-Library).
+ 
+-## To build the plugin using the Rack SDK:
++## Building the plugin using the Rack SDK
+ 
+-* Clone this repo.
++1. Set up a local [Rack development environment](https://vcvrack.com/manual/Building) as described in the Rack manual.
++2. Clone this repo.
+    ```bash
+    $ git clone https://github.com/Dewb/monome-rack
+    ```
+-* Change into the `monome-rack` folder and clone the plugin's submodules with `git submodule update --init --recursive`
++3. Change into the `monome-rack` folder and clone the plugin's submodules with `git submodule update --init --recursive`
+    ```bash
+    $ cd monome-rack
+    $ git submodule update --init --recursive
+    ```
+-* Download the latest Rack 2.x SDK.
++4. Download the latest Rack 2.x SDK. (The URL will depend on your OS and CPU architecture, see https://vcvrack.com/downloads).
+    ```bash
+-   $ curl -O https://vcvrack.com/downloads/Rack-SDK-2.3.0.zip
+-   $ unzip Rack-SDK-2.3.0.zip
++   $ curl -O https://vcvrack.com/downloads/Rack-SDK-2.4.0-mac-arm64.zip
++   $ unzip Rack-SDK-2.5.0-mac-arm64.zip
++   $ rm Rack-SDK-2.5.0-mac-arm64.zip
+    ```
+-
+-* Build dependencies.
++5. Build dependencies with `make dep`.
+    ```bash
+    $ RACK_DIR=$(PWD)/Rack-SDK make dep
+    ```
+-
+-* Build with `make install`.
++6. Run `make install` to build the plugin and copy it into the Rack plugins folder. (Alternately, open the `monome-rack` folder in Visual Studio Code and select `Tasks > Run Build Task`.)
+    ```bash
+-   $ RACK_DIR=$(PWD)/Rack-SDK make install
++   $ RACK_DIR=$(PWD)/Rack-SDK make -j4 install
+    ```
+ 
+-## To build the plugin using the complete VCV Rack source:
++## Building the plugin using the complete VCV Rack source
+ 
+-* Read the [VCVRack](https://github.com/VCVRack/Rack) build instructions for your platform and follow them carefully. Run and test Rack to make sure it works as expected.
++1. Read the [VCVRack](https://github.com/VCVRack/Rack) build instructions for your platform and follow them carefully. Run and test Rack to make sure it works as expected.
+    ```bash
+    $ git clone -b v2 https://github.com/VCVRack/Rack
+    $ cd Rack
+@@ -43,20 +43,20 @@ More detailed instructions are available in the [Rack documentation on installin
+    $ make
+    $ make run
+    ``` 
+-* Clone this repo into the `plugins` folder under VCVRack.
++2. Clone this repo into the `plugins` folder under VCVRack.
+    ```bash
+    $ cd plugins
+    $ git clone https://github.com/Dewb/monome-rack
+    ```
+-* Change into the `monome-rack` folder and clone the plugin's submodules with `git submodule update --init --recursive`, then `make dep` to build dependencies.
++3. Change into the `monome-rack` folder and clone the plugin's submodules with `git submodule update --init --recursive`, then `make dep` to build dependencies.
+    ```bash
+    $ cd monome-rack
+    $ git submodule update --init --recursive
+    $ make dep
+    ```
+-* Build with `make`, or open the `monome-rack` folder in Visual Studio Code and select `Tasks > Run Build Task`.
++4. Build with `make`, or open the `monome-rack` folder in Visual Studio Code and select `Tasks > Run Build Task`.
+    ```bash
+-   $ make
++   $ make -j4
+    ```
+ 
+ ## Updating documentation
+@@ -68,4 +68,74 @@ Prerequisites:
+    $ pip install -r docs/requirements.txt
+    ```
+ 
+-Start a hot-reload server with `mkdocs serve`, and run `mkdocs build` to produce the static site.
+\ No newline at end of file
++Start a hot-reload server with `mkdocs serve`, and run `mkdocs build` to produce the static site.
++
++## Using monome-rack as a development environment for module firmware
++
++This plugin can be used to accelerate firmware development for the hardware. The cycle of rebuilding the plugin and restarting Rack is faster than reflashing hardware, and desktop software debuggers are easier to set up than an in-circuit debugger.
++
++First, some caveats: modifying the firmware can't change anything about the Rack "virtual hardware"; it will have the same panel, with the same inputs, outputs, and controls. If you want to making something new, pick as a starting point the module that best aligns with the I/O needs of your new idea. (The name of the firmware determines which module the firmware will be available for, and therefore which panel and I/O will be used, so when you create the new submodule, make sure your submodule folder name starts with the name of the base module.)
++
++Similarly, if you want to change code that interacts directly with the physical hardware at a low level, like USB device detection or ADC/DAC timing, that code may not be executed in Rack. You'll have to skip to the last step and build and test directly on the hardware. 
++
++Finally, keep in mind that a desktop computer has more resources than the AVR32 CPU inside each module. Memory is quite limited, and each module has limited time to compute its tasks inbetween event ticks. Taking too long on an operation risks delaying the next event, potentially throwing off the timing of sequences, or making input responses feel sluggish. Not everything that works on a desktop computer will easily translate to the hardware without further optimization. (It can be helpful to set these concerns aside during early development and brainstorming, of course -- first figure out if your idea works the way you want it to, and only then work on making it efficient.)
++
++Let's walk through setting up a development environment for one of the modules. This example will use Teletype as it's the most actively developed firmware.
++
++1. First, make sure you can build the monome-rack plugin using the instructions in either [Building the plugin using the Rack SDK](#building-the-plugin-using-the-rack-sdk) or [Building the plugin using the complete VCV Rack source](#building-the-plugin-using-the-complete-vcv-rack-source) above.
++2. Find the GitHub URL and branch name for the firmware you want to modify. Right now, only Teletype is fully "Rack ready" in the upstream repository; the others need Rack-specific branches off forks.
++    | module        | repository url                        | branch     |
++    | ------------- | ------------------------------------- | ---------- |
++    | ansible       | https://github.com/Dewb/ansible       | vcvrack    |
++    | earthsea      | https://github.com/Dewb/earthsea      | vcvrack    |
++    | meadowphysics | https://github.com/Dewb/meadowphysics | vcvrack    | 
++    | teletype      | https://github.com/monome/teletype    | main       |
++    | whitewhale    | https://github.com/Dewb/whitewhale    | vcvrack_pr |
++3. Optional: Sign up for a [GitHub](https://github.com) account if you don't already have one, and use the "Fork" button on one of the repository pages above corresponding to the module you want to modify. On the subsequent page, **uncheck** the "Copy the main branch only" checkbox, so you have access to the non-main branches in your fork (necessary for any module besides teletype.)
++    * Note: If you don't do this, you can run the following commands with the URL and branch listed above directly, but it will be more complicated to share your work with others later.
++5. Use the `git submodule` command to create a new firmware submodule inside the `firmware` folder. Let's say we want to create a new development version of the teletype firmware and call it `teletype-dev` within the Rack environment.
++    ```bash
++    $ cd monome-rack
++    $ cd firmware
++    $ git submodule add -b main https://github.com/<your user name>/teletype teletype-dev
++    ```
++6. Run `git submodule update` to fetch the submodule children of the new submodule.
++    ```bash
++    $ git submodule update --init --recursive
++    ```
++7. Now we need to modify the plugin build process to include `teletype-dev` in our list of firmware binaries to build and add to the plugin. Edit `Makefile` in the monome-rack root folder and under the `firmware-build:` section, add the line:
++    ```
++    cd firmware && $(MAKE) -f teletype.mk TARGET_NAME=teletype-dev
++    ```
++   Make sure this line is indented with a single tab character, like the other lines in the section.
++8. Rebuild the plugin using `make install` or the Visual Studio Code **Run Build Task...** command, as in step 1.
++9. Run Rack and place a Teletype module. You should be able to see `teletype-dev` as one of the choices in the **Firmware Tools** > **Switch Firmware** right-click menu. Switch to it! You're now using the code from the new submodule folder you created in step 3.
++10. Let's make some changes to the code. Close Rack and open `firmware/teletype-dev/module/live_mode.c` in your favorite editor. Go to line 771 and change the string `"TELETYPE "` to something else, like `"HELLO "`. Leave the space at the end of the string.
++11. Rebuild the plugin again as in step 6.
++12. Run Rack again, and now any Teletype modules in your patch running the `teletype-dev` firmware should say **HELLO** on the startup screen instead of **TELETYPE**.
++13. Now you can make some more substantial changes. Fix a bug, add a new feature, or erase everything and create a completely new module. You can also repeat steps 4-7 more than once if you want to pursue multiple ideas in parallel; just make sure you give each new submodule folder a unique name.
++    * Note: if your goal is to create new behavior for the module from scratch, you'll need to preserve the `initialize_module()` and `check_events()` functions, but most everything else is fair game. You'll need to use the `DECLARE_VRAM` and `DECLARE_NVRAM` macros on your key data structures to have them preserved in the Rack patch. Compare the `whitewhale` and `whitewhale-kria` submodules to see and example of two different firmware for the same module. 
++14. When you have made something interesting and want to share it, you'll need to commit back to your firmware fork. It's probably a good idea to first create a branch:
++    ```bash
++    $ cd firmware/teletype-dev
++    $ git checkout -b my_new_feature
++    ```
++15. Now push that branch to your fork:
++    ```bash
++    $ git push -u origin my_new_feature
++    ```
++16. Share your work! Note that this will *not* create any commits in your local copy of the monome-rack repo. This is okay, as you don't need to commit the changes to Rack to add your development firmware. You can share the firmware binaries from the `res` folder to other people and they won't have to build anything. Alternately, they can add your firmware to their build environment themselves by following steps 4-6, except instead of using the normal firmware URL and branch, they'll use your URL and branch in the `git submodule add` command:
++    ```bash
++    $ git submodule add -b my_new_feature https://github.com/<your user name>/teletype teletype-dev
++    ```
++17. Finally, once your new fix or feature is tested and working inside Rack, you can try building it for the hardware. The hardware build process uses a `Makefile` *inside* the specific firmware subfolder, instead of the Rack makefiles in the root of the `firmware/` folder. Building with these Makefiles requires [the avr32 toolchain](https://github.com/monome/avr32-toolchain) to be installed and in your path, a potentially complex process. However, if you have Docker or Rancher Desktop you can use a preconfigured image to make this easy.
++    ```bash
++    $ cd firmware/teletype-dev
++    $ nerdctl run -v $(pwd):/target -t dewb/monome-build 
++    ```
++    See [the monome-build image README](https://github.com/Dewb/monome-build/blob/master/README.md) for more background on building with the image.
++    * Note: The teletype Makefile runs git commands, but the Rack submodule structure moves the .git contents to the plugin root folder and puts it out of scope of the docker image. For now, to make the teletype build work, you'll need to comment out the last two lines of the Makefile, like so:
++        ```make
++        # Add the git commit id to a file for use when printing out the version
++        #../module/gitversion.c: $(GIT_DIR)/HEAD $(GIT_DIR)/index
++        #	echo "const char *git_version = \"$(shell cut -d '-' -f 1 ...
+diff --git a/docs/content/general/credits.md b/docs/content/general/credits.md
+index d8b2a65..ddf2dc6 100644
+--- a/docs/content/general/credits.md
++++ b/docs/content/general/credits.md
+@@ -12,12 +12,11 @@ The firmware code for the hardware modules are licensed under the version 2 of t
+ 
+ Full source for the plugin is available at [https://github.com/Dewb/monome-rack](https://github.com/Dewb/monome-rack). The new code in this repository is also licensed under [version 2 of the GPL](https://github.com/Dewb/monome-rack/blob/main/LICENSE).
+ 
+-
+-
+-This project benefits from the inclusion of the following source libraries with GPL-compatible licenses:
++This project benefits from the inclusion of the following source libraries:
+ 
+ * [base64](https://github.com/ReneNyffenegger/cpp-base64) by René Nyffenegger [License](https://github.com/Dewb/monome-rack/blob/main/lib/base64/LICENSE)
+ * [simple-svg](https://github.com/adishavit/simple-svg) by adishavit [License](https://github.com/Dewb/monome-rack/blob/main/lib/simple-svg/LICENSE)
+ * [oscpack](https://github.com/RossBencina/oscpack) by Ross Bencina [License](https://github.com/Dewb/monome-rack/blob/main/lib/oscpack/LICENSE)
++* [serialosc_example](https://github.com/daniel-bytes/serialosc_example) by Daniel Battaglia
+ 
+-Naturally, this project also couldn't exist without the [VCV Rack SDK](https://github.com/VCVRack/Rack) and the [many open-source libraries](https://github.com/vcvrack/rack#software-libraries) that it depends on.
++Naturally, this project wouldn't exist without the [VCV Rack SDK](https://github.com/VCVRack/Rack) and the [many open-source libraries](https://github.com/vcvrack/rack#software-libraries) that it depends on.
+diff --git a/docs/content/help.md b/docs/content/help.md
+index 13cc7c7..e76d587 100644
+--- a/docs/content/help.md
++++ b/docs/content/help.md
+@@ -22,9 +22,9 @@ Check out the recordings of past [flash crash livecoding events](https://flashcr
+ 
+ [The VCV Community Forum](https://community.vcvrack.com) is a community of VCV Rack users and module developers of all experience levels. [There is a thread for discussion of these modules there as well](https://community.vcvrack.com/t/monome-modules-beta-dev-log/3683).
+ 
+-# Building from source 
++# Development information
+ 
+-[See DEVELOPING.md on GitHub](https://github.com/Dewb/monome-rack/blob/main/DEVELOPING.md).
++For guides to building the plugin from scratch, or using the plugin as a development environment for changes to the module firmware, [see DEVELOPING.md on GitHub](https://github.com/Dewb/monome-rack/blob/main/DEVELOPING.md).
+ 
+ # Reporting bugs
+ 
+diff --git a/docs/content/modules/teletype.md b/docs/content/modules/teletype.md
+index 2818b62..f302d22 100644
+--- a/docs/content/modules/teletype.md
++++ b/docs/content/modules/teletype.md
+@@ -125,7 +125,7 @@ The second way to interact with grids is to script your own interface. The `G` s
+ 
+ For the basics, see [the Teletype manual](https://monome.org/docs/teletype/manual/#grid).
+ 
+-For advanced scripting techniques, see `@scanner-darkly`'s [GRID INTEGRATION studies](https://github.com/scanner-darkly/teletype/wiki/GRID-INTEGRATION).
++For advanced scripting techniques, see [@scanner-darkly](https://github.com/scanner-darkly)'s [GRID INTEGRATION studies](https://github.com/scanner-darkly/teletype/wiki/GRID-INTEGRATION).
+ 
+ You can use either a physical or virtual grid to take advantage of the grid operators or Grid Control Mode. Hardware versions of Teletype can't use both the grid and the keyboard at the same time, and there are [some precautions to follow](https://monome.org/docs/grid/grid-modular/#teletype) regarding power loads, but thankfully the software version has none of these restrictions, making it an excellent environment for developing complex grid scenes that you can later transfer to hardware.
+ 
+@@ -133,9 +133,9 @@ You can use either a physical or virtual grid to take advantage of the grid oper
+ 
+ Choose **Firmware Tools > Switch Firmware** to see alternate firmware options for Teletype.
+ 
+-Currently there are firmware builds for the teletype 4.0 and 5.0-beta release streams. 4.0 is the default; at some point after 5.0 is out of beta, it will become the default for newly placed modules, but modules already placed in your patch will remain 4.0.
++Currently there are firmware options for the Teletype 4.x and 5.x release streams. Older versions of monome-rack used Teletype 4.x by default; as of monome-rack 2.2.5, newly placed modules will default to 5.x, but modules already placed in your patch will stay on whatever they're currently using.
+ 
+-Switching firmware will reset the VRAM and NVRAM for the module, so export any scenes you want to keep before to text files before switching firmware editions.
++Switching firmware will reset the active scene VRAM and the stored scenes NVRAM for the module. Make sure to export any scenes you want to keep before switching firmware editions.
+ 
+ # Further reading
+ 
+diff --git a/firmware/mock_hardware/common/adc.c b/firmware/mock_hardware/common/adc.c
+index dce996c..f4de169 100644
+--- a/firmware/mock_hardware/common/adc.c
++++ b/firmware/mock_hardware/common/adc.c
+@@ -1,10 +1,10 @@
+ #include "mock_hardware_api.h"
+ #include "types.h"
+ 
+-void adc_convert(u16 adc[4])
++void adc_convert(u16 (*adc)[4])
+ {
+-    adc[0] = hardware_getADC(0);
+-    adc[1] = hardware_getADC(1);
+-    adc[2] = hardware_getADC(2);
+-    adc[3] = hardware_getADC(3);
++    (*adc)[0] = hardware_getADC(0);
++    (*adc)[1] = hardware_getADC(1);
++    (*adc)[2] = hardware_getADC(2);
++    (*adc)[3] = hardware_getADC(3);
+ }
+\ No newline at end of file
+diff --git a/firmware/mock_hardware/include/adc.h b/firmware/mock_hardware/include/adc.h
+index aacef0e..801f2ce 100644
+--- a/firmware/mock_hardware/include/adc.h
++++ b/firmware/mock_hardware/include/adc.h
+@@ -1,4 +1,4 @@
+ #include "types.h"
+ 
+ void init_adc(void);
+-void adc_convert(u16 dst[4]);
+\ No newline at end of file
++void adc_convert(u16 (*dst)[4]);
+\ No newline at end of file
+diff --git a/src/common/widgets/CustomMenuTemplates.hpp b/src/common/widgets/CustomMenuTemplates.hpp
+new file mode 100644
+index 0000000..a048f6f
+--- /dev/null
++++ b/src/common/widgets/CustomMenuTemplates.hpp
+@@ -0,0 +1,151 @@
++#pragma once
++
++#include "rack.hpp"
++using namespace rack;
++
++template <class TMenuItem = ui::MenuItem>
++TMenuItem* createUnconsumingIndexSubmenuItem(std::string text, std::vector<std::string> labels, std::function<size_t()> getter, std::function<void(size_t val)> setter, bool disabled = false)
++{
++    struct IndexItem : ui::MenuItem
++    {
++        std::function<size_t()> getter;
++        std::function<void(size_t)> setter;
++        size_t index;
++
++        void step() override
++        {
++            size_t currIndex = getter();
++            this->rightText = CHECKMARK(currIndex == index);
++            MenuItem::step();
++        }
++        void onAction(const event::Action& e) override
++        {
++            setter(index);
++            e.unconsume();
++        }
++    };
++
++    struct Item : TMenuItem
++    {
++        std::function<size_t()> getter;
++        std::function<void(size_t)> setter;
++        std::vector<std::string> labels;
++
++        void step() override
++        {
++            size_t currIndex = getter();
++            std::string label = (currIndex < labels.size()) ? labels[currIndex] : "";
++            this->rightText = label + "  " + RIGHT_ARROW;
++            TMenuItem::step();
++        }
++        ui::Menu* createChildMenu() override
++        {
++            ui::Menu* menu = new ui::Menu;
++            for (size_t i = 0; i < labels.size(); i++)
++            {
++                IndexItem* item = createMenuItem<IndexItem>(labels[i]);
++                item->getter = getter;
++                item->setter = setter;
++                item->index = i;
++                menu->addChild(item);
++            }
++            return menu;
++        }
++    };
++
++    Item* item = createMenuItem<Item>(text);
++    item->getter = getter;
++    item->setter = setter;
++    item->labels = labels;
++    item->disabled = disabled;
++    return item;
++}
++
++template <class TMenuItem = ui::MenuItem>
++TMenuItem* createUnconsumingIndexSubmenuItemWithDynamicLabels(std::string text, std::function<std::vector<std::string>()> getLabels, std::function<size_t()> getter, std::function<void(size_t val)> setter, bool disabled = false)
++{
++    struct IndexItem : ui::MenuItem
++    {
++        std::function<size_t()> getter;
++        std::function<void(size_t)> setter;
++        size_t index;
++
++        void step() override
++        {
++            size_t currIndex = getter();
++            this->rightText = CHECKMARK(currIndex == index);
++            MenuItem::step();
++        }
++        void onAction(const event::Action& e) override
++        {
++            setter(index);
++            e.unconsume();
++        }
++    };
++
++    struct Item : TMenuItem
++    {
++        std::function<std::vector<std::string>()> getLabels;
++        std::function<size_t()> getter;
++        std::function<void(size_t)> setter;
++
++        void step() override
++        {
++            size_t currIndex = getter();
++            auto labels = getLabels();
++            std::string label = (currIndex < labels.size()) ? labels[currIndex] : "";
++            this->rightText = label + "  " + RIGHT_ARROW;
++            TMenuItem::step();
++        }
++        ui::Menu* createChildMenu() override
++        {
++            ui::Menu* menu = new ui::Menu;
++            auto labels = getLabels();
++            for (size_t i = 0; i < labels.size(); i++)
++            {
++                IndexItem* item = createMenuItem<IndexItem>(labels[i]);
++                item->getter = getter;
++                item->setter = setter;
++                item->index = i;
++                menu->addChild(item);
++            }
++            return menu;
++        }
++    };
++
++    Item* item = createMenuItem<Item>(text);
++    item->getter = getter;
++    item->setter = setter;
++    item->getLabels = getLabels;
++    item->disabled = disabled;
++    return item;
++}
++
++template <class TMenuItem = ui::MenuItem>
++TMenuItem* createSubmenuItemWithDynamicRightText(std::string text, std::function<std::string(void)> getRightText, std::function<void(ui::Menu* menu)> createMenu, bool disabled = false)
++{
++    struct Item : TMenuItem
++    {
++        std::function<std::string(void)> getRightText;
++        std::function<void(ui::Menu* menu)> createMenu;
++
++        void step() override
++        {
++            this->rightText = getRightText() + "  " + RIGHT_ARROW;
++            TMenuItem::step();
++        }
++
++        ui::Menu* createChildMenu() override
++        {
++            ui::Menu* menu = new ui::Menu;
++            createMenu(menu);
++            return menu;
++        }
++    };
++
++    Item* item = createMenuItem<Item>(text, getRightText() + "  " + RIGHT_ARROW);
++    item->getRightText = getRightText;
++    item->createMenu = createMenu;
++    item->disabled = disabled;
++    return item;
++}
+\ No newline at end of file
+diff --git a/src/faderbank/FaderbankModule.cpp b/src/faderbank/FaderbankModule.cpp
+index 318db61..ccfd082 100644
+--- a/src/faderbank/FaderbankModule.cpp
++++ b/src/faderbank/FaderbankModule.cpp
+@@ -19,11 +19,7 @@ FaderbankModule::~FaderbankModule()
+ 
+ void FaderbankModule::process(const ProcessArgs& args)
+ {
+-    rack::midi::Message msg;
+-    while (midiInput.tryPop(&msg, args.frame))
+-    {
+-        processMIDIMessage(msg);
+-    }
++    processMIDIMessages(args);
+ 
+     for (unsigned i = 0; i < NUM_FADERS; i++)
+     {
+@@ -44,61 +40,161 @@ void FaderbankModule::process(const ProcessArgs& args)
+     }
+ }
+ 
+-void FaderbankModule::processMIDIMessage(const rack::midi::Message& msg)
++void FaderbankModule::processMIDIMessages(const ProcessArgs& args)
+ {
+-    DEBUG("MIDI: %lld %s", msg.getFrame(), msg.toString().c_str());
++    int min14bitInterval = floor(args.sampleRate * 0.004);
+ 
+-    switch (msg.getStatus())
++    rack::midi::Message msg;
++    while (midiInput.tryPop(&msg, args.frame))
+     {
+-        case 0xb: // Continuous Controller
+-            {
+-                // Combine channel and CC number into a lookup key
+-                uint16_t key = (msg.getChannel() << 8) | msg.getNote();
+-                auto iter = inputMap.find(key);
+-                if (iter != inputMap.end())
++        DEBUG("MIDI: %lld %s", msg.getFrame(), msg.toString().c_str());
++
++        switch (msg.getStatus())
++        {
++            case 0xb: // Continuous Controller
+                 {
+-                    uint8_t index = iter->second;
+-                    if (index < NUM_FADERS)
++                    // Combine channel and CC number into a lookup key
++                    uint8_t ccNum = msg.getNote();
++                    uint16_t key = (msg.getChannel() << 8) | ccNum;
++
++                    auto iter = inputMap.find(key);
++                    if (iter != inputMap.end())
++                    {
++                        auto faderDestinations = iter->second;
++                        for (auto index : faderDestinations) {
++                            if (index < NUM_FADERS)
++                            {
++                                records[index].highValue = msg.getValue();
++                                records[index].lastHighValue = msg.getValue();
++                                records[index].lastHighValueFrame = args.frame;
++                            }
++                        }
++                    }
++
++                    if (ccNum >= 32)
+                     {
+-                        auto param = getParamQuantity(index);
+-                        if (param)
++                        // look for potential LSB CC of 14-bit CC
++                        key = (msg.getChannel() << 8) | (ccNum - 32);
++                        iter = inputMap.find(key);
++                        if (iter != inputMap.end())
+                         {
+-                            param->setScaledValue((msg.getValue() * 1.0) / 127.0);
++                            auto faderDestinations = iter->second;
++                            for (auto index : faderDestinations)
++                            {
++                                if (index < NUM_FADERS && records[index].faderMode == FaderMode14bitCC)
++                                {
++                                    records[index].lowValue = msg.getValue();
++                                    records[index].lastLowValueFrame = args.frame;
++                                }
++                            }
+                         }
+                     }
+                 }
+-            }
+-            break;
+-        case 0xF: // System Exclusive
+-            {
+-                if (msg.bytes[1] == 0x7d && // 16n manufacturer ID
+-                    msg.bytes[2] == 0x00 &&
+-                    msg.bytes[3] == 0x00 &&
+-                    msg.bytes[4] == 0x0F && // sysex config response ID
+-                    msg.bytes.size() > (9 + 48 + NUM_FADERS))
++                break;
++            case 0xF: // System Exclusive
+                 {
+-                    inputMap.clear();
+-                    for (int i = 0; i < NUM_FADERS; i++)
++                    if (msg.bytes[1] == 0x7d && // 16n manufacturer ID
++                        msg.bytes[2] == 0x00 &&
++                        msg.bytes[3] == 0x00 &&
++                        msg.bytes[4] == 0x0F && // sysex config response ID
++                        msg.bytes.size() >= (9 + 80))
+                     {
+-                        uint8_t channel = msg.bytes[9 + 16 + i] - 1;
+-                        uint8_t ccNum = msg.bytes[9 + 48 + i];
+-                        inputMap[(channel << 8) | ccNum] = i;
++                        for (int i = 0; i < NUM_FADERS; i++)
++                        {
++                            uint8_t channel = ((msg.bytes[9 + 16 + i]) & 0xF) - 1;
++                            uint8_t ccNum = msg.bytes[9 + 48 + i] & 0x7F;
++                            records[i].ccNum = ccNum;
++                            records[i].channel = channel;
++                            if (msg.bytes.size() >= 9 + 83)
++                            {
++                                uint16_t ccMode = (msg.bytes[9 + 80] & 0x7F) | ((msg.bytes[9 + 81] & 0x7F) << 7) | ((msg.bytes[9 + 82] & 0x03) << 14);
++                                records[i].faderMode = (ccMode & (1 << i)) == 0 ? FaderModeCC : FaderMode14bitCC;
++                            }
++                        }
++                        updateInputMap();
+                     }
+                 }
++                break;
++            default:
++                break;
++        }
++    }
++
++    for (int i = 0; i < NUM_FADERS; i++)
++    {
++        uint16_t value;
++        bool updateable = false;
++        bool expect14bit = records[i].faderMode == FaderMode14bitCC && records[i].ccNum < 96;
++
++        if (records[i].highValue != 0xFF)
++        {
++            if (expect14bit)
++            {
++                if (records[i].lowValue != 0xFF)
++                {
++                    value = ((records[i].highValue & 0x7F) << 7) + (records[i].lowValue & 0x7F);
++                    updateable = true;
++                }
++                else if ((args.frame - records[i].lastHighValueFrame) > min14bitInterval)
++                {
++                    // give up waiting for a low value
++                    value = (records[i].highValue & 0x7F) << 7;
++                    updateable = true;
++                }
++            }
++            else
++            {
++                value = records[i].highValue & 0x7F;
++                updateable = true;
++            }
++        }
++        else if (expect14bit && records[i].lowValue != 0xFF && (args.frame - records[i].lastLowValueFrame) > min14bitInterval)
++        {
++            // give up waiting for a high value
++            value = ((records[i].lastHighValue & 0x7F) << 7) + (records[i].lowValue & 0x7F);
++            updateable = true;
++        }
++
++        if (updateable)
++        {
++            auto param = getParamQuantity(i);
++            if (param)
++            {
++                param->setScaledValue((value * 1.0f) / ((expect14bit ? 0x3FFF : 0x7F) * 1.0f));
+             }
+-            break;
+-        default:
+-            break;
++
++            records[i].highValue = 0xFF;
++            records[i].lowValue = 0xFF;
++        }
+     }
+ }
+ 
+ void FaderbankModule::resetConfig()
+ {
+-    inputMap.clear();
+     for (int i = 0; i < NUM_FADERS; i++)
+     {
+         // by default, assign CC faders starting with 32, all on channel 1
+-        inputMap[32 + i] = i;
++        records[i].ccNum = 32 + i;
++        records[i].channel = 0;
++        records[i].faderMode = FaderModeCC;
++    }
++
++    updateInputMap();
++}
++
++void FaderbankModule::updateInputMap()
++{
++    inputMap.clear();
++
++    for (int i = 0; i < NUM_FADERS; i++)
++    {
++        uint16_t key = (records[i].channel << 8) | records[i].ccNum;
++        if (inputMap.find(key) == inputMap.end())
++        {
++            inputMap.insert(make_pair(key, std::vector<uint8_t>()));
++        }
++
++        inputMap[key].push_back(i);
+     }
+ }
+ 
+@@ -138,6 +234,79 @@ void FaderbankModule::updateFaderRanges()
+     }
+ }
+ 
++void FaderbankModule::autodetectConfig()
++{
++    resetConfig();
++
++    midiInput.setDriverId(rack::midi::getDriverIds()[0]);
++    if (midiInput.deviceId == -1)
++    {
++        for (int deviceId : midiInput.getDeviceIds())
++        {
++            if (midiInput.getDeviceName(deviceId).substr(0, 3).find("16n") != std::string::npos)
++            {
++                midiInput.setDeviceId(deviceId);
++                break;
++            }
++        }
++    }
++
++    midiOutput.setDriverId(rack::midi::getDriverIds()[0]);
++    if (midiOutput.deviceId == -1)
++    {
++        for (int deviceId : midiOutput.getDeviceIds())
++        {
++            if (midiOutput.getDeviceName(deviceId).find("16n") != std::string::npos)
++            {
++                midiOutput.setDeviceId(deviceId);
++                break;
++            }
++        }
++    }
++
++    // Send a sysex message to request device channel/CC config.
++    if (midiOutput.deviceId != -1)
++    {
++        rack::midi::Message msg;
++        msg.setSize(6);
++        msg.bytes = { 0xF0, 0x7d, 0x00, 0x00, 0x1F, 0xF7 };
++
++        midiOutput.sendMessage(msg);
++    }
++}
++
++void FaderbankModule::writeConfigSysex()
++{
++    if (midiOutput.deviceId != -1)
++    {
++        rack::midi::Message msg;
++        msg.setSize(41);
++
++        uint8_t header[] = { 0xF0, 0x7d, 0x00, 0x00, 0x0C };
++        for (int i = 0; i < 5; i++)
++        {
++            msg.bytes[i] = header[i];
++        }
++
++        uint16_t modeBits = 0x0000;
++        for (int i = 0; i < NUM_FADERS; i++)
++        {
++            msg.bytes[5 + i] = (records[i].channel + 1) & 0x1F;
++            msg.bytes[21 + i] = records[i].ccNum & 0x7F;
++            if (records[i].faderMode == FaderMode14bitCC)
++            {
++                modeBits |= (1 << i);
++            }
++        }
++        msg.bytes[37] = modeBits & 0x7F;
++        msg.bytes[38] = (modeBits >> 7) & 0x7F;
++        msg.bytes[39] = (modeBits >> 14) & 0x03;
++        msg.bytes[40] = 0xF7;
++
++        midiOutput.sendMessage(msg);
++    }
++}
++
+ json_t* FaderbankModule::dataToJson()
+ {
+     json_t* rootJ = json_object();
+@@ -147,13 +316,19 @@ json_t* FaderbankModule::dataToJson()
+     json_object_set_new(rootJ, "polyphonicMode", json_boolean(polyphonicMode));
+ 
+     json_object_set_new(rootJ, "midi", midiInput.toJson());
++    json_object_set_new(rootJ, "midiOutput", midiOutput.toJson());
+ 
+-    json_t* configJ = json_object();
+-    for (auto& entry : inputMap)
++    json_t* configJ = json_array();
++    for (auto& entry : records)
+     {
+-        json_object_set_new(configJ, std::to_string(entry.first).c_str(), json_integer(entry.second));
++        json_t* faderRecord = json_object();
++        json_object_set_new(faderRecord, "channel", json_integer(entry.channel));
++        json_object_set_new(faderRecord, "faderMode", json_integer(entry.faderMode));
++        json_object_set_new(faderRecord, "ccNum", json_integer(entry.ccNum));
++
++        json_array_append(configJ, faderRecord);
+     }
+-    json_object_set_new(rootJ, "16n_config", configJ);
++    json_object_set_new(rootJ, "fader_config", configJ);
+ 
+     return rootJ;
+ }
+@@ -178,18 +353,55 @@ void FaderbankModule::dataFromJson(json_t* rootJ)
+     if (midiJ)
+         midiInput.fromJson(midiJ);
+ 
+-    json_t* configJ = json_object_get(rootJ, "16n_config");
+-    if (configJ)
++    json_t* midiOutputJ = json_object_get(rootJ, "midiOutput");
++    if (midiOutputJ)
++        midiOutput.fromJson(midiOutputJ);
++
++    // backwards compatibility for patches with older config structure
++    json_t* oldConfigJ = json_object_get(rootJ, "16n_config");
++    if (oldConfigJ)
+     {
+-        inputMap.clear();
+         json_t* dataJ;
+         const char* key;
+-        json_object_foreach(configJ, key, dataJ)
++        json_object_foreach(oldConfigJ, key, dataJ)
+         {
+             int16_t val = std::stoi(key);
+-            inputMap[val] = json_integer_value(dataJ);
++            int8_t fader = json_integer_value(dataJ);
++            records[fader].ccNum = val & 0x7F;
++            records[fader].channel = val >> 8;
++        }
++    }
++
++    // current format for config
++    json_t* configJ = json_object_get(rootJ, "fader_config");
++    if (configJ)
++    {
++        json_t* dataJ;
++        size_t key;
++        json_array_foreach(configJ, key, dataJ)
++        {
++            if (key < NUM_FADERS)
++            {
++                json_t* channelJ = json_object_get(dataJ, "channel");
++                if (channelJ)
++                {
++                    records[key].channel = json_integer_value(channelJ) & 0xF;
++                }
++                json_t* modeJ = json_object_get(dataJ, "faderMode");
++                if (modeJ)
++                {
++                    records[key].faderMode = static_cast<FaderMode>(json_integer_value(modeJ));
++                }
++                json_t* ccJ = json_object_get(dataJ, "ccNum");
++                if (ccJ)
++                {
++                    records[key].ccNum = json_integer_value(ccJ) & 0x7F;
++                }
++            }
+         }
+     }
++
++    updateInputMap();
+ }
+ 
+ void FaderbankModule::fromJson(json_t* rootJ)
+@@ -200,4 +412,14 @@ void FaderbankModule::fromJson(json_t* rootJ)
+         dataFromJson(dataJ);
+ 
+     Module::fromJson(rootJ);
++}
++
++FaderbankModule::ControllerRecord::ControllerRecord()
++{
++    highValue = 0xFF;
++    lowValue = 0xFF;
++    lastHighValue = 0;
++    channel = 0;
++    ccNum = 0;
++    faderMode = FaderModeCC;
+ }
+\ No newline at end of file
+diff --git a/src/faderbank/FaderbankModule.hpp b/src/faderbank/FaderbankModule.hpp
+index 692583b..759d5dc 100644
+--- a/src/faderbank/FaderbankModule.hpp
++++ b/src/faderbank/FaderbankModule.hpp
+@@ -5,6 +5,7 @@
+ 
+ #define NUM_FADERS 16
+ 
++
+ struct FaderbankModule : rack::Module
+ {
+     FaderbankModule();
+@@ -12,18 +13,22 @@ struct FaderbankModule : rack::Module
+ 
+     void process(const ProcessArgs& args) override;
+ 
+-    void processMIDIMessage(const rack::midi::Message& msg);
++    void processMIDIMessages(const ProcessArgs& args);
+     void resetConfig();
++    void updateInputMap();
+     void updateFaderRanges();
++    void autodetectConfig();
++    void writeConfigSysex();
+ 
+     json_t* dataToJson() override;
+     void dataFromJson(json_t* rootJ) override;
+     // override fromJson to deserialize data before params
+     void fromJson(json_t* rootJ) override;
+ 
++    std::map<uint16_t, std::vector<uint8_t> > inputMap;
+ 
+     rack::midi::InputQueue midiInput;
+-    std::map<uint16_t, uint8_t> inputMap;
++    rack::midi::Output midiOutput;
+ 
+     typedef enum
+     {
+@@ -38,7 +43,29 @@ struct FaderbankModule : rack::Module
+         FaderRangeBipolar
+     } FaderRange;
+ 
++    typedef enum
++    {
++        FaderModeCC,
++        FaderMode14bitCC
++    } FaderMode;
++
++    struct ControllerRecord
++    {
++        uint8_t highValue;
++        uint8_t lowValue;
++        uint8_t lastHighValue;
++        int64_t lastHighValueFrame;
++        int64_t lastLowValueFrame;
++        uint8_t ccNum;
++        uint8_t channel;
++        FaderMode faderMode;
++
++        ControllerRecord();
++    };
++
+     FaderSize faderSize = FaderSize90mm;
+     FaderRange faderRange = FaderRange10V;
+     bool polyphonicMode = false;
++
++    ControllerRecord records[NUM_FADERS];
+ };
+diff --git a/src/faderbank/FaderbankWidget.cpp b/src/faderbank/FaderbankWidget.cpp
+index 2c62974..53d040a 100644
+--- a/src/faderbank/FaderbankWidget.cpp
++++ b/src/faderbank/FaderbankWidget.cpp
+@@ -1,5 +1,6 @@
+ #include "FaderbankWidget.hpp"
+ #include "FaderbankModule.hpp"
++#include "CustomMenuTemplates.hpp"
+ 
+ extern rack::Plugin* pluginInstance;
+ 
+@@ -107,7 +108,6 @@ struct FaderbankSliderYellow : LightSlider<FaderbankSlider, FaderbankSliderLight
+     }
+ };
+ 
+-
+ FaderbankWidget::FaderbankWidget(FaderbankModule* module)
+ {
+     setModule(module);
+@@ -147,6 +147,97 @@ FaderbankWidget::FaderbankWidget(FaderbankModule* module)
+     }
+ }
+ 
++void appendFaderConfigMenu(FaderbankModule* fb, ::Menu* menu, int faderIndex)
++{
++    if (fb == nullptr || menu == nullptr || faderIndex < 0 || faderIndex > NUM_FADERS)
++    {
++        return;
++    }
++
++    std::vector<std::string> modeNames { "CC", "CC (14-bit)" };
++
++    std::vector<std::string> channelNames;
++    for (auto i = 0; i < 16; i++)
++    {
++        std::ostringstream ss;
++        ss << (i + 1);
++        channelNames.push_back(ss.str());
++    }
++
++    std::ostringstream faderName;
++    faderName << faderIndex + 1;
++
++    menu->addChild(createSubmenuItemWithDynamicRightText(faderName.str(),
++        [=]()
++        {
++            FaderbankModule::ControllerRecord record = fb->records[faderIndex];
++            std::ostringstream faderDesc;
++            faderDesc << "Ch " << (int)(record.channel + 1) << " " << modeNames[record.faderMode] << " ";
++            if (record.faderMode == FaderbankModule::FaderModeCC)
++            {
++                faderDesc << (int)record.ccNum;
++            }
++            else if (record.faderMode == FaderbankModule::FaderMode14bitCC)
++            {
++                faderDesc << (int)record.ccNum << "/" << (int)(record.ccNum + 32);
++            }
++            return faderDesc.str();
++        },
++        [=](Menu* childMenu)
++        {
++            childMenu->addChild(createUnconsumingIndexSubmenuItem("Channel", channelNames,
++                [=]()
++                {
++                    return fb->records[faderIndex].channel;
++                },
++                [=](int index)
++                {
++                    fb->records[faderIndex].channel = index & 0xF;
++                    fb->updateInputMap();
++                }
++            ));
++
++            childMenu->addChild(createUnconsumingIndexSubmenuItem("Mode", modeNames,
++                [=]()
++                {
++                    return fb->records[faderIndex].faderMode;
++                },
++                [=](int index)
++                {
++                    fb->records[faderIndex].faderMode = static_cast<FaderbankModule::FaderMode>(index);
++                    fb->updateInputMap();
++                }
++            ));
++
++            childMenu->addChild(createUnconsumingIndexSubmenuItemWithDynamicLabels("CC Number",
++                [=]()
++                {
++                    FaderbankModule::ControllerRecord record = fb->records[faderIndex];
++                    uint8_t ccMax = record.faderMode == FaderbankModule::FaderMode14bitCC ? 31 : 127;
++
++                    std::vector<std::string> ccNames;
++                    for (auto i = 0; i < ccMax + 1; i++)
++                    {
++                        std::ostringstream ss;
++                        ss << i;
++                        ccNames.push_back(ss.str());
++                    }
++                    return ccNames;
++                },
++                [=]()
++                {
++                    return fb->records[faderIndex].ccNum;
++                },
++                [=](int index)
++                {
++                    fb->records[faderIndex].ccNum = index & 0x7F;
++                    fb->updateInputMap();
++                }
++            ));
++        }
++    ));
++}
++
+ void FaderbankWidget::appendContextMenu(Menu* menu)
+ {
+     auto fb = dynamic_cast<FaderbankModule*>(module);
+@@ -157,7 +248,7 @@ void FaderbankWidget::appendContextMenu(Menu* menu)
+ 
+     menu->addChild(new MenuSeparator());
+ 
+-    menu->addChild(createIndexSubmenuItem("Fader voltage range", { "0-10V", "0-5V", "+/-5V" },
++    menu->addChild(createUnconsumingIndexSubmenuItem("Fader voltage range", { "0-10V", "0-5V", "+/-5V" },
+         [=]() {
+             return fb->faderRange;
+         },
+@@ -173,7 +264,7 @@ void FaderbankWidget::appendContextMenu(Menu* menu)
+             }
+         }));
+ 
+-    menu->addChild(createIndexSubmenuItem("Fader size", { "90mm", "60mm" },
++    menu->addChild(createUnconsumingIndexSubmenuItem("Fader size", { "90mm", "60mm" },
+         [=]() {
+             return fb->faderSize;
+         },
+@@ -200,29 +291,61 @@ void FaderbankWidget::appendContextMenu(Menu* menu)
+ 
+     menu->addChild(new MenuSeparator());
+ 
+-    menu->addChild(createSubmenuItem("MIDI connection", fb->midiInput.getDeviceName(fb->midiInput.getDeviceId()),
+-        [=](Menu* childMenu)
++    menu->addChild(createMenuItem("Autodetect 16n hardware", "",
++        [=]()
+         {
+-            appendMidiMenu(childMenu, &fb->midiInput);
+-            // remove channel selection
+-            auto last = childMenu->children.back();
+-            childMenu->removeChild(last);
+-            delete last;
++            fb->autodetectConfig();
+         }));
+ 
+-    menu->addChild(createMenuItem("Autodetect 16n configuration", "",
+-        [=]()
++    menu->addChild(createSubmenuItem("MIDI Configuration", "",
++        [=](Menu* configMenu)
+         {
+-            fb->resetConfig();
+-
+-            // Send a sysex message to request device channel/CC config.
+-            midi::Message msg;
+-            msg.setSize(6);
+-            msg.bytes = { 0xF0, 0x7d, 0x00, 0x00, 0x1F, 0xF7 };
++            configMenu->addChild(createSubmenuItem("Input device", fb->midiInput.getDeviceName(fb->midiInput.getDeviceId()),
++                [=](Menu* childMenu)
++                {
++                    appendMidiMenu(childMenu, &fb->midiInput);
++                    // remove channel selection
++                    auto last = childMenu->children.back();
++                    childMenu->removeChild(last);
++                    delete last;
++                    // and separator
++                    last = childMenu->children.back();
++                    childMenu->removeChild(last);
++                    delete last;
++                }));
++
++            configMenu->addChild(createSubmenuItem("Output device", fb->midiOutput.getDeviceName(fb->midiOutput.getDeviceId()),
++                [=](Menu* childMenu)
++                {
++                    appendMidiMenu(childMenu, &fb->midiOutput);
++                    // remove channel selection
++                    auto last = childMenu->children.back();
++                    childMenu->removeChild(last);
++                    delete last;
++                    // and separator
++                    last = childMenu->children.back();
++                    childMenu->removeChild(last);
++                    delete last;
++                }));
++
++            configMenu->addChild(createSubmenuItem("Fader settings", "",
++                [=](Menu* childMenu)
++                {
++                    for (int i = 0; i < NUM_FADERS; i++)
++                    {
++                        appendFaderConfigMenu(fb, childMenu, i);
++                    }
++                }));
++
++            configMenu->addChild(new MenuSeparator());
++
++            configMenu->addChild(createMenuItem("Write configuration to 16n hardware", "",
++                [=]()
++                {
++                    fb->writeConfigSysex();
++                }
++            ));
++        }
++    ));
++}
+ 
+-            midi::Output output;
+-            output.setDriverId(fb->midiInput.getDriverId());
+-            output.setDeviceId(fb->midiInput.getDeviceId());
+-            output.sendMessage(msg);
+-        }));
+-}
+\ No newline at end of file

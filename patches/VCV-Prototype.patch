@@ -1,7 +1,27 @@
 diff --git a/Makefile b/Makefile
-index 2d535f9..9e0f184 100644
+index 2d535f9..6c468d3 100644
 --- a/Makefile
 +++ b/Makefile
+@@ -115,7 +115,7 @@ DISTRIBUTABLES += dep/supercollider/SCClassLibrary
+ DISTRIBUTABLES += support/supercollider_extensions
+ SUPERCOLLIDER_CMAKE_FLAGS += -DSUPERNOVA=0 -DSC_EL=0 -DSC_VIM=0 -DSC_ED=0 -DSC_IDE=0 -DSC_ABLETON_LINK=0 -DSC_QT=0 -DCMAKE_BUILD_TYPE=Release -DSCLANG_SERVER=0 -DBUILD_TESTING=0 -DNO_LIBSNDFILE=1
+ SUPERCOLLIDER_SUBMODULES += external_libraries/hidapi external_libraries/nova-simd external_libraries/nova-tt external_libraries/portaudio/portaudio_submodule external_libraries/yaml-cpp
+-SUPERCOLLIDER_BRANCH := 3.13
++SUPERCOLLIDER_BRANCH := develop
+ 
+ OBJECTS += dep/supercollider/build/external_libraries/libtlsf.a
+ OBJECTS += dep/supercollider/build/external_libraries/hidapi/linux/libhidapi.a
+@@ -129,8 +129,8 @@ OBJECTS += dep/supercollider/build/external_libraries/libyaml.a
+ LDFLAGS += -lpthread -lasound -ludev
+ 
+ $(supercollider):
+-	cd dep && git clone "https://github.com/supercollider/supercollider" --branch $(SUPERCOLLIDER_BRANCH) --depth 1
+-	cd dep/supercollider && git checkout c64c5244c5e7bbcb26a829e9cf72d249a529c213
++	cd dep && git clone "https://github.com/supercollider/supercollider" --branch $(SUPERCOLLIDER_BRANCH)
++	cd dep/supercollider && git checkout Version-3.13.1
+ 	cd dep/supercollider && git submodule update --depth 1 --init -- $(SUPERCOLLIDER_SUBMODULES)
+ 	cd dep/supercollider && mkdir build
+ 	cd dep/supercollider/build && $(CMAKE) .. $(SUPERCOLLIDER_CMAKE_FLAGS)
 @@ -240,8 +240,10 @@ ifdef ARCH_WIN
  endif
  

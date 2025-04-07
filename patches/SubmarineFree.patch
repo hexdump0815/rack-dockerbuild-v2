@@ -1,0 +1,220 @@
+the name LightButton is now part of the rack sdk, solets rename it to not clash
+see: https://github.com/david-c14/SubmarineFree/issues/203
+
+diff --git a/src/EO1.cpp b/src/EO1.cpp
+index be895f0..1a0a871 100644
+--- a/src/EO1.cpp
++++ b/src/EO1.cpp
+@@ -433,7 +433,7 @@ namespace {
+ } // end namespace
+ 
+ struct EO102 : SchemeModuleWidget {
+-	LightButton *paramRun;
++	SMFLightButton *paramRun;
+ 	EO102(EO_102 *module) {
+ 		setModule(module);
+ 		this->box.size = Vec(405, 380);
+@@ -484,7 +484,7 @@ struct EO102 : SchemeModuleWidget {
+ 		addParam(createParamCentered<MedKnob<LightKnob>>(Vec(245, 320), module, EO_102::PARAM_TRIGGER));
+ 		addChild(createLightCentered<TinyLight<BlueLight>>(Vec(226, 333), module, EO_102::LIGHT_TRIGGER));
+ 		addParam(createParamCentered<SubSwitch2>(Vec(211.5, 280), module, EO_102::PARAM_RUNMODE));
+-		paramRun = createParamCentered<LightButton>(Vec(245, 280), module, EO_102::PARAM_RUN);
++		paramRun = createParamCentered<SMFLightButton>(Vec(245, 280), module, EO_102::PARAM_RUN);
+ 		addParam(paramRun);
+ 
+ 		addParam(createParamCentered<MedKnob<LightKnob>>(Vec(290, 320), module, EO_102::PARAM_INDEX_1));
+diff --git a/src/HS1.cpp b/src/HS1.cpp
+index cf66c6f..925e67a 100644
+--- a/src/HS1.cpp
++++ b/src/HS1.cpp
+@@ -397,7 +397,7 @@ namespace {
+ } // end namespace
+ 
+ struct HS101 : SchemeModuleWidget {
+-	LightButton *paramRun;
++	SMFLightButton *paramRun;
+ 	HS101(HS_101 *module) {
+ 		setModule(module);
+ 		this->box.size = Vec(450, 380);
+@@ -423,7 +423,7 @@ struct HS101 : SchemeModuleWidget {
+ 		addInput(createInputCentered<SilverPort>(Vec(47, 341), module, HS_101::INPUT_TRIGGER));
+ 		addOutput(createOutputCentered<SilverPort>(Vec(72, 341), module, HS_101::OUTPUT_TRIGGER));
+ 		
+-		paramRun = createParamCentered<LightButton>(Vec(102, 341), module, HS_101::PARAM_RUN);
++		paramRun = createParamCentered<SMFLightButton>(Vec(102, 341), module, HS_101::PARAM_RUN);
+ 		addParam(paramRun);
+ 		addChild(createLightCentered<TinyLight<BlueLight>>(Vec(115, 341), module, HS_101::LIGHT_STORING));
+ 
+diff --git a/src/LA1.cpp b/src/LA1.cpp
+index 259ae1e..e68ed91 100644
+--- a/src/LA1.cpp
++++ b/src/LA1.cpp
+@@ -355,7 +355,7 @@ namespace {
+ } // end namespace
+ 
+ struct LA108 : SchemeModuleWidget {
+-	LightButton *resetButton;
++	SMFLightButton *resetButton;
+ 	LA108(LA_108 *module) {
+ 		setModule(module);
+ 		this->box.size = Vec(300, 380);
+@@ -386,7 +386,7 @@ struct LA108 : SchemeModuleWidget {
+ 		addParam(createParamCentered<SnapKnob<MedKnob<LightKnob>>>(Vec(58, 320), module, LA_108::PARAM_TRIGGER));
+ 		addParam(createParamCentered<SubSwitch2>(Vec(89, 320.5), module, LA_108::PARAM_EDGE));
+ 		addParam(createParamCentered<SubSwitch2>(Vec(115, 320.5), module, LA_108::PARAM_RUN));
+-		resetButton = createParamCentered<LightButton>(Vec(159, 320), module, LA_108::PARAM_RESET);
++		resetButton = createParamCentered<SMFLightButton>(Vec(159, 320), module, LA_108::PARAM_RESET);
+ 		addParam(resetButton);
+ 		addParam(createParamCentered<MedKnob<LightKnob>>(Vec(190, 320), module, LA_108::PARAM_TIME));
+ 		addParam(createParamCentered<SmallKnob<LightKnob>>(Vec(226, 327), module, LA_108::PARAM_INDEX_1));
+diff --git a/src/LA2.cpp b/src/LA2.cpp
+index 41ca78e..307293b 100644
+--- a/src/LA2.cpp
++++ b/src/LA2.cpp
+@@ -395,7 +395,7 @@ namespace {
+ } // end namespace
+ 
+ struct LA216 : SchemeModuleWidget {
+-	LightButton *resetButton;
++	SMFLightButton *resetButton;
+ 	LA216(LA_216 *module) {
+ 		setModule(module);
+ 		this->box.size = Vec(330, 380);
+@@ -428,7 +428,7 @@ struct LA216 : SchemeModuleWidget {
+ 		addParam(createParamCentered<SnapKnob<MedKnob<LightKnob>>>(Vec(32.5, 208.5), module, LA_216::PARAM_TRIGGER));
+ 		addParam(createParamCentered<SubSwitch2>(Vec(43, 65.5), module, LA_216::PARAM_EDGE));
+ 		addParam(createParamCentered<SubSwitch2>(Vec(20, 115.5), module, LA_216::PARAM_RUN));
+-		resetButton = createParamCentered<LightButton>(Vec(16.5, 163), module, LA_216::PARAM_RESET);
++		resetButton = createParamCentered<SMFLightButton>(Vec(16.5, 163), module, LA_216::PARAM_RESET);
+ 		addParam(resetButton);
+ 		addParam(createParamCentered<MedKnob<LightKnob>>(Vec(32.5, 270), module, LA_216::PARAM_TIME));
+ 		addParam(createParamCentered<SmallKnob<LightKnob>>(Vec(18.5, 337), module, LA_216::PARAM_INDEX_1));
+diff --git a/src/MZ9.cpp b/src/MZ9.cpp
+index 69f3bc7..124c107 100644
+--- a/src/MZ9.cpp
++++ b/src/MZ9.cpp
+@@ -38,7 +38,7 @@ struct MZ_909: Module {
+ };
+ 
+ struct MZ909 : SchemeModuleWidget {
+-	LightButton *onButton;
++	SMFLightButton *onButton;
+ 	MZ909(MZ_909 *module) {
+ 		setModule(module);
+ 		this->box.size = Vec(30, 380);
+@@ -47,7 +47,7 @@ struct MZ909 : SchemeModuleWidget {
+ 
+ 		addInput(createInputCentered<SilverPort>(Vec(15, 285), module, MZ_909::INPUT_1));
+ 		addOutput(createOutputCentered<SilverPort>(Vec(15, 325), module, MZ_909::OUTPUT_1));
+-		onButton = createParamCentered<LightButton>(Vec(15, 40), module, MZ_909::PARAM_ON);
++		onButton = createParamCentered<SMFLightButton>(Vec(15, 40), module, MZ_909::PARAM_ON);
+ 		addParam(onButton);
+ 	}
+ 	void render(NVGcontext *vg, SchemeCanvasWidget *canvas) override {
+diff --git a/src/SN1.cpp b/src/SN1.cpp
+index cfee0b1..72278bb 100644
+--- a/src/SN1.cpp
++++ b/src/SN1.cpp
+@@ -273,11 +273,11 @@ struct SN101 : SchemeModuleWidget {
+ 		addParam(createParamCentered<SmallKnob<LightKnob>>(Vec(15, 140), module, SN_1::PARAM_EVOL));
+ 		lengthKnob = createParamCentered<SnapKnob<SmallKnob<LightKnob>>>(Vec(15, 170), module, SN_1::PARAM_LENGTH);
+ 		addParam(lengthKnob);
+-		addParam(createParamCentered<LightButton>(Vec(20, 210), module, SN_1::PARAM_HARM_2));
+-		addParam(createParamCentered<LightButton>(Vec(20, 230), module, SN_1::PARAM_HARM_3));
+-		addParam(createParamCentered<LightButton>(Vec(20, 250), module, SN_1::PARAM_HARM_4));
+-		addParam(createParamCentered<LightButton>(Vec(20, 270), module, SN_1::PARAM_HARM_5));
+-		addParam(createParamCentered<LightButton>(Vec(20, 290), module, SN_1::PARAM_HARM_8));
++		addParam(createParamCentered<SMFLightButton>(Vec(20, 210), module, SN_1::PARAM_HARM_2));
++		addParam(createParamCentered<SMFLightButton>(Vec(20, 230), module, SN_1::PARAM_HARM_3));
++		addParam(createParamCentered<SMFLightButton>(Vec(20, 250), module, SN_1::PARAM_HARM_4));
++		addParam(createParamCentered<SMFLightButton>(Vec(20, 270), module, SN_1::PARAM_HARM_5));
++		addParam(createParamCentered<SMFLightButton>(Vec(20, 290), module, SN_1::PARAM_HARM_8));
+ 		addOutput(createOutputCentered<SilverPort>(Vec(15,350), module, SN_1::OUTPUT_1));
+ 	}
+ 	void render(NVGcontext *vg, SchemeCanvasWidget *canvas) override {
+diff --git a/src/XFX.cpp b/src/XFX.cpp
+index 7e869ea..01f18b0 100644
+--- a/src/XFX.cpp
++++ b/src/XFX.cpp
+@@ -401,7 +401,7 @@ struct XF102 : SchemeModuleWidget {
+ 			addChild(createLightCentered<TinyLight<BlueRedLight>>(Vec(142.5, 68.5 + offset), module, XF_102::LIGHT_AUTO_1 + i * 2));
+ 		}
+ 
+-		addParam(createParamCentered<LightButton>(Vec(98, 102.5), module, XF_102::PARAM_LINK_1));
++		addParam(createParamCentered<SMFLightButton>(Vec(98, 102.5), module, XF_102::PARAM_LINK_1));
+ 	}
+ 	void render(NVGcontext *vg, SchemeCanvasWidget *canvas) override {
+ 		drawBase(vg, "XF-102");
+@@ -599,8 +599,8 @@ struct XF104 : SchemeModuleWidget {
+ 			addChild(createLightCentered<TinyLight<BlueRedLight>>(Vec(142.5, 68.5 + offset), module, XF_104::LIGHT_AUTO_1 + i * 2));
+ 		}
+ 
+-		addParam(createParamCentered<LightButton>(Vec(98, 102.5), module, XF_104::PARAM_LINK_1));
+-		addParam(createParamCentered<LightButton>(Vec(98, 278.5), module, XF_104::PARAM_LINK_2));
++		addParam(createParamCentered<SMFLightButton>(Vec(98, 102.5), module, XF_104::PARAM_LINK_1));
++		addParam(createParamCentered<SMFLightButton>(Vec(98, 278.5), module, XF_104::PARAM_LINK_2));
+ 	}
+ 	void render(NVGcontext *vg, SchemeCanvasWidget *canvas) override {
+ 		drawBase(vg, "XF-104");
+diff --git a/src/shared/LightButton.cpp b/src/shared/LightButton.cpp
+index d6bdc55..ca8a942 100755
+--- a/src/shared/LightButton.cpp
++++ b/src/shared/LightButton.cpp
+@@ -8,12 +8,12 @@
+ #include "../SubmarineFree.hpp"
+ #include "color.hpp"
+ 
+-LightButton::LightButton() {
++SMFLightButton::SMFLightButton() {
+ 	box.size.x = 16.0f;
+ 	box.size.y = 16.0f;
+ }
+ 
+-void LightButton::draw(const DrawArgs &args) {
++void SMFLightButton::draw(const DrawArgs &args) {
+ 	nvgSave(args.vg);
+ 
+ 	// Shadow
+@@ -52,7 +52,7 @@ void LightButton::draw(const DrawArgs &args) {
+ 	Widget::draw(args);
+ }
+ 
+-void LightButton::drawLayer(const DrawArgs &args, int layer) {
++void SMFLightButton::drawLayer(const DrawArgs &args, int layer) {
+ 	if (layer == 1) {
+ 		float value = 0.0f;
+ 		if (getParamQuantity()) {
+@@ -67,7 +67,7 @@ void LightButton::drawLayer(const DrawArgs &args, int layer) {
+ 	Widget::drawLayer(args, layer);
+ }
+ 
+-void LightButton::drawLight(const DrawArgs &args, bool enabled) {
++void SMFLightButton::drawLight(const DrawArgs &args, bool enabled) {
+ 	Rect lightbox = Rect(Vec(box.size.x / 4.0f, box.size.y / 4.0f), Vec(box.size.x / 2.0f, box.size.y / 4.0f));	
+ 	NVGcolor lcol = (enabled)?color:nvgRGB(0x4a,0x4a,0x4a);
+ 
+@@ -88,7 +88,7 @@ void LightButton::drawLight(const DrawArgs &args, bool enabled) {
+ 	}
+ }
+ 
+-void LightButton::drawHalo(const DrawArgs &args) {
++void SMFLightButton::drawHalo(const DrawArgs &args) {
+ 	// Halo
+ 	// Don't draw halo if rendering in a framebuffer, e.g. screenshots or Module Browser
+ 	if (args.fb)
+diff --git a/src/shared/components.hpp b/src/shared/components.hpp
+index b99b5ca..3f95409 100755
+--- a/src/shared/components.hpp
++++ b/src/shared/components.hpp
+@@ -93,9 +93,9 @@ struct SubSwitchHorz : k {
+ // Buttons
+ //////////////////
+ 
+-struct LightButton : app::Switch {
++struct SMFLightButton : app::Switch {
+ 	NVGcolor color = SUBLIGHTBLUE;
+-	LightButton(); 
++	SMFLightButton(); 
+ 	void draw(const DrawArgs &args) override;
+ 	void drawLayer(const DrawArgs &args, int layer) override;
+ 	void drawLight(const DrawArgs &args, bool enabled);

@@ -1,0 +1,16 @@
+the linux detection does not seem to work like this here - lets just force it for now ...
+
+diff --git a/src/dsp/Wavetable.cpp b/src/dsp/Wavetable.cpp
+index b4e8d77..85cb9d9 100644
+--- a/src/dsp/Wavetable.cpp
++++ b/src/dsp/Wavetable.cpp
+@@ -73,7 +73,8 @@ void i16toi15_block(short *s, short *o, int n)
+ 
+ int min_F32_tables = 3;
+ 
+-#if ARCH_MAC || ARCH_LIN
++// #if ARCH_MAC || ARCH_LIN
++#if 1
+ bool _BitScanReverse(unsigned int *result, unsigned int bits)
+ {
+     *result = __builtin_ctz(bits);

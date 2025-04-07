@@ -39,7 +39,7 @@ else
   git checkout v2
   # this is the version i used this script last with - uncomment this
   # line to build the same versions, which should compile quite well
-  #git checkout c9719506a42d49b20a344226d8f44dcc22c9ca29
+  #git checkout 9a77be1591e763ad054558ee1bd39d6489377fce
 
   # and the SunsetSignals repo seems to make trouble as well, so get rid of it too
   cd repos
@@ -74,11 +74,6 @@ else
 #  cd repos/GlueTheGiant
 #  git checkout development
 #  cd ../..
-
-  # ugly hack to make SubmarineFree compile with rack v2.4.1
-  cd repos/SubmarineFree
-  find . -type f | xargs sed -i 's,LightButton,SubmarineFreeLightButton,g'
-  cd ../..
 
   git submodule update --init --recursive
   ( cd ../.. ; mkdir -p source ; tar czf source/library-source.tar.gz compile/library )
@@ -333,7 +328,7 @@ if [ -f ../../source/vcv-link-source.tar.gz ]; then
 else
   git clone https://github.com/stellare-modular/vcv-link
   cd vcv-link
-  git checkout 2.0.0
+  git checkout 2.1.0
   git submodule update --init --recursive
   ( cd ../../.. ; mkdir -p source ; tar czf source/vcv-link-source.tar.gz compile/plugins/vcv-link )
 fi
