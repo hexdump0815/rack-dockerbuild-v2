@@ -1,26 +1,15 @@
 diff --git a/src/engine/Engine.cpp b/src/engine/Engine.cpp
-index 453a4a09..78b0a957 100644
+index 9e4b452f..78259583 100644
 --- a/src/engine/Engine.cpp
 +++ b/src/engine/Engine.cpp
-@@ -98,6 +98,9 @@ struct SpinBarrier {
- 				return;
+@@ -25,7 +25,7 @@ inline void cpuPause() {
  #if defined ARCH_X64
- 			__builtin_ia32_pause();
-+#else
-+// TODO: test if this is really required
-+			asm volatile("yield" ::: "memory");
+ 	_mm_pause();
+ #elif defined ARCH_ARM64
+-	__yield();
++	asm volatile("yield" ::: "memory");
  #endif
- 		}
- 	}
-@@ -147,6 +150,9 @@ struct HybridBarrier {
- 				return;
- #if defined ARCH_X64
- 			__builtin_ia32_pause();
-+#else
-+// TODO: test if this is really required
-+			asm volatile("yield" ::: "memory");
- #endif
- 		}
+ }
  
 diff --git a/arch.mk b/arch.mk
 index 88b50819..8b402e52 100644
@@ -52,15 +41,6 @@ index b72fd683..3f17ef59 100644
  endif
  
  ifdef ARCH_LIN
-@@ -91,7 +91,7 @@ build/%.m.o: %.m
- build/%.bin.o: %
- 	@mkdir -p $(@D)
- ifdef ARCH_LIN
--	$(OBJCOPY) -I binary -O elf64-x86-64 -B i386:x86-64 --rename-section .data=.rodata,alloc,load,readonly,data,contents $< $@
-+	$(OBJCOPY) -I binary -O elf32-littlearm -B arm7 --rename-section .data=.rodata,alloc,load,readonly,data,contents $< $@
- endif
- ifdef ARCH_WIN
- 	$(OBJCOPY) -I binary -O pe-x86-64 -B i386:x86-64 --rename-section .data=.rodata,alloc,load,readonly,data,contents $< $@
 diff --git a/dep.mk b/dep.mk
 index 7db35fb5..211f83d5 100644
 --- a/dep.mk
