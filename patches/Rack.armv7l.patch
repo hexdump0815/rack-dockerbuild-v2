@@ -25,22 +25,6 @@ index 88b50819..8b402e52 100644
  else
  $(error Could not determine CPU architecture of $(MACHINE))
  endif
-diff --git a/compile.mk b/compile.mk
-index b72fd683..3f17ef59 100644
---- a/compile.mk
-+++ b/compile.mk
-@@ -25,9 +25,9 @@ ifdef ARCH_X64
- 	FLAGS += -DARCH_X64
- 	FLAGS += -march=nehalem
- endif
--ifdef ARCH_ARM64
-+ifdef ARCH_ARM32
- 	FLAGS += -DARCH_ARM64
--	FLAGS += -march=armv8-a+fp+simd
-+	FLAGS += -march=armv7 -mtune=cortex-a9 -mfpu=neon -mno-unaligned-access -DSIMDE_ENABLE_NATIVE_ALIASES
- endif
- 
- ifdef ARCH_LIN
 diff --git a/dep.mk b/dep.mk
 index 7db35fb5..211f83d5 100644
 --- a/dep.mk
@@ -56,20 +40,6 @@ index 7db35fb5..211f83d5 100644
  endif
  
  ifdef ARCH_MAC
-diff --git a/dep/Makefile b/dep/Makefile
-index 87c1278b..8bed24e0 100755
---- a/dep/Makefile
-+++ b/dep/Makefile
-@@ -124,7 +124,8 @@
- $(openssl): | openssl-1.1.1w
- 	# The CFLAGS environment variable is ignored, so pass CFLAGS to their custom ./config script, which passes them to the compiler.
- 	# Set no-pinshared so OpenSSL doesn't call GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_PIN, ...) on initialization on Windows. This prevents libRack from being unloaded on Windows with FreeLibrary().
--	cd openssl-1.1.1w && ./config --prefix="$(DEP_PATH)" no-shared no-hw threads no-zlib no-capieng no-pinshared $(CFLAGS)
-+	# disable asm as otherwise it will try to compile armv8 asm, which will of course not work on armv7
-+	cd openssl-1.1.1w && ./config --prefix="$(DEP_PATH)" no-shared no-hw threads no-zlib no-capieng no-pinshared no-asm $(CFLAGS)
- 	$(MAKE) -C openssl-1.1.1w
- 	$(MAKE) -C openssl-1.1.1w install_sw
- 
 diff --git a/Makefile b/Makefile
 index e1be07d1..80b56aa4 100644
 --- a/Makefile
@@ -83,20 +53,35 @@ index e1be07d1..80b56aa4 100644
  endif
  ifdef ARCH_MAC
  	STANDALONE_TARGET := Rack
+diff --git a/compile.mk b/compile.mk
+index a076c20d..1fabbf99 100644
+--- a/compile.mk
++++ b/compile.mk
+@@ -29,8 +29,8 @@ endif
+ ifdef ARCH_X64
+ 	FLAGS += -march=nehalem
+ endif
+-ifdef ARCH_ARM64
+-	FLAGS += -march=armv8-a+fp+simd
++ifdef ARCH_ARM32
++	FLAGS += -march=armv7 -mtune=cortex-a9 -mfpu=neon -mno-unaligned-access -DSIMDE_ENABLE_NATIVE_ALIASES
+ endif
+ 
+ ifdef ARCH_LIN
 diff --git a/plugin.mk b/plugin.mk
-index 88a51f51..a7e8faa9 100644
+index e2630f67..073ca3e1 100644
 --- a/plugin.mk
 +++ b/plugin.mk
-@@ -30,7 +30,7 @@ ifdef ARCH_LIN
+@@ -32,7 +32,7 @@ ifdef ARCH_LIN
  	# When Rack loads a plugin, it symlinks /tmp/Rack2 to its system dir, so the plugin can link to libRack.
  	LDFLAGS += -Wl,-rpath=/tmp/Rack2
  	# Since the plugin's compiler could be a different version than Rack's compiler, link libstdc++ and libgcc statically to avoid ABI issues.
 -	LDFLAGS += -static-libstdc++ -static-libgcc
 +	LDFLAGS += -static-libstdc++ -static-libgcc -latomic
- 	RACK_USER_DIR ?= $(HOME)/.Rack2
+ 	XDG_DATA_HOME ?= $(HOME)/.local/share
+ 	RACK_USER_DIR ?= $(XDG_DATA_HOME)/Rack2
  endif
- 
-@@ -55,6 +55,8 @@ all: $(TARGET)
+@@ -60,6 +60,8 @@ all: $(TARGET)
  
  include $(RACK_DIR)/compile.mk
  
@@ -106,17 +91,33 @@ index 88a51f51..a7e8faa9 100644
  	rm -rfv build $(TARGET) dist
  
 diff --git a/src/common.cpp b/src/common.cpp
-index 4f2869c0..77af2ae9 100644
+index aad8aeab..9741f29d 100644
 --- a/src/common.cpp
 +++ b/src/common.cpp
-@@ -34,8 +34,8 @@ const std::string APP_VERSION = TOSTRING(_APP_VERSION);
+@@ -33,9 +33,9 @@ const std::string APP_VERSION = TOSTRING(_RACK_VERSION);
+ #if defined ARCH_X64
  	const std::string APP_CPU = "x64";
  	const std::string APP_CPU_NAME = "x64";
- #elif defined ARCH_ARM64
+-#elif defined ARCH_ARM64
 -	const std::string APP_CPU = "arm64";
 -	const std::string APP_CPU_NAME = "ARM64";
++#elif defined ARCH_ARM32
 +	const std::string APP_CPU = "arm32";
 +	const std::string APP_CPU_NAME = "ARM32";
  #endif
  const std::string API_URL = "https://api.vcvrack.com";
  
+diff --git a/include/arch.hpp b/include/arch.hpp
+index 99cd27b0..924e31d6 100644
+--- a/include/arch.hpp
++++ b/include/arch.hpp
+@@ -7,6 +7,9 @@
+ #if defined __aarch64__
+ 	#define ARCH_ARM64 1
+ #endif
++#if defined __arm__
++	#define ARCH_ARM32 1
++#endif
+ 
+ // Check OS
+ #if defined _WIN32

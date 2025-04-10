@@ -1,0 +1,13 @@
+diff --git a/Makefile b/Makefile
+index 96762c7..a1fa8f0 100644
+--- a/Makefile
++++ b/Makefile
+@@ -2,7 +2,7 @@ RACK_DIR ?= ../..
+ 
+ FLAGS +=
+ CFLAGS +=
+-CXXFLAGS += -Iexternal/OpenSimplexNoise
++CXXFLAGS += -Iexternal/OpenSimplexNoise -Wno-narrowing
+ 
+ # Careful about linking to shared libraries, since you can't assume much about the user's environment and library search path.
+ # Static libraries are fine, but they should be added to this plugin's build system.
