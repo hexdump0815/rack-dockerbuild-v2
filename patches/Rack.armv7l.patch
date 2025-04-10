@@ -121,3 +121,108 @@ index 99cd27b0..924e31d6 100644
  
  // Check OS
  #if defined _WIN32
+diff --git a/dep/Makefile b/dep/Makefile
+index f016299e..f0cee5d4 100755
+--- a/dep/Makefile
++++ b/dep/Makefile
+@@ -124,7 +124,8 @@ openssl-3.3.2:
+ $(openssl): | openssl-3.3.2
+ 	# Set no-pinshared so OpenSSL doesn't call GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_PIN, ...) on initialization on Windows. This prevents libRack from being unloaded on Windows with FreeLibrary().
+ 	# Don't use no-shared because libcurl's configure uses the shared library to find OpenSSL.
+-	cd openssl-3.3.2 && ./Configure --prefix="$(DEP_PATH)" --libdir=lib no-zlib no-capieng no-pinshared no-apps no-tests no-docs no-ui-console
++	# disable asm as otherwise it will try to compile armv8 asm, which will of course not work on armv7
++	cd openssl-3.3.2 && ./Configure --prefix="$(DEP_PATH)" --libdir=lib no-zlib no-capieng no-pinshared no-apps no-tests no-docs no-ui-console no-asm
+ 	$(MAKE) -C openssl-3.3.2
+ 	$(MAKE) -C openssl-3.3.2 install_sw
+ 
+diff --git a/src/system.cpp b/src/system.cpp
+index 190b6da3..cf49d7c2 100644
+--- a/src/system.cpp
++++ b/src/system.cpp
+@@ -934,45 +934,56 @@ void runProcessDetached(const std::string& path) {
+ 
+ 
+ uint32_t getFpuFlags() {
+-#if defined ARCH_X64
+-	return _mm_getcsr();
+-#elif defined ARCH_ARM64
+-	uint64_t fpcr;
+-	__asm__ volatile("mrs %0, fpcr" : "=r" (fpcr));
+-	return fpcr;
+-#endif
++//#if defined ARCH_X64
++//	return _mm_getcsr();
++//#elif defined ARCH_ARM64
++//	uint64_t fpcr;
++//	__asm__ volatile("mrs %0, fpcr" : "=r" (fpcr));
++//	return fpcr;
++//#endif
++	return 0;
+ }
+ 
+ void setFpuFlags(uint32_t flags) {
+-#if defined ARCH_X64
+-	_mm_setcsr(flags);
+-#elif defined ARCH_ARM64
+-	uint64_t fpcr = flags;
+-	__asm__ volatile("msr fpcr, %0" :: "r" (fpcr));
+-#endif
++//#if defined ARCH_X64
++//	_mm_setcsr(flags);
++//#elif defined ARCH_ARM64
++//	uint64_t fpcr = flags;
++//	__asm__ volatile("msr fpcr, %0" :: "r" (fpcr));
++//#endif
+ }
+ 
+ void resetFpuFlags() {
+-	uint32_t flags = getFpuFlags();
+-
+-#if defined ARCH_X64
++//	uint32_t flags = getFpuFlags();
++//
++//#if defined ARCH_X64
++//	// Set CPU to flush-to-zero (FTZ) and denormals-are-zero (DAZ) mode
++//	// https://software.intel.com/en-us/node/682949
++//	// _MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON);
++//	flags |= 0x8000;
++//	// _MM_SET_DENORMALS_ZERO_MODE(_MM_DENORMALS_ZERO_ON);
++//	flags |= 0x0040;
++//	// Round-to-nearest is default
++//	flags &= ~0x6000;
++//#elif defined ARCH_ARM64
++//	// Set Flush-to-Zero
++//	flags |= 1 << 24;
++//	// ARM64 always uses DAZ
++//	// Round-to-nearest is default
++//	flags &= ~((1 << 22) | (1 << 23));
++//#endif
++//
++//	setFpuFlags(flags);
++//	old cpu flag initialization taken from:
++//	https://github.com/VCVRack/Rack/commit/e2a4a6209d4ab84ece3e685b129b3300b8e370bf
++//	until i read up some some proper *FpuFlags implementation for armv7l
+ 	// Set CPU to flush-to-zero (FTZ) and denormals-are-zero (DAZ) mode
+ 	// https://software.intel.com/en-us/node/682949
+-	// _MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON);
+-	flags |= 0x8000;
+-	// _MM_SET_DENORMALS_ZERO_MODE(_MM_DENORMALS_ZERO_ON);
+-	flags |= 0x0040;
+-	// Round-to-nearest is default
+-	flags &= ~0x6000;
+-#elif defined ARCH_ARM64
+-	// Set Flush-to-Zero
+-	flags |= 1 << 24;
++	// On ARM64, this is a SIMDe function.
++	_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON);
+ 	// ARM64 always uses DAZ
+-	// Round-to-nearest is default
+-	flags &= ~((1 << 22) | (1 << 23));
+-#endif
+-
+-	setFpuFlags(flags);
++	// Reset rounding mode to default (nearest)
++	std::fesetround(FE_TONEAREST);
+ }
+ 
+ 
