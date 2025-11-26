@@ -39,7 +39,7 @@ else
   git checkout v2
   # this is the version i used this script last with - uncomment this
   # line to build the same versions, which should compile quite well
-  #git checkout 9a77be1591e763ad054558ee1bd39d6489377fce
+  #git checkout f4a5bfa8e6733688b3b0864b78c94ccef9e53278
 
   # and the SunsetSignals repo seems to make trouble as well, so get rid of it too
   cd repos
