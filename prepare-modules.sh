@@ -333,9 +333,10 @@ else
   ( cd ../../.. ; mkdir -p source ; tar czf source/vcv-link-source.tar.gz compile/plugins/vcv-link )
 fi
 # for some strange reason the link modules does not get checked out properly - so redo it by hand
-cd modules/link
-git checkout 4f00babaa9fa6812ada1aacbb71aaac8ac34f547
-cd ../..
+# update: seems to be no longer required ...
+#cd modules/link
+#git checkout 4f00babaa9fa6812ada1aacbb71aaac8ac34f547
+#cd ../..
 if [ -f ../../../patches/vcv-link.patch ]; then
   patch -p1 < ../../../patches/vcv-link.patch
 fi
