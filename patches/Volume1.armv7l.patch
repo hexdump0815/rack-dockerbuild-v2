@@ -1,0 +1,15 @@
+with optimization enabled this plugin takes 1-2 days to compile ...
+
+diff --git a/Makefile b/Makefile
+index a6eb9d1..f6e8943 100644
+--- a/Makefile
++++ b/Makefile
+@@ -20,6 +20,8 @@ DISTRIBUTABLES += $(wildcard LICENSE*) res presets README.md
+ # Include the Rack plugin Makefile framework
+ include $(RACK_DIR)/plugin.mk
+ 
++CXXFLAGS += -O0
++
+ win-dist: all
+ 	rm -rf dist
+ 	mkdir -p dist/$(SLUG)
